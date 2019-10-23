@@ -103,7 +103,6 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
                           robot.rightDrive.getCurrentPosition());
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // Step through each leg of the path,
