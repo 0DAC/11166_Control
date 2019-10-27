@@ -19,6 +19,7 @@ public class SensorTest extends LinearOpMode {
         color_sensor = new ColorSensorInterface(this);
         touch_sensor = new LimitSwitchInterface(this);
 
+        telemetry.setAutoClear(false);
         telemetry.addData("System Check: ", "Sensors");
         telemetry.addData(">>", "Press start to begin systems check");
         telemetry.update();
@@ -27,13 +28,13 @@ public class SensorTest extends LinearOpMode {
         while(opModeIsActive()) {
             space();
             telemetry.addData("Device: ", distance_sensor.getDeviceName());
-            telemetry.addData("Data: ", String.format("Distance: %.2f cm", distance_sensor.getDistance()));
+            telemetry.addData("Data: ", "Distance: %.2f cm", distance_sensor.getDistance());
             space();
             telemetry.addData("Device: ", color_sensor.getDeviceName());
-            telemetry.addData("Data: ", String.format("Color: %s", color_sensor.classifyColor() ? "Black" : "Yellow"));
+            telemetry.addData("Data: ", "Color: %s", color_sensor.classifyColor() ? "Black" : "Yellow");
             space();
             telemetry.addData("Device: ", touch_sensor.getDeviceName());
-            telemetry.addData("Data: ", String.format("The button %s", touch_sensor.isPressed() ? "is pressed" : "is not pressed"));
+            telemetry.addData("Data: ", "The button %s", touch_sensor.isPressed() ? "is pressed" : "is not pressed");
             space();
 
             telemetry.update();
