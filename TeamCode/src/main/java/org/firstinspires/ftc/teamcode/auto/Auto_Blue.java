@@ -6,10 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="BlueAuto_R", group="DogeCV")
-
-
-public class BlueBlock_R extends LinearOpMode {
+@Autonomous(name="Auto_Blue", group="DogeCV")
+public class Auto_Blue extends LinearOpMode {
 
     // Hardware declaration
     private DcMotor flDrive;
@@ -18,7 +16,7 @@ public class BlueBlock_R extends LinearOpMode {
     private DcMotor rrDrive;
     private DcMotor lintake_motor;
     private DcMotor rintake_motor;
-    private Servo clamp_servo;
+    private Servo l_foundation, r_foundation;
 
     double pos = 0;
 
@@ -31,13 +29,15 @@ public class BlueBlock_R extends LinearOpMode {
         // Start wakeLock
         //wakeLock.acquire();
 
+        telemetry.setAutoClear(false);
         flDrive = hardwareMap.get(DcMotor.class, "left_1");
         frDrive = hardwareMap.get(DcMotor.class, "right_1");
         rlDrive = hardwareMap.get(DcMotor.class, "left_2");
         rrDrive = hardwareMap.get(DcMotor.class, "right_2");
         lintake_motor = hardwareMap.get(DcMotor.class, "intake_1");
         rintake_motor = hardwareMap.get(DcMotor.class, "intake_2");
-        clamp_servo = hardwareMap.get(Servo.class, "clamp_servo");
+        l_foundation = hardwareMap.get(Servo.class, "left_foundation");
+        r_foundation = hardwareMap.get(Servo.class, "right_foundation");
 
         flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -59,21 +59,74 @@ public class BlueBlock_R extends LinearOpMode {
         rlDrive.setDirection(DcMotor.Direction.FORWARD);
         rrDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        clamp_servo.setPosition(1000);
+        // set servos to up
+        telemetry.addData("Status", "Moving Servos Up...");
+        telemetry.update();
+        l_foundation.setPosition(.5);
+        r_foundation.setPosition(.7);
 
-        int val = 8;
+        waitForStart();
+
+        int val_0 = 15; //fine
+        telemetry.addData("Status", "Moving Forward...");
+        telemetry.update();
+        encoderDrive(.1, val_0, val_0, val_0, val_0);
+        telemetry.addData("Status", "Adjusting Trajectory...");
+        telemetry.update();
+        int val_1 = 7;
+        encoderDrive(.05, -val_1, val_1, -val_1, val_1);
+        int val_9 = 20;
+        encoderDrive(.1, val_9, val_9, val_9, val_9);
+        encoderDrive(.05, val_1, -val_1, val_1, -val_1);
+        telemetry.addData("Status", "Moving Forward...");
+        telemetry.update();
+        int val_7 = 10;
+        encoderDrive(.1, val_7, val_7, val_7, val_7);
+        telemetry.addData("Status", "Lowering Servos...");
+        telemetry.update();
+        l_foundation.setPosition(1.0);
+        r_foundation.setPosition(.1);
+        sleep(500);
+        telemetry.addData("Status", "Backing Up...");
+        telemetry.update();
+        int val_8 = 43;
+        encoderDrive(.05, -val_8, -val_8, -val_8, -val_8);
+        telemetry.addData("Status", "Moving Servos Up...");
+        telemetry.update();
+        l_foundation.setPosition(.5);
+        r_foundation.setPosition(.7);
+        /*telemetry.addData("Status", "Compensating...");
+        telemetry.update();
+        int val_2 = 7;
+        encoderDrive(.05, -val_2, val_2, -val_2, val_2);
+        telemetry.addData("Status", "Turning...");
+        telemetry.update();
+        int val_3 = 8;
+        encoderDrive(.05, -val_3, val_3, -val_3, val_3);
+        telemetry.addData("Status", "Backing Up...");
+        telemetry.update();
+        int val_4 = 10;
+        encoderDrive(.05, -val_4, -val_4, -val_4, -val_4);
+        */
+         sleep(10000000);
+
+
+        /*l_foundation.setPosition(1200);
+        l_foundation.setPosition(0);
+
+        int val = 15;
         // move forwards (start with back facing the wall)
         encoderDrive(.5, val, val, val, val);
 
-        // lower the intake claws
-        encoderDrive(.5, 16, 16);
-        clamp_servo.setPosition(120);
+        // extend the intake claws
+        l_foundation.setPosition(2047);
+        r_foundation.setPosition(1000);
 
         encoderDrive(.5, -val, -val, -val, -val);
         // turn left
         encoderDrive(.5, -16, 16, -16, 16);
         // move forward
-        encoderDrive(.5, val, val, val, val);
+        encoderDrive(.5, val, val, val, val);*/
     }
 
     public void encoderDrive ( double speed, int flDrivePos, int frDrivePos, int rlDrivePos, int rrDrivePos) {
@@ -82,10 +135,6 @@ public class BlueBlock_R extends LinearOpMode {
         frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rlDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         flDrivePos = flDrivePos * (1125 / ((42 / 35) * (32))) + flDrive.getCurrentPosition();
         frDrivePos = frDrivePos * (1125 / ((42 / 35) * (32))) + frDrive.getCurrentPosition();
@@ -96,6 +145,11 @@ public class BlueBlock_R extends LinearOpMode {
         frDrive.setTargetPosition(frDrivePos);
         rlDrive.setTargetPosition(rlDrivePos);
         rrDrive.setTargetPosition(rrDrivePos);
+
+        flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rlDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         flDrive.setPower(speed);
         frDrive.setPower(speed);
@@ -121,14 +175,15 @@ public class BlueBlock_R extends LinearOpMode {
 
         lintake_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rintake_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lintake_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rintake_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         l_servo_pos = l_servo_pos* (1125 / ((42 / 35) * (32))) + flDrive.getCurrentPosition();
         r_servo_pos = r_servo_pos * (1125 / ((42 / 35) * (32))) + frDrive.getCurrentPosition();
 
         lintake_motor.setTargetPosition(l_servo_pos);
         rintake_motor.setTargetPosition(r_servo_pos);
+
+        lintake_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rintake_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         lintake_motor.setPower(speed);
         rintake_motor.setPower(speed);
