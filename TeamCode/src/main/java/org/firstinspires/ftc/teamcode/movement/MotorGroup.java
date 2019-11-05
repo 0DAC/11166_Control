@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public class MotorGroup {
 
-    String name;        // for telemetry update purposes
     int n;              // number of motors in this group
     DcMotor[] motors;   // pointers to motors
     HardwareMap hmp;    // save local copy of hardware map
@@ -19,17 +18,28 @@ public class MotorGroup {
     static final double COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_CM * 3.1415);
 
-    public void init(HardwareMap hmp, String group_name, String[] motor_names) {
+    public MotorGroup(HardwareMap hmp, String motor_names) {
         this.hmp = hmp;
-        this.name = group_name;
+        this.n = 1;
+        motors = new DcMotor[1];
+        init_motors(new String[] {motor_names});
+    }
+
+    public MotorGroup(HardwareMap hmp, String[] motor_names) {
+        this.hmp = hmp;
         this.n = motor_names.length;
         motors = new DcMotor[motor_names.length];
+        init_motors(motor_names);
+    }
+
+    private void init_motors(String[] motor_names) {
         for (int i = 0; i < this.n; i++) {
             motors[i] = hmp.get(DcMotor.class, motor_names[i]);
             assert motors[i] != null : "Could not find " + motor_names[i];
             motors[i].setPower(0);
             motors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
 
@@ -42,23 +52,6 @@ public class MotorGroup {
     }
 
     // Auto or Drive-By-Distance Functions
-
-    public void run(double cm_dist, double speed) {
-        reset_encoders();
-        for (DcMotor motor : motors) {
-            motor.setTargetPosition((int)(cm_dist*COUNTS_PER_CM));
-            motor.setPower(speed);
-        }
-        boolean busy = true;
-        do {
-            for (DcMotor motor : motors)
-                busy &= motor.isBusy();
-        } while (busy);
-        for (DcMotor motor: motors) {
-            motor.setPower(0);
-        }
-    }
-
     public double[] getEncoderValues() {
         double[] vals = new double[n];
         for (int i = 0; i < n; i ++) {
@@ -72,6 +65,6 @@ public class MotorGroup {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-}
+    }
 
 }
