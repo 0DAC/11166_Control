@@ -19,11 +19,19 @@ public class RobotControl {
         bot_right = new MotorGroup(hmp, sys.bot_right);
     }
 
+    /**
+     * Mechanum strafing
+     * For linear motion i.e. NSEW movement set angle to 0
+     * Note: motion is defined by the polar vector form (r, theta)
+     * @param angle: radian angle rotation (theta component)
+     * @param percent_rotation: percent max speed angular rotation
+     * @param percent_power: percent max speed vector magnitude (r component)
+     */
     public void strafe(double angle, double percent_rotation, double percent_power) {
         double r = percent_power*MAX_SPEED;
-        double robotAngle = angle - Math.PI / 4;
+        double robotAngle = angle;
         double rightX = percent_rotation*MAX_SPEED; // TODO: make sure this isn't too much
-        final double v1 = r * Math.cos(robotAngle) + rightX;
+        final double v1 = r * Math.cos(robotAngle) + rightX;l./
         final double v2 = r * Math.sin(robotAngle) - rightX;
         final double v3 = r * Math.sin(robotAngle) + rightX;
         final double v4 = r * Math.cos(robotAngle) - rightX;
@@ -34,6 +42,11 @@ public class RobotControl {
         bot_right.setPower(v4);
     }
 
+    /**
+     * Failsafe function for N-S drive (in case the mechanum fails)
+     * @param direction: 1 for forward, -1 for backwards
+     * @param percent_power: percent full speed
+     */
     public void linear_drive(int direction, double percent_power) {
         top_left .setPower(direction*percent_power*MAX_SPEED);
         top_right.setPower(-direction*percent_power*MAX_SPEED);
@@ -41,6 +54,9 @@ public class RobotControl {
         bot_right.setPower(-direction*percent_power*MAX_SPEED);
     }
 
+    /**
+     * Full stop function
+     */
     public void stop_drive() {
         top_left .setPower(0);
         top_right.setPower(0);

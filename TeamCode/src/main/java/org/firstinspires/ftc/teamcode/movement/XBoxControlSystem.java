@@ -43,17 +43,15 @@ public class XBoxControlSystem extends LinearOpMode {
             else if (gamepad1.left_bumper) {
                 //DRIVE_SPEED -= DELTA_SPEED;
             }
-            // left_drive joystick = linear movement
-            if (gamepad1.right_stick_x == 0 && gamepad1.right_stick_y == 0) {
-                telemetry.addData("Left Joystick Values", String.format("(" + gamepad1.left_stick_x + ", " + gamepad1.left_stick_y + ")"));
+            // left joystick = forward, backward, strafing
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            // polar component theta for strafing
+            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
 
-                robot.left_drive.setPower((gamepad1.left_stick_y * DRIVE_SPEED - gamepad1.left_stick_x * TURN_SPEED));
-                robot.right_drive.setPower(-(gamepad1.left_stick_y * DRIVE_SPEED + gamepad1.left_stick_x * TURN_SPEED));
-            }
-            else {
-                robot.left_drive.setPower(gamepad1.right_stick_x * TURN_SPEED);
-                robot.right_drive.setPower(gamepad1.right_stick_x * TURN_SPEED);
-            }
+            // right joystick = rotation
+            double rightX = gamepad1.right_stick_x;
+
+            robot.strafe(robotAngle, rightX, r);
 
             telemetry.update();
         }
