@@ -31,7 +31,7 @@ public class RobotControl {
         double r = percent_power*MAX_SPEED;
         double robotAngle = angle;
         double rightX = percent_rotation*MAX_SPEED; // TODO: make sure this isn't too much
-        final double v1 = r * Math.cos(robotAngle) + rightX;l./
+        final double v1 = r * Math.cos(robotAngle) + rightX;
         final double v2 = r * Math.sin(robotAngle) - rightX;
         final double v3 = r * Math.sin(robotAngle) + rightX;
         final double v4 = r * Math.cos(robotAngle) - rightX;
