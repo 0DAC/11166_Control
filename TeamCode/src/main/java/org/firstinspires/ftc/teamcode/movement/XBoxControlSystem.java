@@ -46,7 +46,7 @@ public class XBoxControlSystem extends LinearOpMode {
             // left joystick = forward, backward, strafing
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             // polar component theta for strafing
-            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
 
             // right joystick = rotation
             double rightX = gamepad1.right_stick_x;
