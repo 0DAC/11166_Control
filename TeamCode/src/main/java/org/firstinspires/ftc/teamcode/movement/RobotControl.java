@@ -2,10 +2,8 @@ package org.firstinspires.ftc.teamcode.movement;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.SystemConfig;
-
 public class RobotControl {
     SystemConfig sys = new SystemConfig();
     public MotorGroup top_left, top_right, bot_left, bot_right;
@@ -22,16 +20,6 @@ public class RobotControl {
     }
 
     /**
-     * Move robot by distance
-     * @param angle
-     * @param percent_rotation
-     * @param distance
-     */
-    public void strafe_distance(double angle, double percent_rotation, double distance) {
-
-    }
-
-    /**
      * Mechanum strafing
      * For linear motion i.e. NSEW movement set angle to 0
      * Note: motion is defined by the polar vector form (r, theta)
@@ -41,22 +29,17 @@ public class RobotControl {
      */
     public void strafe(double angle, double percent_rotation, double percent_power) {
         double r = percent_power*MAX_SPEED;
-        double robotAngle = angle+Math.PI/4;
+        double robotAngle = angle;
         double rightX = percent_rotation*MAX_SPEED; // TODO: make sure this isn't too much
+        final double v1 = r * Math.cos(robotAngle) + rightX;
+        final double v2 = r * Math.sin(robotAngle) - rightX;
+        final double v3 = r * Math.sin(robotAngle) + rightX;
+        final double v4 = r * Math.cos(robotAngle) - rightX;
 
-        drive(new MechVector(
-                limit_scale(Math.cos(robotAngle), r, -1, 1)-rightX,
-                limit_scale(Math.sin(robotAngle), r, -1, 1)+rightX,
-                limit_scale(Math.sin(robotAngle), r, -1, 1)-rightX,
-                limit_scale(Math.cos(robotAngle), r, -1, 1)+rightX
-        ));
-    }
-
-    public void drive(MechVector powers) {
-        top_left.setPower(powers.front_left);
-        top_right.setPower(powers.front_right);
-        bot_left.setPower(powers.back_left);
-        bot_right.setPower(powers.back_right);
+        top_left.setPower(v1);
+        top_right.setPower(v2);
+        bot_left.setPower(v3);
+        bot_right.setPower(v4);
     }
 
     /**
@@ -79,28 +62,5 @@ public class RobotControl {
         top_right.setPower(0);
         bot_left .setPower(0);
         bot_right.setPower(0);
-    }
-
-    // Convinience math functions
-
-    /**
-     * OutOfBounds Check
-     * @param val: ditto
-     * @param lower: ditto
-     * @param upper: ditto
-     * @return
-     */
-    public double limit_val(double val, double lower, double upper) { return Range.clip(val, lower, upper); }
-
-     /**
-     * Scale a value within a certain bound
-     * @param val: ditto
-     * @param factor: ditto
-     * @param upper: ditto
-     * @param lower: ditto
-     * @return
-     */
-    public double limit_scale(double val, double factor, double upper, double lower) {
-        return limit_val(val*factor, upper, lower);
     }
 }
