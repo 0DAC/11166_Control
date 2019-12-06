@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import android.app.Dialog;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.util.GetSide;
 
 @Autonomous(name="Auto_Red", group="DogeCV")
 public class Auto_Red extends LinearOpMode {
