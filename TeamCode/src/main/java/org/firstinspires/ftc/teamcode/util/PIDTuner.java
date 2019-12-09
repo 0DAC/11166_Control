@@ -4,11 +4,11 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import edu.spa.ftclib.internal.controller.PIDController;
-import edu.spa.ftclib.internal.drivetrain.Headingable;
-import edu.spa.ftclib.internal.state.Button;
-import edu.spa.ftclib.internal.state.ToggleBoolean;
-import edu.spa.ftclib.internal.state.ToggleInt;
+import org.firstinspires.ftc.teamcode.HOMAR.controller.PIDController;
+import org.firstinspires.ftc.teamcode.HOMAR.drivetrain.Headingable;
+import org.firstinspires.ftc.teamcode.HOMAR.state.Button;
+import org.firstinspires.ftc.teamcode.HOMAR.state.ToggleBoolean;
+import org.firstinspires.ftc.teamcode.HOMAR.state.ToggleInt;
 
 /**
  * Created by Gabriel on 2018-01-07.

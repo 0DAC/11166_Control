@@ -1,8 +1,6 @@
-package edu.spa.ftclib.internal.sensor;
+package org.firstinspires.ftc.teamcode.HOMAR.sensor;
 
 import com.qualcomm.robotcore.hardware.GyroSensor;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /**
  * Created by Gabriel on 2018-01-02.

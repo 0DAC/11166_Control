@@ -1,4 +1,4 @@
-package edu.spa.ftclib.internal.sensor;
+package org.firstinspires.ftc.teamcode.HOMAR.sensor;
 
 /**
  * Created by Gabriel on 2018-01-08.

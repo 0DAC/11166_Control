@@ -1,4 +1,4 @@
-package edu.spa.ftclib.internal.sensor;
+package org.firstinspires.ftc.teamcode.HOMAR.sensor;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 

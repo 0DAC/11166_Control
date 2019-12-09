@@ -1,8 +1,11 @@
-package edu.spa.ftclib.internal.drivetrain;
+package org.firstinspires.ftc.teamcode.HOMAR.drivetrain;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import edu.spa.ftclib.internal.controller.FinishableIntegratedController;
+import org.firstinspires.ftc.teamcode.HOMAR.controller.Controller;
+import org.firstinspires.ftc.teamcode.HOMAR.controller.FinishableIntegratedController;
+import org.firstinspires.ftc.teamcode.HOMAR.controller.PIController;
+import org.firstinspires.ftc.teamcode.HOMAR.controller.PIDController;
 
 /**
  * Created by Michaela on 2018-1-2.
@@ -12,9 +15,9 @@ import edu.spa.ftclib.internal.controller.FinishableIntegratedController;
 public class HeadingableTankDrivetrain extends TankDrivetrain implements Headingable {
     /**
      * The controller being used.
-     * @see edu.spa.ftclib.internal.controller.PIDController
-     * @see edu.spa.ftclib.internal.controller.PIController
-     * @see edu.spa.ftclib.internal.controller.Controller
+     * @see PIDController
+     * @see PIController
+     * @see Controller
      */
     public FinishableIntegratedController controller;
 
@@ -32,7 +35,7 @@ public class HeadingableTankDrivetrain extends TankDrivetrain implements Heading
      * The constructor for the drivetrain.
      * @param motors The array of motors that you give the constructor so that it can find the hardware
      * @param controller Which controller you want the system to use.
-     *                   @see edu.spa.ftclib.internal.controller.PIDController
+     *                   @see PIDController
      */
     public HeadingableTankDrivetrain(DcMotor[] motors, FinishableIntegratedController controller) {
         super(motors);

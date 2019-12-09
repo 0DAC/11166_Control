@@ -1,4 +1,4 @@
-package edu.spa.ftclib.internal.controller;
+package org.firstinspires.ftc.teamcode.HOMAR.controller;
 
 //Created by Gabriel on 2018-01-02.
 
@@ -15,6 +15,7 @@ public abstract class ControlAlgorithm implements Controller, TargetableAlgorith
 
     /**
      * Set the value the robot should hold
+     *
      * @param target The value you want the robot to hold
      */
     public void setTarget(double target) {

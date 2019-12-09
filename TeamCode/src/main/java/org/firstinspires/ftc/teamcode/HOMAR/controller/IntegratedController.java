@@ -1,7 +1,7 @@
-package edu.spa.ftclib.internal.controller;
+package org.firstinspires.ftc.teamcode.HOMAR.controller;
 
-import edu.spa.ftclib.internal.sensor.DerivativeSensor;
-import edu.spa.ftclib.internal.sensor.Sensor;
+import org.firstinspires.ftc.teamcode.HOMAR.sensor.DerivativeSensor;
+import org.firstinspires.ftc.teamcode.HOMAR.sensor.Sensor;
 
 //Created by Gabriel on 2018-01-02.
 

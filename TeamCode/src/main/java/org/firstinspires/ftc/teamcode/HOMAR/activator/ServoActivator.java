@@ -1,4 +1,4 @@
-package edu.spa.ftclib.internal.activator;
+package org.firstinspires.ftc.teamcode.HOMAR.activator;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
