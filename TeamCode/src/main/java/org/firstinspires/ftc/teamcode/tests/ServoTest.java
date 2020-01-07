@@ -1,31 +1,32 @@
 package org.firstinspires.ftc.teamcode.tests;
 
+import com.disnodeteam.dogecommander.DogeOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.movement.RobotControl;
+import org.firstinspires.ftc.teamcode.bot.components.Robot;
 
 @Autonomous(name="Servo Test", group="Test")
-public class ServoTest extends LinearOpMode {
+public class ServoTest extends LinearOpMode implements DogeOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotControl robot = new RobotControl(hardwareMap);
+        Robot robot = new Robot(this, hardwareMap);
 
         telemetry.setAutoClear(false);
 
         telemetry.addData("Motor Being Tested: ", "left_foundation");
         telemetry.update();
-        robot.left_foundation.setPosition(1000);
+        //robot.left_foundation.setPosition(1000);
         sleep(1000);
-        robot.left_foundation.setPosition(1968);
+        //robot.left_foundation.setPosition(1968);
         sleep(1000);
 
         telemetry.addData("Motor Being Tested: ", "right_foundation");
         telemetry.update();
-        robot.right_foundation.setPosition(1000);
+        //robot.right_foundation.setPosition(1000);
         sleep(1000);
-        robot.right_foundation.setPosition(220);
+        //robot.right_foundation.setPosition(220);
         sleep(1000);
 
         /*telemetry.addData("Motor Being Tested: ", "turner");

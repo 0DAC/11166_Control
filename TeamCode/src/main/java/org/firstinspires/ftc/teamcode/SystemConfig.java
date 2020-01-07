@@ -5,14 +5,15 @@ package org.firstinspires.ftc.teamcode;
  */
 public class SystemConfig {
 
-    public String[] left_motors = new String[] {"left_1", "left_2"};
-    public String[] right_motors = new String[] {"right_1", "right_2"};
-    public String[] left_intake = new String[] {"intake_1"}; // range is 120-1000
-    public String[] right_intake = new String[] {"intake_2"}; // range is 119-1264
+    public static String[] motors = new String[] {"left_front", "left_rear", "right_front", "right_rear"};
+    public static String left_intake = "intake_1"; // range is 120-1000
+    public static String right_intake = "intake_2"; // range is 119-126
 
-    public String left_foundation_servo = "left_foundation";
-    public String right_foundation_servo = "right_foundation";
-    public String gripper_servo = "stone_gripper";
-    public String turner_servo = "gripper_turner";
+    public static String left_foundation_servo = "left_foundation";
+    public static String right_foundation_servo = "right_foundation";
 
+    public static double  LEFT_FOUNDATION_UP    = .5,
+                          LEFT_FOUNDATION_DOWN  = .8,
+                          RIGHT_FOUNDATION_UP   = .42,
+                          RIGHT_FOUNDATION_DOWN = 0;
 }
