@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
-import com.disnodeteam.dogecommander.Subsystem;
-
 import org.firstinspires.ftc.teamcode.HOMAR.drivetrain.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.SystemConfig;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class DriveTrain implements Subsystem {
+public class DriveTrain {
     private HardwareMap hmp;
 
     private MecanumDrivetrain drive;
@@ -16,10 +14,7 @@ public class DriveTrain implements Subsystem {
 
     public DriveTrain(HardwareMap hardwareMap) {
         this.hmp = hardwareMap;
-    }
 
-    @Override
-    public void initHardware() {
         motors = new DcMotor[SystemConfig.motors.length];
         for (int i = 0; i < motors.length; i++) motors[i] = hmp.get(DcMotor.class, SystemConfig.motors[i]);
         drive = new MecanumDrivetrain(motors);
@@ -28,9 +23,5 @@ public class DriveTrain implements Subsystem {
     public void power_drive(double angle, double power) {
         drive.setCourse(angle);
         drive.setVelocity(power);
-    }
-
-    @Override
-    public void periodic() {
     }
 }

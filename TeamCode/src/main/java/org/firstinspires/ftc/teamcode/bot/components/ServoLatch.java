@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
-import com.disnodeteam.dogecommander.Subsystem;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -11,9 +9,9 @@ import org.firstinspires.ftc.teamcode.SystemConfig;
 /**
  * Synchronized latch control with DogeCommander, HOMAR
  */
-public class ServoLatch implements Subsystem {
+public class ServoLatch {
     private SystemConfig sys;
-    private HardwareMap hardwareMap;
+    private HardwareMap hmp;
 
     private ServoActivator leftLatch;
     private ServoActivator rightLatch;
@@ -21,10 +19,13 @@ public class ServoLatch implements Subsystem {
     private boolean latchUp;
 
     public ServoLatch(HardwareMap hardwareMap) {
-        this.hardwareMap = hardwareMap;
+        this.hmp = hardwareMap;
         this.sys = new SystemConfig();
 
         latchUp = true;
+
+        leftLatch = new ServoActivator(hmp.get(Servo.class, sys.left_foundation_servo), sys.LEFT_FOUNDATION_UP, sys.LEFT_FOUNDATION_DOWN);
+        rightLatch = new ServoActivator(hmp.get(Servo.class, sys.right_foundation_servo), sys.RIGHT_FOUNDATION_UP, sys.RIGHT_FOUNDATION_DOWN);
     }
 
     public void toggle() {
@@ -38,20 +39,15 @@ public class ServoLatch implements Subsystem {
 
     public void hook() {
         latchUp = false;
+        update();
     }
 
     public void release() {
         latchUp = false;
+        update();
     }
 
-    @Override
-    public void initHardware() {
-        leftLatch = new ServoActivator(hardwareMap.get(Servo.class, sys.left_foundation_servo), sys.LEFT_FOUNDATION_UP, sys.LEFT_FOUNDATION_DOWN);
-        rightLatch = new ServoActivator(hardwareMap.get(Servo.class, sys.right_foundation_servo), sys.RIGHT_FOUNDATION_UP, sys.RIGHT_FOUNDATION_DOWN);
-    }
-
-    @Override
-    public void periodic() {
+    public void update() {
         leftLatch.setActivated(latchUp);
         rightLatch.setActivated(latchUp);
     }

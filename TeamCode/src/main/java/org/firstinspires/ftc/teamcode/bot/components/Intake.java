@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
-import com.disnodeteam.dogecommander.Subsystem;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class Intake implements Subsystem {
+public class Intake {
     private HardwareMap hmp;
     private DcMotor left, right;
     private State state = State.STOP;
 
     public Intake(HardwareMap hmp) {
         this.hmp = hmp;
+        this.left = hmp.get(DcMotor.class, "intake_left");
+        this.right = hmp.get(DcMotor.class, "intake_right");
     }
 
 
@@ -32,17 +33,6 @@ public class Intake implements Subsystem {
     }
 
     public void setState(State state) {
-        this.state = state;
-    }
-
-    @Override
-    public void initHardware() {
-        this.left = hmp.get(DcMotor.class, "intake_left");
-        this.right = hmp.get(DcMotor.class, "intake_right");
-    }
-
-    @Override
-    public void periodic() {
         left.setPower(state.power);
         right.setPower(state.power);
     }
