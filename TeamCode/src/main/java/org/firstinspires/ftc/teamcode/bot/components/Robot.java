@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.bot.components;
 import com.disnodeteam.dogecommander.DogeOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.SystemConfig;
 
 public class Robot {
@@ -12,23 +13,16 @@ public class Robot {
     public ServoLatch latch;
     public DriveTrain drive;
 
-    public Robot(DogeOpMode opmode, HardwareMap hmp) {
+    public Robot(DogeOpMode opmode, HardwareMap hmp, Telemetry t) {
         sys = new SystemConfig();
 
         //intake = new Intake(hmp);
         //latch = new ServoLatch(hmp);
         drive = new DriveTrain(hmp);
+        drive.drive.setTelemetry(t);
     }
 
-    /**
-     * Robot drive-by-power
-     * @param angle: angle in radians. 0 is straight ahead, PI/2 is straight left
-     * @param power: velocity
-     */
-    public void power_drive(double angle, double power) {
-        drive.power_drive(angle, power);
-    }
-
+    public void xbox_control(double x, double y, double turn) { drive.xbox_drive(x, y, turn); }
     // TODO: implement intake and latch functionality
 
 }

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.HOMAR.drivetrain;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
  * Created by Gabriel on 2017-12-27.
  * A {@link Holonomic holonomic} drivetrain with four wheels.
@@ -10,6 +12,11 @@ import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
  */
 
 abstract public class HolonomicFourWheelDrivetrain extends Drivetrain implements Holonomic, Rotatable, Positionable {
+    Telemetry t;
+    /**
+     * Used to determine strafing
+     */
+    private double strafing = 0;
     /**
      * Rotation velocity (the amount of power that should be added to each of the motors to make the drivetrain rotate)
      */
@@ -82,9 +89,30 @@ abstract public class HolonomicFourWheelDrivetrain extends Drivetrain implements
      * Gets the direction the robot is supposed to be moving along.
      * @return The course in radians, where 0 is forwards and {@link Math#PI}/2 is directly to the left.
      */
+    public double getStrafing() {
+        return strafing;
+    }
+
+    /**
+     * Sets the direction you want the robot to move along.
+     * @param strafe The course in radians, where 0 is forwards and {@link Math#PI}/2 is directly to the left.
+     */
+    public void setStrafing(double strafe) {
+        this.strafing = strafe;
+        updateMotorPowers(); //sends power to the motors based on the course given
+    }
+
+    /**
+     * Gets the direction the robot is supposed to be moving along.
+     * @return The course in radians, where 0 is forwards and {@link Math#PI}/2 is directly to the left.
+     */
     @Override
     public double getCourse() {
         return course;
+    }
+
+    public void setTelemetry(Telemetry te) {
+        this.t = te;
     }
 
     /**
@@ -97,6 +125,21 @@ abstract public class HolonomicFourWheelDrivetrain extends Drivetrain implements
             motorPowers[i] = calculateWheelPower(course, getVelocity(), rotation, wheelAngles[i]);
             motors[i].setPower(motorPowers[i]);
         }
+        // if strafing left, reverse right side powers
+        if (strafing > 0) {
+            motorPowers[1] = Math.abs(motorPowers[1]);
+            motorPowers[3] = Math.abs(motorPowers[3]);
+        }
+        // if strafing right, reverse left side powers
+        else if (strafing < 0) {
+            motorPowers[0] = -Math.abs(motorPowers[0]);
+            motorPowers[2] = -Math.abs(motorPowers[2]);
+        }
+        t.addData("Top Left", motorPowers[0]);
+        t.addData("Top Right", motorPowers[1]);
+        t.addData("Bottom Left", motorPowers[2]);
+        t.addData("Bottom Right", motorPowers[3]);
+        t.update();
         return motorPowers;
     }
 
