@@ -12,8 +12,7 @@ public class Robot {
     //private FinishableIntegratedController controller;
     private MecanumDrivetrain drive;
     private Servo l_foundation, r_foundation;
-    private InnerIntake innerIntake;
-    private OuterIntake outerIntake;
+    private Intake intake;
     private CraneLift lift;
     //private BNO055IMUImpl gyro;
 
@@ -50,8 +49,7 @@ public class Robot {
 
         // configure foundation grabber servos
 
-        innerIntake = new InnerIntake(hmp);
-        outerIntake = new OuterIntake(hmp);
+        intake = new Intake(hmp);
 
         // configure crane lift
         lift = new CraneLift(hmp);
@@ -74,58 +72,71 @@ public class Robot {
                 controller);*/
      }
 
-     public void drive_to_pos(int[] pos, double power) {
-        for (int i = 0; i < drive.motors.length; i ++) drive.motors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        for (int i = 0; i < drive.motors.length; i ++) drive.motors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        for (int i = 0; i < drive.motors.length; i ++) drive.motors[i].setTargetPosition(pos[i]);
-        for (int i = 0; i < drive.motors.length; i ++) drive.motors[i].setPower(power);
-
-        while (true) {
-            for (int i = 0; i < drive.motors.length; i ++){
-                if (drive.motors[i].isBusy()) continue;
-            }
-            break;
-        }
-         for (int i = 0; i < drive.motors.length; i ++) drive.motors[i].setPower(0);
-         for (int i = 0; i < drive.motors.length; i ++) drive.motors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+     public void intake() {
+         intake.intake();
      }
+     public void spit() {
+         intake.spit();
+    }
+     public void stop_intake() {
+         intake.stop();
+    }
 
-     public void out_intake() { outerIntake.intake();}
-     public void out_spit() { outerIntake.spit();}
-     public void out_stop_intake() { outerIntake.stop();}
-
-     public void in_intake() { innerIntake.intake();}
-     public void in_spit() { innerIntake.spit();}
-     public void in_stop_intake() { innerIntake.stop();}
-
-     public void turn_90_ccw(double speed) {
+    public void turn_90_ccw(double speed) {
         drive.setRotation(speed);
         pause(TURN_90_TIME);
         drive.setRotation(0);
     }
-     public void turn_90_cw(double speed) {
+    public void turn_90_cw(double speed) {
         drive.setRotation(-speed);
         pause(TURN_90_TIME);
         drive.setRotation(0);
     }
 
-     public void raise_foundations() {
+    public void raise_foundations() {
         l_foundation.setPosition(LEFT_FOUNDATION_UP);
         r_foundation.setPosition(RIGHT_FOUNDATION_UP);
     }
-     public void lower_foundations() {
+    public void lower_foundations() {
         l_foundation.setPosition(LEFT_FOUNDATION_DOWN);
         r_foundation.setPosition(RIGHT_FOUNDATION_DOWN);
     }
 
-    public void raise_lift() { lift.extend(); }
-    public void lower_lift() { lift.retract(); }
+    public void vraise_lift() { lift.vextend(); }
+    public void vlower_lift() { lift.vretract(); }
+    public void vstop() {lift.vstop();}
+
+    public void hraise_lift() { lift.hextend(); }
+    public void hlower_lift() { lift.hretract();}
+    public void hstop() {lift.hstop();}
+
+    public void toggle_grabber() {
+        lift.toggle_grabber();
+    }
 
      public void xbox_drive(double move_x, double move_y, double turn_x) {
          double course = Math.atan2(-move_y, move_x) - Math.PI/2;
          double velocity = Math.hypot(move_x, move_y);
          double rotation = -turn_x;
          power_drive(course, velocity, rotation);
+     }
+
+     public void encoder_drive(double speed, int[] speeds) {
+        for (int i = 0; i < drive.motors.length; i ++) {
+            drive.motors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            drive.motors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            drive.motors[i].setTargetPosition(speeds[i]);
+            drive.motors[i].setPower(speed);
+        }
+        while (true) {
+            for (int i = 0; i < drive.motors.length; i ++)
+                if (drive.motors[i].isBusy()) continue;
+            break;
+        }
+         for (int i = 0; i < drive.motors.length; i ++) {
+             drive.motors[i].setPower(0);
+             drive.motors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         }
      }
 
     /**

@@ -16,6 +16,10 @@ public class SystemConfig {
     public static String left_lift = "left_lift";
     public static String right_lift = "right_lift";
 
+    public static String lift_extend = "lift_extend";
+    public static String lift_grabber = "lift_grab";
+    public static String lift_turner = "lift_turner";
+
     public static String left_foundation_servo = "left_foundation";
     public static String right_foundation_servo = "right_foundation";
 

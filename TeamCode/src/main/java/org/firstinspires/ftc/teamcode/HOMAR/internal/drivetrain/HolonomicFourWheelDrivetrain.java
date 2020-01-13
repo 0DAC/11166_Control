@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 /**
  * Created by Gabriel on 2017-12-27.
  * A {@link Holonomic holonomic} drivetrain with four wheels.
- * {@link MecanumDrivetrain} and {@link OmniwheelDrivetrain} extend this; we wrote this because most of that code is very similar.
+ * {@link MecanumDrivetrain} and {@link OmniwheelDrivetrain} vextend this; we wrote this because most of that code is very similar.
  */
 
 abstract public class HolonomicFourWheelDrivetrain extends Drivetrain implements Holonomic, Rotatable, Positionable {
@@ -127,17 +127,7 @@ abstract public class HolonomicFourWheelDrivetrain extends Drivetrain implements
      */
     @Override
     public void setTargetPosition(double targetPosition) {
-        for (int i = 0; i < runModes.length; i++) {
-            runModes[i] = motors[i].getMode();  //Save the RunModes so we can restore them later
-        }
-        this.targetPosition = targetPosition;
-        for (int i = 0; i < motors.length; i++) {   //Calculate how far each wheel has to go to get the drivetrain to a specific position
-            wheelTargetPositions[i] = targetPosition*calculateWheelCoefficient(course, wheelAngles[i]);
-            motors[i].setTargetPosition((int)(wheelTargetPositions[i]+0.5));    //Round to the nearest int because setTargetPosition only accepts ints
-        }
-        for (DcMotor motor : motors) motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        for (DcMotor motor : motors) motor.setMode(RunMode.RUN_TO_POSITION);
-        updateMotorPowers();
+
     }
 
     /**
