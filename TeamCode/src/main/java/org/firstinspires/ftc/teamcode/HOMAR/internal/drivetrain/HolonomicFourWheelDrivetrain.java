@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
  */
 
 abstract public class HolonomicFourWheelDrivetrain extends Drivetrain implements Holonomic, Rotatable, Positionable {
+    private final double TICKS_PER_REVOLUTION = 398;
     /**
      * Rotation velocity (the amount of power that should be added to each of the motors to make the drivetrain rotate)
      */
@@ -98,6 +99,21 @@ abstract public class HolonomicFourWheelDrivetrain extends Drivetrain implements
             motors[i].setPower(motorPowers[i]);
         }
         return motorPowers;
+    }
+
+    public void drive_distance(double distance, double angle, double power) {
+        double[] motorVectors = new double[4];
+        setCourse(course);
+        setVelocity(power);
+        setRotation(0);
+        for (int i = 0; i < 4; i ++) {
+            motors[i].setMode(RunMode.STOP_AND_RESET_ENCODER);
+            motors[i].setMode(RunMode.RUN_TO_POSITION);
+            motorVectors[i] = distance*calculateWheelCoefficient(angle, wheelAngles[i]);
+            motors[i].setTargetPosition((int)(motorVectors[i]*getTicksPerUnit()));
+            calculateMotorPowers();
+        }
+        while (motors[0].isBusy() || motors[1].isBusy() || motors[2].isBusy() || motors[3].isBusy());
     }
 
     /**

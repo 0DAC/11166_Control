@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.SystemConfig;
 
 public class Robot {
     //private FinishableIntegratedController controller;
-    private MecanumDrivetrain drive;
+    public MecanumDrivetrain drive;
     private Servo l_foundation, r_foundation;
     private Intake intake;
     private CraneLift lift;
@@ -19,9 +19,11 @@ public class Robot {
     private final long TURN_90_TIME = 550;
 
     public static double  RIGHT_FOUNDATION_UP = 1,
-            RIGHT_FOUNDATION_DOWN  = 0.25,
+            RIGHT_FOUNDATION_DOWN  = 0.195,
             LEFT_FOUNDATION_UP   = 0.1,
-            LEFT_FOUNDATION_DOWN = 0.875;
+            LEFT_FOUNDATION_DOWN = 0.739;
+
+    public static int TICKS_PER_REVOLUTION = 383;
 
     public Robot(HardwareMap hmp) {
         // configure motors
@@ -70,6 +72,10 @@ public class Robot {
 
         drive = new HeadingableMecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight},
                 controller);*/
+     }
+
+     public void dist_drive(double distance, double angle, double power) {
+        drive.drive_distance(distance, angle, power);
      }
 
      public void intake() {
