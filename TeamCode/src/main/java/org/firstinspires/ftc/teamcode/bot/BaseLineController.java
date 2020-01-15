@@ -33,8 +33,8 @@ public class BaseLineController extends OpMode {
         // claw toggle: back
         if (gamepad2.back) bot.toggle_grabber();
 
-        if (gamepad2.x) bot.lower_foundations();
-        else if (gamepad2.y) bot.raise_foundations();
+        if (gamepad1.x) bot.lower_foundations();
+        else if (gamepad1.y) bot.raise_foundations();
 
         if (gamepad2.dpad_down) bot.vlower_lift();
         else if (gamepad2.dpad_up) bot.vraise_lift();
