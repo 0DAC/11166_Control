@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.HOMAR.internal.drivetrain.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.SystemConfig;
-import org.firstinspires.ftc.teamcode.bot.components.Robot;
 
 @Autonomous(name = "Motor Test", group = "test")
 public class MotorTest extends LinearOpMode {

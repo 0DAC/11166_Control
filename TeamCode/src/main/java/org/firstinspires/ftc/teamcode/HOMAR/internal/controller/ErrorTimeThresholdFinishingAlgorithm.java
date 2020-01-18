@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.HOMAR.internal.controller;
 
-//import org.firstinspires.ftc.teamcode.HOMAR.internal.Global;    //For testing
+//import edu.spa.ftclib.internal.Global;    //For testing
 
 //Created by Gabriel on 2017-12-29.
 

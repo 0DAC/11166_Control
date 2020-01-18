@@ -6,11 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 /**
  * Created by Gabriel on 2017-12-27.
  * A {@link Holonomic holonomic} drivetrain with four wheels.
- * {@link MecanumDrivetrain} and {@link OmniwheelDrivetrain} vextend this; we wrote this because most of that code is very similar.
+ * {@link MecanumDrivetrain} and {@link OmniwheelDrivetrain} extend this; we wrote this because most of that code is very similar.
  */
 
 abstract public class HolonomicFourWheelDrivetrain extends Drivetrain implements Holonomic, Rotatable, Positionable {
-    private final double TICKS_PER_REVOLUTION = 398;
     /**
      * Rotation velocity (the amount of power that should be added to each of the motors to make the drivetrain rotate)
      */
@@ -101,21 +100,6 @@ abstract public class HolonomicFourWheelDrivetrain extends Drivetrain implements
         return motorPowers;
     }
 
-    public void drive_distance(double distance, double angle, double power) {
-        double[] motorVectors = new double[4];
-        setCourse(course);
-        setVelocity(power);
-        setRotation(0);
-        for (int i = 0; i < 4; i ++) {
-            motors[i].setMode(RunMode.STOP_AND_RESET_ENCODER);
-            motors[i].setMode(RunMode.RUN_TO_POSITION);
-            motorVectors[i] = distance*calculateWheelCoefficient(angle, wheelAngles[i]);
-            motors[i].setTargetPosition((int)(motorVectors[i]*getTicksPerUnit()));
-            calculateMotorPowers();
-        }
-        while (motors[0].isBusy() || motors[1].isBusy() || motors[2].isBusy() || motors[3].isBusy());
-    }
-
     /**
      *
      * @param course the angle that you want the robot to move along
@@ -143,7 +127,17 @@ abstract public class HolonomicFourWheelDrivetrain extends Drivetrain implements
      */
     @Override
     public void setTargetPosition(double targetPosition) {
-
+        for (int i = 0; i < runModes.length; i++) {
+            runModes[i] = motors[i].getMode();  //Save the RunModes so we can restore them later
+        }
+        this.targetPosition = targetPosition;
+        for (DcMotor motor : motors) motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        for (DcMotor motor : motors) motor.setMode(RunMode.RUN_TO_POSITION);
+        for (int i = 0; i < motors.length; i++) {   //Calculate how far each wheel has to go to get the drivetrain to a specific position
+            wheelTargetPositions[i] = targetPosition*calculateWheelCoefficient(course, wheelAngles[i]);
+            motors[i].setTargetPosition((int)(wheelTargetPositions[i]+0.5));    //Round to the nearest int because setTargetPosition only accepts ints
+        }
+        updateMotorPowers();
     }
 
     /**

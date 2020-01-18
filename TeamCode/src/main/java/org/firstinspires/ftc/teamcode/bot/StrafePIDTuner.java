@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.HOMAR.PIDTuner;
 import org.firstinspires.ftc.teamcode.bot.components.Robot;
 
 @Autonomous(name = "Strafe PID Tuning", group = "auto")

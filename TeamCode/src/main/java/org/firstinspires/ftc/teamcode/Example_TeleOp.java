@@ -1,27 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.bot.components.Robot;
 
 @Autonomous(name="Example Movement for Robot")
-public class Example_TeleOp extends OpMode {
+public class Example_TeleOp extends LinearOpMode {
     Robot bot;
 
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
         bot = new Robot(hardwareMap);
-    }
-
-    @Override
-    public void loop() {
-        // drives forward
-        bot.power_drive(0, 5, 0);
-        // drives 50 (not sure of units yet) at full power
-        bot.drive.drive_distance(50, 0, 1.0);
-
-        // hard coded turn 90
-        bot.turn_90_ccw(1.0);
+        waitForStart();
+        bot.encoder_drive(telemetry, 0.3, new int[]{30, 30, 30, 30});
+        for (int i = 0; i < 10; i ++) {
+            bot.encoder_drive(telemetry, 0.3, new int[]{30, 30, 30, 30});
+            sleep(1000);
+            bot.encoder_drive(telemetry, 0.3, new int[]{-30, -30, -30, -30});
+            sleep(1000);
+        }
+        bot.stop();
+        //bot.drive.drive_distance(5, Math.PI, 0.5);
+        //bot.drive.drive_distance(5, 0, 0.5);
     }
 }

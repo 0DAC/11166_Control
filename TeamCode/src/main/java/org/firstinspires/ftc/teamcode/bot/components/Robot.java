@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -19,9 +20,9 @@ public class Robot {
     private final long TURN_90_TIME = 550;
 
     public static double  RIGHT_FOUNDATION_UP = 1,
-            RIGHT_FOUNDATION_DOWN  = 0.195,
+            RIGHT_FOUNDATION_DOWN  = 0.739,
             LEFT_FOUNDATION_UP   = 0.1,
-            LEFT_FOUNDATION_DOWN = 0.739;
+            LEFT_FOUNDATION_DOWN = 0.195;
 
     public static int TICKS_PER_REVOLUTION = 383;
 
@@ -41,6 +42,11 @@ public class Robot {
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         drive = new MecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight});
 
@@ -72,19 +78,52 @@ public class Robot {
 
         drive = new HeadingableMecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight},
                 controller);*/
-     }
-
-     public void dist_drive(double distance, double angle, double power) {
-        drive.drive_distance(distance, angle, power);
-     }
-
-     public void intake() {
-         intake.intake();
-     }
-     public void spit() {
-         intake.spit();
     }
-     public void stop_intake() {
+
+    /**
+     *
+     * @param power
+     * @param encoder_vals: encoder positions in this order: {front_l, front_l, back_l, back_r}
+     */
+    public void encoder_drive(Telemetry t, double power, int[] encoder_vals) {
+        for (int i = 0; i < 4; i ++) {
+            drive.motors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            drive.motors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            int new_pos = encoder_vals[i]*(1125 / ((42 / 35) * (32)) + drive.motors[i].getCurrentPosition());
+            drive.motors[i].setTargetPosition(new_pos);
+            drive.motors[i].setPower(power);
+        }
+
+        double tolerance = 0.1;
+
+        double time = System.currentTimeMillis();
+
+        while ((busy(drive.motors[0], tolerance)  || busy(drive.motors[1], tolerance) || busy(drive.motors[2], tolerance) || busy(drive.motors[3], tolerance)) && (
+                (System.currentTimeMillis()-time <=2000))) {
+            t.addData("Status: ", "Moving");
+            t.update();
+        }
+
+        for (int i = 0; i < 4; i ++) {
+            drive.motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            drive.motors[i].setPower(0);
+            drive.motors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+        t.addData("Status: ", "Stopped");
+        t.update();
+    }
+
+    public boolean busy(DcMotor motor, double tolerance) {
+        return motor.isBusy();//(Math.abs(motor.getCurrentPosition()/motor.getTargetPosition()) <= tolerance);
+    }
+
+    public void intake() {
+    intake.intake();
+    }
+    public void spit() {
+    intake.spit();
+    }
+    public void stop_intake() {
          intake.stop();
     }
 
@@ -120,30 +159,12 @@ public class Robot {
         lift.toggle_grabber();
     }
 
-     public void xbox_drive(double move_x, double move_y, double turn_x) {
-         double course = Math.atan2(-move_y, move_x) - Math.PI/2;
-         double velocity = Math.hypot(move_x, move_y);
-         double rotation = -turn_x;
-         power_drive(course, velocity, rotation);
-     }
-
-     public void encoder_drive(double speed, int[] speeds) {
-        for (int i = 0; i < drive.motors.length; i ++) {
-            drive.motors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            drive.motors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            drive.motors[i].setTargetPosition(speeds[i]);
-            drive.motors[i].setPower(speed);
-        }
-        while (true) {
-            for (int i = 0; i < drive.motors.length; i ++)
-                if (drive.motors[i].isBusy()) continue;
-            break;
-        }
-         for (int i = 0; i < drive.motors.length; i ++) {
-             drive.motors[i].setPower(0);
-             drive.motors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-         }
-     }
+    public void xbox_drive(double move_x, double move_y, double turn_x) {
+        double course = Math.atan2(-move_y, move_x) - Math.PI/2;
+        double velocity = Math.hypot(move_x, move_y);
+        double rotation = -turn_x;
+        power_drive(course, velocity, rotation);
+    }
 
     /**
      * Mechanum drive by power vector
