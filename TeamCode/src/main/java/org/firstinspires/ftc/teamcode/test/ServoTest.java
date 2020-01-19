@@ -16,6 +16,5 @@ public class ServoTest extends LinearOpMode {
     public void runOpMode() {
         r = new Robot(hardwareMap);
         waitForStart();
-        r.encoder_drive(telemetry, 0.3, new int[]{30, 30, 30, 30});
     }
 }

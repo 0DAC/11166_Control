@@ -15,16 +15,15 @@ public class Robot {
     private Servo l_foundation, r_foundation;
     private Intake intake;
     private CraneLift lift;
+    private int TIME_THRESHOLD = 2000;
     //private BNO055IMUImpl gyro;
 
-    private final long TURN_90_TIME = 550;
+    private final int TURN_90_TIME = 40;
 
     public static double  RIGHT_FOUNDATION_UP = 1,
-            RIGHT_FOUNDATION_DOWN  = 0.739,
+            RIGHT_FOUNDATION_DOWN  = 0.25,
             LEFT_FOUNDATION_UP   = 0.1,
-            LEFT_FOUNDATION_DOWN = 0.195;
-
-    public static int TICKS_PER_REVOLUTION = 383;
+            LEFT_FOUNDATION_DOWN = 0.85;
 
     public Robot(HardwareMap hmp) {
         // configure motors
@@ -42,11 +41,6 @@ public class Robot {
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         drive = new MecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight});
 
@@ -83,9 +77,9 @@ public class Robot {
     /**
      *
      * @param power
-     * @param encoder_vals: encoder positions in this order: {front_l, front_l, back_l, back_r}
+     * @param encoder_vals: encoder positions in this order: {front_l, front_r, back_l, back_r}
      */
-    public void encoder_drive(Telemetry t, double power, int[] encoder_vals) {
+    public void encoder_drive(double power, int[] encoder_vals) {
         for (int i = 0; i < 4; i ++) {
             drive.motors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             drive.motors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -94,14 +88,10 @@ public class Robot {
             drive.motors[i].setPower(power);
         }
 
-        double tolerance = 0.1;
-
         double time = System.currentTimeMillis();
 
-        while ((busy(drive.motors[0], tolerance)  || busy(drive.motors[1], tolerance) || busy(drive.motors[2], tolerance) || busy(drive.motors[3], tolerance)) && (
-                (System.currentTimeMillis()-time <=2000))) {
-            t.addData("Status: ", "Moving");
-            t.update();
+        while ((drive.motors[0].isBusy() || drive.motors[1].isBusy() || drive.motors[2].isBusy() || drive.motors[3].isBusy()) &&
+                ((System.currentTimeMillis()-time <= TIME_THRESHOLD))) {
         }
 
         for (int i = 0; i < 4; i ++) {
@@ -109,13 +99,12 @@ public class Robot {
             drive.motors[i].setPower(0);
             drive.motors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        t.addData("Status: ", "Stopped");
-        t.update();
     }
 
-    public boolean busy(DcMotor motor, double tolerance) {
-        return motor.isBusy();//(Math.abs(motor.getCurrentPosition()/motor.getTargetPosition()) <= tolerance);
+    public void set_threshold(int val) {
+        TIME_THRESHOLD = val;
     }
+
 
     public void intake() {
     intake.intake();
@@ -127,15 +116,27 @@ public class Robot {
          intake.stop();
     }
 
+    public void drive_forward(double speed, int distance) {
+        encoder_drive(speed, new int[]{-distance, distance, -distance, distance});
+    }
+
+    public void drive_backward(double speed, int distance) {
+        encoder_drive(speed, new int[]{distance, -distance, distance, -distance});
+    }
+
+    public void strafe_right(double speed, int distance) {
+        encoder_drive(speed, new int[]{-distance, -distance, distance, distance});
+    }
+
+    public void strafe_left(double speed, int distance) {
+        encoder_drive(speed, new int[]{distance, distance, -distance, -distance});
+    }
+
     public void turn_90_ccw(double speed) {
-        drive.setRotation(speed);
-        pause(TURN_90_TIME);
-        drive.setRotation(0);
+        encoder_drive(speed, new int[]{TURN_90_TIME, TURN_90_TIME, TURN_90_TIME, TURN_90_TIME});
     }
     public void turn_90_cw(double speed) {
-        drive.setRotation(-speed);
-        pause(TURN_90_TIME);
-        drive.setRotation(0);
+        encoder_drive(speed, new int[]{-TURN_90_TIME, -TURN_90_TIME, -TURN_90_TIME, -TURN_90_TIME});
     }
 
     public void raise_foundations() {
