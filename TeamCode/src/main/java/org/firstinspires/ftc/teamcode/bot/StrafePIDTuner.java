@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.bot.components.Robot;
 
 @Autonomous(name = "Strafe PID Tuning", group = "auto")
 public class StrafePIDTuner extends LinearOpMode {
-    private final double speed = 0.5;
+    private final double speed = 0.7;
     private final long time_per = 1000;
 
     Robot bot;
