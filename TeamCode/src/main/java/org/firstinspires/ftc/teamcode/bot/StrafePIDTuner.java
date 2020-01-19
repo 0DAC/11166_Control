@@ -16,7 +16,7 @@ public class StrafePIDTuner extends LinearOpMode {
     @Override
     public void runOpMode() {
         bot = new Robot(hardwareMap);
-
+        waitForStart();
         bot.pause(time_per);
         bot.power_drive(Math.PI / 2, speed, 0);
         bot.print_encoder_vals(telemetry);
