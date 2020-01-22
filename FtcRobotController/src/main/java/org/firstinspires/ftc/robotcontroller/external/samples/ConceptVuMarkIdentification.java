@@ -66,7 +66,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @TeleOp(name="Concept: VuMark Id", group ="Concept")
-@Disabled
+
 public class ConceptVuMarkIdentification extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
@@ -85,10 +85,10 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         // OR...  Do Not Activate the Camera Monitor View, to save power
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         /*
          * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -102,7 +102,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code on the next line, between the double quotes.
          */
-        parameters.vuforiaLicenseKey = " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+        parameters.vuforiaLicenseKey = "AVQaKO7/////AAABmQFBis10NUmmmITnIlHPC8ZK/qOj4m9+8VyrUgEKj83oG+HigeX5meWckrb1IyQzptwVBGVWVEKBhiyhsOiU8eUaDBY9uyhMGMSd7NW/7JE4zMyrYWdQeNb3FZ979b072+T5h5p/qzrjdgTQvNdLTJfBYM3407CgV070hMfA6r2AilF4QTHQ6ds8X5t42wFENyWf5NjPR69jwez9/hI2TU7iYLQ3PtS3i0PfAPrR/R0YQRaMXqPq45vguLg53UuzcYWYruHxsnPLR/ASDhrz44bp6bP3V2fr34F7ocXwEP+0ZqsbcKUZGPqz1WhLVspZ0ojYJqhTRZlSOCwPTX6S42J7Y8163xbYpQ6vORUwDJvH";
 
         /*
          * We also indicate which camera on the RC that we wish to use.

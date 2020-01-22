@@ -18,7 +18,7 @@ public class Robot {
     private int TIME_THRESHOLD = 2000;
     //private BNO055IMUImpl gyro;
 
-    private final int TURN_90_TIME = 40;
+    private final int TURN_90_TIME = 35;
 
     public static double  RIGHT_FOUNDATION_UP = 1,
             RIGHT_FOUNDATION_DOWN  = 0.25,
