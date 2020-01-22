@@ -11,8 +11,11 @@ public class Example_TeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        bot = new Robot(hardwareMap);
+        bot = new Robot(hardwareMap, telemetry);
         waitForStart();
+        while (opModeIsActive()) {
+            bot.get_skystone_pos();
+        }
         bot.stop();
         //bot.drive.drive_distance(5, Math.PI, 0.5);
         //bot.drive.drive_distance(5, 0, 0.5);

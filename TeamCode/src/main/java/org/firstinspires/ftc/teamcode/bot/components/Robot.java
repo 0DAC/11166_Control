@@ -15,8 +15,8 @@ public class Robot {
     private Servo l_foundation, r_foundation;
     private Intake intake;
     private CraneLift lift;
+    private Camera camera;
     private int TIME_THRESHOLD = 2000;
-    //private BNO055IMUImpl gyro;
 
     private final int TURN_90_TIME = 35;
 
@@ -24,6 +24,57 @@ public class Robot {
             RIGHT_FOUNDATION_DOWN  = 0.25,
             LEFT_FOUNDATION_UP   = 0.1,
             LEFT_FOUNDATION_DOWN = 0.85;
+
+    public Robot(HardwareMap hmp, Telemetry t) {
+        // configure motors
+        DcMotor frontLeft = hmp.get(DcMotor.class, "driveFrontLeft");
+        DcMotor frontRight = hmp.get(DcMotor.class, "driveFrontRight");
+        DcMotor backLeft = hmp.get(DcMotor.class, "driveBackLeft");
+        DcMotor backRight = hmp.get(DcMotor.class, "driveBackRight");
+
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        drive = new MecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight});
+
+        // config foundation servos
+
+        l_foundation = hmp.get(Servo.class, SystemConfig.left_foundation_servo);
+        r_foundation = hmp.get(Servo.class, SystemConfig.right_foundation_servo);
+
+        // configure foundation grabber servos
+
+        intake = new Intake(hmp);
+
+        // configure crane lift
+        lift = new CraneLift(hmp);
+
+        camera = new Camera(hmp, t);
+
+        // configure outerIntake motors
+        /*gyro = hmp.get(BNO055IMUImpl.class, "gyro");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();  //Figure out why the naive one doesn't have a public constructor
+        gyro.initialize(parameters);
+        while (!gyro.isGyroCalibrated());
+
+        controller =    new FinishableIntegratedController(new IntegratingGyroscopeSensor(gyro),
+                        new PIDController(1, 1, 1), // default values to 1, will tune later
+                        new ErrorTimeThresholdFinishingAlgorithm(Math.PI/50, 1));
+
+        drive = new HeadingableMecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight},
+                controller);*/
+    }
 
     public Robot(HardwareMap hmp) {
         // configure motors
@@ -56,6 +107,8 @@ public class Robot {
         // configure crane lift
         lift = new CraneLift(hmp);
 
+        camera = new Camera(hmp, null);
+
         // configure outerIntake motors
         /*gyro = hmp.get(BNO055IMUImpl.class, "gyro");
 
@@ -72,6 +125,10 @@ public class Robot {
 
         drive = new HeadingableMecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight},
                 controller);*/
+    }
+
+    public int get_skystone_pos() {
+        return camera.scan_for_stone();
     }
 
     /**
