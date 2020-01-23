@@ -206,6 +206,11 @@ public class Robot {
         encoder_drive(speed, new int[]{-TURN_90_TIME, -TURN_90_TIME, -TURN_90_TIME, -TURN_90_TIME});
     }
 
+    public void turn(double speed, double angle) {
+        int sign = (int) (Math.signum(angle) * angle/90 * TURN_90_TIME);
+        encoder_drive(speed, new int[]{sign, sign, sign, sign});
+    }
+
     public void raise_foundations() {
         l_foundation.setPosition(LEFT_FOUNDATION_UP);
         r_foundation.setPosition(RIGHT_FOUNDATION_UP);
