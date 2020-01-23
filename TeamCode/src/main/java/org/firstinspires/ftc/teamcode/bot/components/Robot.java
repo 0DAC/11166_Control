@@ -21,7 +21,7 @@ public class Robot {
     private final int TURN_90_TIME = 35;
 
     public static double  RIGHT_FOUNDATION_UP = 1,
-            RIGHT_FOUNDATION_DOWN  = 0.25,
+            RIGHT_FOUNDATION_DOWN  = 0.24,
             LEFT_FOUNDATION_UP   = 0.1,
             LEFT_FOUNDATION_DOWN = 0.85;
 

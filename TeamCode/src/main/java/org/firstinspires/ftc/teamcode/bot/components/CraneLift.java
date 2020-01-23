@@ -33,14 +33,14 @@ public class CraneLift {
         left = hardwareMap.get(DcMotor.class, SystemConfig.left_lift);
         right = hardwareMap.get(DcMotor.class, SystemConfig.right_lift);
 
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         left.setDirection(DcMotorSimple.Direction.FORWARD);
         right.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         extender = hardwareMap.get(Servo.class, SystemConfig.lift_extend);
         grabber = hardwareMap.get(Servo.class, SystemConfig.lift_grabber);
@@ -51,13 +51,49 @@ public class CraneLift {
 
     // vertical lift
     public void vextend() {
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         left.setTargetPosition(Math.min(left.getCurrentPosition()+MOVE_INCREMENTS,MAX_POSITION));
         right.setTargetPosition(Math.min(right.getCurrentPosition()+MOVE_INCREMENTS, MAX_POSITION));
+
+        double time = System.currentTimeMillis();
+        while (left.isBusy() && right.isBusy() && (System.currentTimeMillis()-time <= 1000)) {}
+
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        left.setPower(0);
+        right.setPower(0);
+
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void vretract() {
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         left.setTargetPosition(Math.max(left.getCurrentPosition()-MOVE_INCREMENTS, 0));
         right.setTargetPosition(Math.max(right.getCurrentPosition()-MOVE_INCREMENTS, 0));
+
+        double time = System.currentTimeMillis();
+        while (left.isBusy() && right.isBusy() && (System.currentTimeMillis()-time <= 1000)) {}
+
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        left.setPower(0);
+        right.setPower(0);
+
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void vstop() {
