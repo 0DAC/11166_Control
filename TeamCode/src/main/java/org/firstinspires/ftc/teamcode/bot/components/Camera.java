@@ -156,71 +156,7 @@ public class Camera {
                 .translation(0, 0, stoneZ)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
 
-        //Set the position of the bridge support targets with relation to origin (center of field)
-        /*blueFrontBridge.setLocation(OpenGLMatrix
-                .translation(-bridgeX, bridgeY, bridgeZ)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, bridgeRotY, bridgeRotZ)));
 
-        blueRearBridge.setLocation(OpenGLMatrix
-                .translation(-bridgeX, bridgeY, bridgeZ)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, -bridgeRotY, bridgeRotZ)));
-
-        redFrontBridge.setLocation(OpenGLMatrix
-                .translation(-bridgeX, -bridgeY, bridgeZ)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, -bridgeRotY, 0)));
-
-        redRearBridge.setLocation(OpenGLMatrix
-                .translation(bridgeX, -bridgeY, bridgeZ)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, bridgeRotY, 0)));
-
-        //Set the position of the perimeter targets with relation to origin (center of field)
-        red1.setLocation(OpenGLMatrix
-                .translation(quadField, -halfField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180)));
-
-        red2.setLocation(OpenGLMatrix
-                .translation(-quadField, -halfField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180)));
-
-        front1.setLocation(OpenGLMatrix
-                .translation(-halfField, -quadField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90)));
-
-        front2.setLocation(OpenGLMatrix
-                .translation(-halfField, quadField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 90)));
-
-        blue1.setLocation(OpenGLMatrix
-                .translation(-quadField, halfField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0)));
-
-        blue2.setLocation(OpenGLMatrix
-                .translation(quadField, halfField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0)));
-
-        rear1.setLocation(OpenGLMatrix
-                .translation(halfField, quadField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , -90)));
-
-        rear2.setLocation(OpenGLMatrix
-                .translation(halfField, -quadField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
-*/
-        //
-        // Create a transformation matrix describing where the phone is on the robot.
-        //
-        // NOTE !!!!  It's very important that you turn OFF your phone's Auto-Screen-Rotation option.
-        // Lock it into Portrait for these numbers to work.
-        //
-        // Info:  The coordinate frame for the robot looks the same as the field.
-        // The robot's "forward" direction is facing out along X axis, with the LEFT side facing out along the Y axis.
-        // Z is UP on the robot.  This equates to a bearing angle of Zero degrees.
-        //
-        // The phone starts out lying flat, with the screen facing Up and with the physical top of the phone
-        // pointing to the LEFT side of the Robot.
-        // The two examples below assume that the camera is facing forward out the front of the robot.
-
-        // We need to rotate the camera around it's long axis to bring the correct camera forward.
         if (CAMERA_CHOICE == BACK) {
             phoneYRotate = -90;
         } else {
@@ -246,14 +182,23 @@ public class Camera {
         for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parameters.cameraDirection);
         }
-    }
 
-    public int scan_for_stone() {
+        // WARNING:
+        // In this sample, we do not wait for PLAY to be pressed.  Target Tracking is started immediately when INIT is pressed.
+        // This sequence is used to enable the new remote DS Camera Preview feature to be used with this sample.
+        // CONSEQUENTLY do not put any driving commands in this loop.
+        // To restore the normal opmode structure, just un-comment the following line:
+
+        // waitForStart();
+
         // Note: To use the remote camera preview:
         // AFTER you hit Init on the Driver Station, use the "options menu" to select "Camera Stream"
         // Tap the preview window to receive a fresh image.
 
         targetsSkyStone.activate();
+    }
+
+    public double scan_for_stone() {
 
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
@@ -282,13 +227,17 @@ public class Camera {
             // express the rotation of the robot in degrees.
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            telemetry.update();
+            return translation.get(0) / mmPerInch;
         } else {
             telemetry.addData("Visible Target", "none");
         }
         telemetry.update();
+        return 0;
+    }
 
+    public void close() {
         // Disable Tracking when we are done;
         targetsSkyStone.deactivate();
-        return 0;
     }
 }

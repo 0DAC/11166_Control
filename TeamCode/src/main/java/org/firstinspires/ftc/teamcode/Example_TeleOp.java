@@ -14,7 +14,7 @@ public class Example_TeleOp extends LinearOpMode {
         bot = new Robot(hardwareMap, telemetry);
         waitForStart();
         while (opModeIsActive()) {
-            bot.get_skystone_pos();
+            double stone_x = bot.get_skystone_pos();
         }
         bot.stop();
         //bot.drive.drive_distance(5, Math.PI, 0.5);

@@ -20,10 +20,10 @@ public class BaseLineController extends OpMode {
 
     @Override
     public void loop() {
-        if (gamepad2.left_trigger != 0) {
+        if (gamepad1.left_trigger != 0) {
             bot.intake();
         }
-        else if (gamepad2.right_trigger != 0) {
+        else if (gamepad1.right_trigger != 0) {
             bot.spit();
         }
         else {
@@ -31,17 +31,17 @@ public class BaseLineController extends OpMode {
         }
 
         // claw toggle: back
-        if (gamepad2.back) bot.toggle_grabber();
+        if (gamepad1.back) bot.toggle_grabber();
 
         if (gamepad1.x) bot.lower_foundations();
         else if (gamepad1.y) bot.raise_foundations();
 
-        if (gamepad2.dpad_down) bot.vlower_lift();
-        else if (gamepad2.dpad_up) bot.vraise_lift();
+        if (gamepad1.dpad_down) bot.vlower_lift();
+        else if (gamepad1.dpad_up) bot.vraise_lift();
         else bot.vstop();
 
-        if (gamepad2.a) bot.hlower_lift();
-        else if (gamepad2.b) bot.hraise_lift();
+        if (gamepad1.a) bot.hlower_lift();
+        else if (gamepad1.b) bot.hraise_lift();
         else bot.hstop();
         bot.xbox_drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
     }

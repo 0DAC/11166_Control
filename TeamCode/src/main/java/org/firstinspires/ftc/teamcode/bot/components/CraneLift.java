@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -10,6 +11,10 @@ public class CraneLift {
     private DcMotor left, right; // vertical extension
     private Servo extender, grabber, turner;
     private final double VSPEED = 0.2;
+
+    //  vertical extension
+    private final int MOVE_INCREMENTS = 50;
+    private final int MAX_POSITION = 250;
 
     // horizontal extension
     private int h_curr_pos = 1;
@@ -31,6 +36,12 @@ public class CraneLift {
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        left.setDirection(DcMotorSimple.Direction.FORWARD);
+        right.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         extender = hardwareMap.get(Servo.class, SystemConfig.lift_extend);
         grabber = hardwareMap.get(Servo.class, SystemConfig.lift_grabber);
         turner = hardwareMap.get(Servo.class, SystemConfig.lift_turner);
@@ -40,13 +51,13 @@ public class CraneLift {
 
     // vertical lift
     public void vextend() {
-        left.setPower(-VSPEED);
-        right.setPower(-VSPEED);
+        left.setTargetPosition(Math.min(left.getCurrentPosition()+MOVE_INCREMENTS,MAX_POSITION));
+        right.setTargetPosition(Math.min(right.getCurrentPosition()+MOVE_INCREMENTS, MAX_POSITION));
     }
 
     public void vretract() {
-        left.setPower(VSPEED);
-        right.setPower(VSPEED);
+        left.setTargetPosition(Math.max(left.getCurrentPosition()-MOVE_INCREMENTS, 0));
+        right.setTargetPosition(Math.max(right.getCurrentPosition()-MOVE_INCREMENTS, 0));
     }
 
     public void vstop() {

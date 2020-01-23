@@ -213,56 +213,6 @@ public class ConceptVuforiaSkyStoneNavigation extends LinearOpMode {
                 .translation(0, 0, stoneZ)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
 
-        //Set the position of the bridge support targets with relation to origin (center of field)
-        /*blueFrontBridge.setLocation(OpenGLMatrix
-                .translation(-bridgeX, bridgeY, bridgeZ)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, bridgeRotY, bridgeRotZ)));
-
-        blueRearBridge.setLocation(OpenGLMatrix
-                .translation(-bridgeX, bridgeY, bridgeZ)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, -bridgeRotY, bridgeRotZ)));
-
-        redFrontBridge.setLocation(OpenGLMatrix
-                .translation(-bridgeX, -bridgeY, bridgeZ)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, -bridgeRotY, 0)));
-
-        redRearBridge.setLocation(OpenGLMatrix
-                .translation(bridgeX, -bridgeY, bridgeZ)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, bridgeRotY, 0)));
-
-        //Set the position of the perimeter targets with relation to origin (center of field)
-        red1.setLocation(OpenGLMatrix
-                .translation(quadField, -halfField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180)));
-
-        red2.setLocation(OpenGLMatrix
-                .translation(-quadField, -halfField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180)));
-
-        front1.setLocation(OpenGLMatrix
-                .translation(-halfField, -quadField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90)));
-
-        front2.setLocation(OpenGLMatrix
-                .translation(-halfField, quadField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 90)));
-
-        blue1.setLocation(OpenGLMatrix
-                .translation(-quadField, halfField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0)));
-
-        blue2.setLocation(OpenGLMatrix
-                .translation(quadField, halfField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0)));
-
-        rear1.setLocation(OpenGLMatrix
-                .translation(halfField, quadField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , -90)));
-
-        rear2.setLocation(OpenGLMatrix
-                .translation(halfField, -quadField, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
-*/
         //
         // Create a transformation matrix describing where the phone is on the robot.
         //

@@ -127,8 +127,18 @@ public class Robot {
                 controller);*/
     }
 
+    /**
+     *
+     * @return -1 for left, 0 for center, 1 for right, 2 for not found
+     */
+    final double CENTER_POS = -20.0;
+    final double TOLERANCE = 1.1;
     public int get_skystone_pos() {
-        return camera.scan_for_stone();
+        double x = camera.scan_for_stone();
+        if (x == 0) return 2;
+        else if (x >= CENTER_POS-TOLERANCE && x <= CENTER_POS+TOLERANCE) return 0;
+        else if (x <= CENTER_POS-TOLERANCE) return 1;
+        return 2;
     }
 
     /**
