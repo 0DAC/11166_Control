@@ -12,13 +12,16 @@ public class CraneLift {
     private Servo extender, grabber, turner;
 
     //  vertical extension
-    private final int MOVE_INCREMENTS = 50;
-    private final int MAX_POSITION = 250;
-    private final double MOVE_POWER = 0.5;
+    private final int VMIN_POSITION= 10;
+    private final int VMAX_POSITION = 250;
+    private final int VMOVE_INCREMENT = 50;
+    private final double MOVE_POWER = 0.3;
+    private int V_POS = 10;
 
     // horizontal extension
-    private double h_curr_pos = 0;
-    private final double HSPEED = 0.02;
+    private final double H_OUT = 0.9;
+    private final double H_IN = 0.1;
+    private boolean extended = false;
 
     // grabber rotator
     private double rotator_pos = 0.5;
@@ -27,7 +30,7 @@ public class CraneLift {
     // stone grabber
     private final double GRABBER_CLOSED = 0.65,
                     GRABBER_OPEN = 0.07;
-    private int state = 0; // 0 = open, 1 = closed
+    private int grabber_state = 0; // 0 = open, 1 = closed
 
     // stone turner
     private final double TURN_POS = 0.5;
@@ -36,6 +39,9 @@ public class CraneLift {
     public CraneLift(HardwareMap hardwareMap) {
         left = hardwareMap.get(DcMotor.class, SystemConfig.left_lift);
         right = hardwareMap.get(DcMotor.class, SystemConfig.right_lift);
+
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -55,18 +61,18 @@ public class CraneLift {
 
     // vertical lift
     public void vextend() {
-        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        V_POS = Math.min(V_POS+VMOVE_INCREMENT,VMAX_POSITION);
+
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left.setTargetPosition(Math.min(left.getCurrentPosition()+MOVE_INCREMENTS,MAX_POSITION));
+        left.setTargetPosition(V_POS);
         left.setPower(MOVE_POWER);
 
-        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setTargetPosition(Math.min(right.getCurrentPosition()+MOVE_INCREMENTS, MAX_POSITION));
+        right.setTargetPosition(V_POS);
         right.setPower(MOVE_POWER);
 
         double time = System.currentTimeMillis();
-        while (left.isBusy() && right.isBusy() && (System.currentTimeMillis()-time <= 1000)) {}
+        while (left.isBusy() && right.isBusy() && (System.currentTimeMillis()-time <= 500)) {}
 
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left.setPower(0);
@@ -78,18 +84,18 @@ public class CraneLift {
     }
 
     public void vretract() {
-        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        V_POS = Math.max(V_POS -VMOVE_INCREMENT, VMIN_POSITION);
+
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left.setTargetPosition(Math.max(left.getCurrentPosition()-MOVE_INCREMENTS, 0));
+        left.setTargetPosition(V_POS);
         left.setPower(MOVE_POWER);
 
-        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setTargetPosition(Math.max(right.getCurrentPosition()-MOVE_INCREMENTS, 0));
+        right.setTargetPosition(V_POS);
         right.setPower(MOVE_POWER);
 
         double time = System.currentTimeMillis();
-        while (left.isBusy() && right.isBusy() && (System.currentTimeMillis()-time <= 1000)) {}
+        while (left.isBusy() && right.isBusy() && (System.currentTimeMillis()-time <= 500)) {}
 
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left.setPower(0);
@@ -107,15 +113,16 @@ public class CraneLift {
 
     // extender
     public void hextend() {
-        h_curr_pos = Math.min(h_curr_pos + HSPEED, 2400);
-        extender.setPosition(h_curr_pos/2400);
+        extender.setPosition(H_OUT);
     }
 
     public void hretract() {
-        h_curr_pos = Math.max(h_curr_pos - HSPEED, 0);
-        extender.setPosition(h_curr_pos/2400);
+        extender.setPosition(H_IN);
     }
-    public void hstop() {
+    public void htoggle() {
+        if (extended) hretract();
+        else hextend();
+        extended = !extended;
     }
 
     // stone grabber
@@ -129,8 +136,9 @@ public class CraneLift {
 
     public void toggle_grabber() {
         // if it's currently open, close
-        if (grabber.getPosition() == 0) grab_stone();
+        if (grabber_state == 0) grab_stone();
         else drop_stone();
+        grabber_state = 1- grabber_state;
     }
 
     public void rotate_grabber_ccw() {
@@ -141,6 +149,19 @@ public class CraneLift {
     public void rotate_grabber_cw() {
         rotator_pos = Math.min(1, rotator_pos+ROTATOR_SPEED);
         turner.setPosition(rotator_pos);
+    }
+
+    /**
+     * Composite grabbing action
+     */
+    public void deploy() {
+        vextend();
+        vextend();
+        hextend();
+        grab_stone();
+        hretract();
+        vretract();
+        vretract();
     }
 
 }

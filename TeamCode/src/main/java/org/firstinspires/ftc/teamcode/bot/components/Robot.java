@@ -224,9 +224,9 @@ public class Robot {
     public void vlower_lift() { lift.vretract(); }
     public void vstop() {lift.vstop();}
 
-    public void hraise_lift() { lift.hextend(); }
-    public void hlower_lift() { lift.hretract();}
-    public void hstop() {lift.hstop();}
+    public void hextend_toggle() {
+        lift.htoggle();
+    }
 
     public void grabber_turn_left() { lift.rotate_grabber_ccw();}
     public void grabber_turn_right() { lift.rotate_grabber_cw();}
@@ -236,6 +236,10 @@ public class Robot {
 
     public void toggle_grabber() {
         lift.toggle_grabber();
+    }
+
+    public void deploy_grabber() {
+        lift.deploy();
     }
 
     public void xbox_drive(double move_x, double move_y, double turn_x) {
