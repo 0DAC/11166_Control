@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.SystemConfig;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+
 public class CraneLift {
     private DcMotor left, right; // vertical extension
     private Servo extender, grabber, turner;
@@ -15,20 +17,20 @@ public class CraneLift {
     private final int VMIN_POSITION= 10;
     private final int VMAX_POSITION = 250;
     private final int VMOVE_INCREMENT = 50;
-    private final double MOVE_POWER = 0.3;
-    private int V_POS = 10;
+    private final double VMOVE_POWER = 0.3;
+    private int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension
-    private final double H_OUT = 0.9;
-    private final double H_IN = 0.1;
+    private final double H_OUT = 0.6;
+    private final double H_IN = 0.25;
     private boolean extended = false;
 
     // grabber rotator
-    private double rotator_pos = 0.5;
+    private double rotator_pos = 0.7;
     private double ROTATOR_SPEED = 0.1;
 
     // stone grabber
-    private final double GRABBER_CLOSED = 0.65,
+    private final double GRABBER_CLOSED = 0.75,
                     GRABBER_OPEN = 0.07;
     private int grabber_state = 0; // 0 = open, 1 = closed
 
@@ -46,62 +48,78 @@ public class CraneLift {
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left.setZeroPowerBehavior(BRAKE);
+        right.setZeroPowerBehavior(BRAKE);
 
-        left.setDirection(DcMotorSimple.Direction.FORWARD);
-        right.setDirection(DcMotorSimple.Direction.REVERSE);
+        left.setDirection(DcMotorSimple.Direction.REVERSE);
+        right.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
 
         extender = hardwareMap.get(Servo.class, SystemConfig.lift_extend);
         grabber = hardwareMap.get(Servo.class, SystemConfig.lift_grabber);
         turner = hardwareMap.get(Servo.class, SystemConfig.lift_turner);
 
         turner.setPosition(TURN_POS);
+        extender.setPosition(H_IN);
+        grabber.setPosition(GRABBER_OPEN);
     }
 
     // vertical lift
     public void vextend() {
-        V_POS = Math.min(V_POS+VMOVE_INCREMENT,VMAX_POSITION);
+        /*if (VLEFT_POS > VMAX_POSITION || VRIGHT_POS > VMAX_POSITION) return;
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left.setPower(-VMOVE_POWER);
 
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setPower(-VMOVE_POWER);
+
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();*/
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left.setTargetPosition(V_POS);
-        left.setPower(MOVE_POWER);
+        left.setTargetPosition(VMOVE_INCREMENT);
+        left.setPower(VMOVE_POWER);
 
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setTargetPosition(V_POS);
-        right.setPower(MOVE_POWER);
+        right.setTargetPosition(VMOVE_INCREMENT);
+        right.setPower(VMOVE_POWER);
 
         double time = System.currentTimeMillis();
-        while (left.isBusy() && right.isBusy() && (System.currentTimeMillis()-time <= 500)) {}
+        while ((left.isBusy() || right.isBusy()) && ((System.currentTimeMillis()-time <= 500))) {
+        }
 
-        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left.setZeroPowerBehavior(BRAKE);
         left.setPower(0);
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right.setZeroPowerBehavior(BRAKE);
         right.setPower(0);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void vretract() {
-        V_POS = Math.max(V_POS -VMOVE_INCREMENT, VMIN_POSITION);
-
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left.setTargetPosition(V_POS);
-        left.setPower(MOVE_POWER);
+        left.setTargetPosition(-VMOVE_INCREMENT);
+        left.setPower(VMOVE_POWER);
 
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setTargetPosition(V_POS);
-        right.setPower(MOVE_POWER);
+        right.setTargetPosition(-VMOVE_INCREMENT);
+        right.setPower(VMOVE_POWER);
 
         double time = System.currentTimeMillis();
-        while (left.isBusy() && right.isBusy() && (System.currentTimeMillis()-time <= 500)) {}
+        while ((left.isBusy() || right.isBusy()) && ((System.currentTimeMillis()-time <= 500))) {
+        }
 
-        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left.setZeroPowerBehavior(BRAKE);
         left.setPower(0);
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right.setZeroPowerBehavior(BRAKE);
         right.setPower(0);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
@@ -157,9 +175,15 @@ public class CraneLift {
     public void deploy() {
         vextend();
         vextend();
+        vretract();
+        vretract();
+
         hextend();
         grab_stone();
         hretract();
+
+        vextend();
+        vextend();
         vretract();
         vretract();
     }

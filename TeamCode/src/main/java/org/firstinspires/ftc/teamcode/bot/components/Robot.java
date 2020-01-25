@@ -105,7 +105,7 @@ public class Robot {
         intake = new Intake(hmp);
 
         // configure crane lift
-        lift = new CraneLift(hmp);
+        //lift = new CraneLift(hmp);
 
         camera = new Camera(hmp, null);
 
@@ -222,7 +222,7 @@ public class Robot {
 
     public void vraise_lift() { lift.vextend(); }
     public void vlower_lift() { lift.vretract(); }
-    public void vstop() {lift.vstop();}
+    public void vhold() {lift.vstop();}
 
     public void hextend_toggle() {
         lift.htoggle();

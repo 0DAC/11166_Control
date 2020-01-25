@@ -14,7 +14,7 @@ public class RedPark extends LinearOpMode {
     @Override
     public void runOpMode() {
         bot = new Robot(hardwareMap);
-        prog = new MainParkingAuto(bot, Side.LEFT);
+        prog = new MainParkingAuto(bot, Side.LEFT, true);
         waitForStart();
         prog.run();
     }

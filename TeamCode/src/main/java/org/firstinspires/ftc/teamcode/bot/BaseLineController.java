@@ -21,26 +21,39 @@ public class BaseLineController extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            if (gamepad1.left_trigger != 0) {
+            if (gamepad2.left_trigger != 0) {
                 bot.intake();
-            } else if (gamepad1.right_trigger != 0) {
+            } else if (gamepad2.right_trigger != 0) {
                 bot.spit();
             } else {
                 bot.stop_intake();
             }
 
             // driver gamepad
-            if (gamepad2.dpad_down) bot.power_drive(Math.PI*3/2, 0.5, 0);
-            else if (gamepad2.dpad_up) bot.power_drive(Math.PI/2, 0.5, 0);
-            else if (gamepad2.dpad_left) bot.power_drive(0, 0.5, 0);
-            else if (gamepad2.dpad_right) bot.power_drive(Math.PI, 0.5, 0);
+            if (gamepad2.dpad_left) bot.power_drive(Math.PI*3/2, 0.5, 0);
+            else if (gamepad2.dpad_right) bot.power_drive(Math.PI/2, 0.5, 0);
+            else if (gamepad2.dpad_up) bot.power_drive(0, 0.5, 0);
+            else if (gamepad2.dpad_down) bot.power_drive(Math.PI, 0.5, 0);
             else bot.xbox_drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-            if (gamepad1.x) bot.lower_foundations();
-            else if (gamepad1.y) bot.raise_foundations();
+            if (gamepad2.x) bot.lower_foundations();
+            else if (gamepad2.y) bot.raise_foundations();
 
-            if (gamepad2.a) bot.toggle_grabber();
-            if (gamepad2.b) bot.hextend_toggle();
+            if (gamepad1.right_trigger != 0) {
+                bot.vlower_lift();
+            }
+            else if (gamepad1.left_trigger != 0) {
+                bot.vraise_lift();
+            }
+
+            if (gamepad2.a) {
+                bot.toggle_grabber();
+                sleep(500);
+            }
+            if (gamepad2.b) {
+                bot.hextend_toggle();
+                sleep(500);
+            }
 
             // driver gamepad
         }
