@@ -23,7 +23,7 @@ public class Robot {
     public static double  RIGHT_FOUNDATION_UP = 1,
             RIGHT_FOUNDATION_DOWN  = 0.24,
             LEFT_FOUNDATION_UP   = 0.1,
-            LEFT_FOUNDATION_DOWN = 0.85;
+            LEFT_FOUNDATION_DOWN = 0.86;
 
     public Robot(HardwareMap hmp, Telemetry t) {
         // configure motors
@@ -207,7 +207,7 @@ public class Robot {
     }
 
     public void turn(double speed, double angle) {
-        int sign = (int) (Math.signum(angle) * angle/90 * TURN_90_TIME);
+        int sign = (int) (angle/90 * TURN_90_TIME);
         encoder_drive(speed, new int[]{sign, sign, sign, sign});
     }
 
@@ -227,6 +227,12 @@ public class Robot {
     public void hraise_lift() { lift.hextend(); }
     public void hlower_lift() { lift.hretract();}
     public void hstop() {lift.hstop();}
+
+    public void grabber_turn_left() { lift.rotate_grabber_ccw();}
+    public void grabber_turn_right() { lift.rotate_grabber_cw();}
+
+    public void grab_stone() { lift.grab_stone(); }
+    public void drop_stone() { lift.drop_stone(); }
 
     public void toggle_grabber() {
         lift.toggle_grabber();
