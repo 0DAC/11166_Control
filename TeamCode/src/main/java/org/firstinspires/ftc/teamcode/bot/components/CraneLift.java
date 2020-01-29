@@ -14,14 +14,15 @@ public class CraneLift {
     private Servo extender, grabber, turner;
 
     //  vertical extension
-    private final int VMIN_POSITION= 10;
-    private final int VMAX_POSITION = 250;
+    private final int VMIN_POSITION= -250;
+    private final int VMAX_POSITION = 10;
     private final int VMOVE_INCREMENT = 50;
-    private final double VMOVE_POWER = 0.3;
+    private final double VMOVE_UP_POWER = 0.8;
+    private final double VMOVE_DOWN_POWER = 0.1;
     private int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension
-    private final double H_OUT = 0.6;
+    private final double H_OUT = 0.65;
     private final double H_IN = 0.25;
     private boolean extended = false;
 
@@ -30,8 +31,8 @@ public class CraneLift {
     private double ROTATOR_SPEED = 0.1;
 
     // stone grabber
-    private final double GRABBER_CLOSED = 0.75,
-                    GRABBER_OPEN = 0.07;
+    private final double GRABBER_CLOSED = 0.14,
+                    GRABBER_OPEN = 0.8;
     private int grabber_state = 0; // 0 = open, 1 = closed
 
     // stone turner
@@ -68,48 +69,39 @@ public class CraneLift {
 
     // vertical lift
     public void vextend() {
-        /*if (VLEFT_POS > VMAX_POSITION || VRIGHT_POS > VMAX_POSITION) return;
+        //if (VLEFT_POS > VMAX_POSITION || VRIGHT_POS > VMAX_POSITION) return;
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left.setPower(-VMOVE_POWER);
+        left.setPower(-VMOVE_UP_POWER);
 
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right.setPower(-VMOVE_POWER);
+        right.setPower(-VMOVE_UP_POWER);
 
         VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();*/
-        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left.setTargetPosition(VMOVE_INCREMENT);
-        left.setPower(VMOVE_POWER);
-
-        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setTargetPosition(VMOVE_INCREMENT);
-        right.setPower(VMOVE_POWER);
-
-        double time = System.currentTimeMillis();
-        while ((left.isBusy() || right.isBusy()) && ((System.currentTimeMillis()-time <= 500))) {
-        }
-
-        left.setZeroPowerBehavior(BRAKE);
-        left.setPower(0);
-        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        right.setZeroPowerBehavior(BRAKE);
-        right.setPower(0);
-        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        VRIGHT_POS = right.getCurrentPosition();
     }
 
     public void vretract() {
+        //if (VLEFT_POS > VMAX_POSITION || VRIGHT_POS > VMAX_POSITION) return;
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left.setPower(VMOVE_DOWN_POWER);
+
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setPower(VMOVE_DOWN_POWER);
+
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+    }
+
+    public void vstop() {
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left.setTargetPosition(-VMOVE_INCREMENT);
-        left.setPower(VMOVE_POWER);
+        left.setTargetPosition(VLEFT_POS);
+        left.setPower(VMOVE_UP_POWER);
 
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setTargetPosition(-VMOVE_INCREMENT);
-        right.setPower(VMOVE_POWER);
+        right.setTargetPosition(VRIGHT_POS);
+        right.setPower(VMOVE_UP_POWER);
 
         double time = System.currentTimeMillis();
         while ((left.isBusy() || right.isBusy()) && ((System.currentTimeMillis()-time <= 500))) {
@@ -122,11 +114,6 @@ public class CraneLift {
         right.setZeroPowerBehavior(BRAKE);
         right.setPower(0);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void vstop() {
-        left.setPower(0);
-        right.setPower(0);
     }
 
     // extender

@@ -16,7 +16,7 @@ public class Robot {
     private Intake intake;
     private CraneLift lift;
     private Camera camera;
-    private int TIME_THRESHOLD = 2000;
+    private int TIME_THRESHOLD = 1500;
 
     private final int TURN_90_TIME = 35;
 
@@ -186,26 +186,21 @@ public class Robot {
     public void drive_forward(double speed, int distance) {
         encoder_drive(speed, new int[]{-distance, distance, -distance, distance});
     }
-
     public void drive_backward(double speed, int distance) {
         encoder_drive(speed, new int[]{distance, -distance, distance, -distance});
     }
-
     public void strafe_right(double speed, int distance) {
         encoder_drive(speed, new int[]{-distance, -distance, distance, distance});
     }
-
     public void strafe_left(double speed, int distance) {
         encoder_drive(speed, new int[]{distance, distance, -distance, -distance});
     }
-
     public void turn_90_ccw(double speed) {
         encoder_drive(speed, new int[]{TURN_90_TIME, TURN_90_TIME, TURN_90_TIME, TURN_90_TIME});
     }
     public void turn_90_cw(double speed) {
         encoder_drive(speed, new int[]{-TURN_90_TIME, -TURN_90_TIME, -TURN_90_TIME, -TURN_90_TIME});
     }
-
     public void turn(double speed, double angle) {
         int sign = (int) (angle/90 * TURN_90_TIME);
         encoder_drive(speed, new int[]{sign, sign, sign, sign});

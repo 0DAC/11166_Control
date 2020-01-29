@@ -45,6 +45,7 @@ public class BaseLineController extends LinearOpMode {
             else if (gamepad1.left_trigger != 0) {
                 bot.vraise_lift();
             }
+            else bot.vhold();
 
             if (gamepad2.a) {
                 bot.toggle_grabber();
