@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.SystemConfig;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 
 public class CraneLift {
     private DcMotor left, right; // vertical extension
@@ -16,11 +17,11 @@ public class CraneLift {
     private Telemetry t;
 
     //  vertical extension
-    private final int VMIN_POSITION= -250;
+    private final int VMIN_POSITION= 250;
     private final int VMAX_POSITION = 10;
     private final int VMOVE_INCREMENT = 50;
-    private final double VMOVE_UP_POWER = .7;
-    private final double VMOVE_DOWN_POWER = 0.1;
+    private final double VMOVE_UP_POWER = .8;
+    private final double VMOVE_DOWN_POWER = .4;
     private int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension
@@ -55,8 +56,8 @@ public class CraneLift {
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        left.setZeroPowerBehavior(BRAKE);
-        right.setZeroPowerBehavior(BRAKE);
+        left.setZeroPowerBehavior(FLOAT);
+        right.setZeroPowerBehavior(FLOAT);
 
         left.setDirection(DcMotorSimple.Direction.FORWARD);
         right.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -80,7 +81,6 @@ public class CraneLift {
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left.setPower(VMOVE_UP_POWER);
 
-        // TODO: uncomment this
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setPower(VMOVE_UP_POWER);
 
@@ -93,11 +93,25 @@ public class CraneLift {
     }
 
     public void vretract() {
-        //if (VLEFT_POS < VMIN_POSITION || VRIGHT_POS < VMIN_POSITION) return;
+        if (VLEFT_POS < VMIN_POSITION || VRIGHT_POS > VMIN_POSITION)  {
+            left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left.setPower(-VMOVE_DOWN_POWER);
+
+            right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            right.setPower(-VMOVE_DOWN_POWER);
+
+            VLEFT_POS = left.getCurrentPosition();
+            VRIGHT_POS = right.getCurrentPosition();
+        }
+        else {
+            left.setPower(0);
+            right.setPower(0);
+            left.setZeroPowerBehavior(BRAKE);
+            right.setZeroPowerBehavior(BRAKE);
+        }
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left.setPower(-VMOVE_DOWN_POWER);
 
-        // TODO: uncomment this
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setPower(-VMOVE_DOWN_POWER);
 
@@ -110,11 +124,14 @@ public class CraneLift {
     }
 
     public void vstop() {
-        //left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+//        left.setPower(0);
+//        right.setPower(0);
+//        left.setZeroPowerBehavior(BRAKE);
+//        right.setZeroPowerBehavior(BRAKE);
         left.setTargetPosition(VLEFT_POS);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // TODO: uncomment this
         //right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setTargetPosition(VRIGHT_POS);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -122,6 +139,7 @@ public class CraneLift {
         t.addData("Left Lift:", VLEFT_POS);
         t.addData("Right Lift:", VRIGHT_POS);
         t.update();
+
 
 /*        double time = System.currentTimeMillis();
         while ((left.isBusy() || right.isBusy()) && ((System.currentTimeMillis()-time <= 500))) {
