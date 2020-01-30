@@ -36,14 +36,16 @@ public class BaseLineController extends LinearOpMode {
             else if (gamepad2.dpad_down) bot.power_drive(Math.PI, 0.5, 0);
             else bot.xbox_drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-            if (gamepad2.x) bot.lower_foundations();
-            else if (gamepad2.y) bot.raise_foundations();
+            if (gamepad1.x) bot.lower_foundations();
+            else if (gamepad1.y) bot.raise_foundations();
 
-            if (gamepad1.right_trigger != 0) {
-                bot.vlower_lift();
-            }
-            else if (gamepad1.left_trigger != 0) {
+            //gamepad triggers seem to be flipped, this activates right trigger
+            if (gamepad1.left_trigger != 0) {
                 bot.vraise_lift();
+            }
+            //gamepad triggers seem to be flipped, this activates left trigger
+            else if (gamepad1.right_trigger != 0) {
+                bot.vlower_lift();
             }
             else bot.vhold();
 
@@ -53,6 +55,10 @@ public class BaseLineController extends LinearOpMode {
             }
             if (gamepad2.b) {
                 bot.hextend_toggle();
+                sleep(500);
+            }
+            if (gamepad2.x) {
+                bot.toggle_turner();
                 sleep(500);
             }
 

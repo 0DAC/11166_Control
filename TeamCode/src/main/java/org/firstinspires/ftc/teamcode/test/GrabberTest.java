@@ -13,8 +13,6 @@ public class GrabberTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         bot = new Robot(hardwareMap);
         waitForStart();
-        bot.grabber_turn_right();
-        bot.grabber_turn_left();
         bot.grab_stone();
         bot.drop_stone();
     }

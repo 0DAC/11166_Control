@@ -54,7 +54,7 @@ public class Robot {
         intake = new Intake(hmp);
 
         // configure crane lift
-        lift = new CraneLift(hmp);
+        lift = new CraneLift(hmp, t);
 
         camera = new Camera(hmp, t);
 
@@ -105,7 +105,7 @@ public class Robot {
         intake = new Intake(hmp);
 
         // configure crane lift
-        //lift = new CraneLift(hmp);
+        lift = new CraneLift(hmp, null);
 
         camera = new Camera(hmp, null);
 
@@ -149,6 +149,8 @@ public class Robot {
     public void encoder_drive(double power, int[] encoder_vals) {
         for (int i = 0; i < 4; i ++) {
             drive.motors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //set dummy position before changing runmode
+            drive.motors[i].setTargetPosition(0);
             drive.motors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
             int new_pos = encoder_vals[i]*(1125 / ((42 / 35) * (32)) + drive.motors[i].getCurrentPosition());
             drive.motors[i].setTargetPosition(new_pos);
@@ -223,8 +225,7 @@ public class Robot {
         lift.htoggle();
     }
 
-    public void grabber_turn_left() { lift.rotate_grabber_ccw();}
-    public void grabber_turn_right() { lift.rotate_grabber_cw();}
+    public void toggle_turner() { lift.toggle_rotator();}
 
     public void grab_stone() { lift.grab_stone(); }
     public void drop_stone() { lift.drop_stone(); }
