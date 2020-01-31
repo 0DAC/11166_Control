@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -12,7 +14,14 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 
 public class CraneLift {
-    private DcMotor left, right; // vertical extension
+    private DcMotorEx left, right; // vertical extension
+
+    public static final double P = 20;
+    public static final double I = 0;
+    public static final double D = 0;
+    public static final double leftF = 11.62;
+    public static final double rightF = 11.30;
+
     private Servo extender, grabber, turner;
     private Telemetry t;
 
@@ -20,8 +29,8 @@ public class CraneLift {
     private final int VMIN_POSITION= 250;
     private final int VMAX_POSITION = 10;
     private final int VMOVE_INCREMENT = 50;
-    private final double VMOVE_UP_POWER = .8;
-    private final double VMOVE_DOWN_POWER = .4;
+    private final double VMOVE_UP_POWER = 1;
+    private final double VMOVE_DOWN_POWER = 1;
     private int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension
@@ -43,8 +52,22 @@ public class CraneLift {
     public CraneLift(HardwareMap hardwareMap, Telemetry t) {
         this.t = t;
 
-        left = hardwareMap.get(DcMotor.class, SystemConfig.left_lift);
-        right = hardwareMap.get(DcMotor.class, SystemConfig.right_lift);
+        left = hardwareMap.get(DcMotorEx.class, SystemConfig.left_lift);
+        right = hardwareMap.get(DcMotorEx.class, SystemConfig.right_lift);
+
+        // get the PID coefficients for the RUN_USING_ENCODER  modes.
+        PIDFCoefficients pidfLeftOrig = left.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDFCoefficients pidfRightOrig = right.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // change coefficients using methods included with DcMotorEx class.
+        PIDFCoefficients pidfLeftNew = new PIDFCoefficients(P, I, D, leftF);
+        left.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfLeftNew);
+        PIDFCoefficients pidfRightNew = new PIDFCoefficients(P, I, D, rightF);
+        right.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfRightNew);
+
+        // re-read coefficients and verify change.
+        PIDFCoefficients pidfLeftModified = left.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDFCoefficients pidfRightModified = right.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
