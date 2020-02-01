@@ -56,7 +56,7 @@ public class Robot {
         // configure crane lift
         lift = new CraneLift(hmp, t);
 
-        camera = new Camera(hmp, t);
+        //camera = new Camera(hmp, t);
 
         // configure outerIntake motors
         /*gyro = hmp.get(BNO055IMUImpl.class, "gyro");
@@ -107,7 +107,7 @@ public class Robot {
         // configure crane lift
         lift = new CraneLift(hmp, null);
 
-        camera = new Camera(hmp, null);
+        //camera = new Camera(hmp, null);
 
         // configure outerIntake motors
         /*gyro = hmp.get(BNO055IMUImpl.class, "gyro");

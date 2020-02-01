@@ -32,7 +32,7 @@ public class ClassRegistrar {
 
     /**
      * Register a given class as an op-mode.
-     * The class must vextend {@link OpMode}, but other than that it is assumed you have made sure it is actually a valid op-mode.
+     * The class must extend {@link OpMode}, but other than that it is assumed you have made sure it is actually a valid op-mode.
      * The {@link com.qualcomm.robotcore.eventloop.opmode.Disabled} annotation is ignored.
      * If the class does not have a {@link TeleOp} or {@link Autonomous} annotation, the op-mode is registered as tele-op.
      * @param clazz The class to register
