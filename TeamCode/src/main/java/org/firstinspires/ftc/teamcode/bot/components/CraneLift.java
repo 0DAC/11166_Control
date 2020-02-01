@@ -18,7 +18,7 @@ public class CraneLift {
 
     public static final double P = 29;
     public static final double I = 0;
-    public static final double D = 0;
+    public static final double D = 3.65; // TODO: test this
     public static final double leftF = 11.62;
     public static final double rightF = 11.80;
 
