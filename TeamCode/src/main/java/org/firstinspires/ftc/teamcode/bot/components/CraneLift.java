@@ -16,7 +16,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 public class CraneLift {
     private DcMotorEx left, right; // vertical extension
 
-    public static final double P = 14;//29;
+    public static final double P = 15;//29;
     public static final double I = 0;
     public static final double D = 0.5;//3.78; // TODO: test this
     public static final double leftF = 11.62;
