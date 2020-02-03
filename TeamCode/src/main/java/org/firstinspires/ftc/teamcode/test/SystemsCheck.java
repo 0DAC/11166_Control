@@ -32,9 +32,12 @@ public class SystemsCheck extends LinearOpMode {
         bot.raise_foundations();
         bot.lower_foundations();
         bot.hextend_toggle();
+        bot.toggle_turner();
+        bot.toggle_turner();
+        bot.toggle_grabber();
+        bot.toggle_grabber();
+        sleep(1000);
         bot.hextend_toggle();
-        bot.toggle_grabber();
-        bot.toggle_grabber();
         sleep(1000);
 
         telemetry.addData("Status: ", "Testing Lift");

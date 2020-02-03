@@ -16,21 +16,20 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 public class CraneLift {
     private DcMotorEx left, right; // vertical extension
 
-    public static final double P = 15;//29;
-    public static final double I = 0;
-    public static final double D = 0.5;//3.78; // TODO: test this
-    public static final double leftF = 11.62;
-    public static final double rightF = 11.80;
+    public static final double P = 2;//15//29;
+    public static final double I = 0.5;//0;
+    public static final double D = 0;//0.5//3.78;
+    public static final double F = 10.6;//10.6;
 
     private Servo extender, grabber, turner;
     private Telemetry t;
 
     //  vertical extension
-    private final int VMIN_POSITION= 250;
+    private final int VMIN_POSITION= 500;
     private final int VMAX_POSITION = 10;
     private final int VMOVE_INCREMENT = 50;
-    private final double VMOVE_UP_POWER = 1;
-    private final double VMOVE_DOWN_POWER = 1;
+    private final double VMOVE_UP_POWER = .4;
+    private final double VMOVE_DOWN_POWER = .05;
     private int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension
@@ -60,9 +59,9 @@ public class CraneLift {
         PIDFCoefficients pidfRightOrig = right.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // change coefficients using methods included with DcMotorEx class.
-        PIDFCoefficients pidfLeftNew = new PIDFCoefficients(P, I, D, leftF);
+        PIDFCoefficients pidfLeftNew = new PIDFCoefficients(P, I, D, F);
         left.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfLeftNew);
-        PIDFCoefficients pidfRightNew = new PIDFCoefficients(P, I, D, rightF);
+        PIDFCoefficients pidfRightNew = new PIDFCoefficients(P, I, D, F);
         right.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfRightNew);
 
         // re-read coefficients and verify change.
@@ -100,7 +99,7 @@ public class CraneLift {
 
     // vertical lift
     public void vextend() {
-        //if (VLEFT_POS > VMAX_POSITION || VRIGHT_POS > VMAX_POSITION) return;
+        //TODO: finish tuning, implement ramping power by time
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left.setPower(VMOVE_UP_POWER);
 
@@ -109,14 +108,38 @@ public class CraneLift {
 
         VLEFT_POS = left.getCurrentPosition();
         VRIGHT_POS = right.getCurrentPosition();
+//        left.setPower(VMOVE_UP_POWER);
+//        left.setTargetPosition(300);
+//        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        right.setPower(VMOVE_UP_POWER);
+//        right.setTargetPosition(300);
+//        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        t.addData("Left Lift:", VLEFT_POS);
-        t.addData("Right Lift:", VRIGHT_POS);
-        t.update();
+//        t.addData("Left Lift:", VLEFT_POS);
+//        t.addData("Right Lift:", VRIGHT_POS);
+//        t.update();
     }
 
     public void vretract() {
-        if (VLEFT_POS < VMIN_POSITION || VRIGHT_POS > VMIN_POSITION)  {
+        //TODO: finish tuning, implement ramping power by time
+//        if (VLEFT_POS > VMIN_POSITION || VRIGHT_POS > VMIN_POSITION)  {
+//            left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            left.setPower(-VMOVE_DOWN_POWER);
+//
+//            right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            right.setPower(-VMOVE_DOWN_POWER);
+//
+//            VLEFT_POS = left.getCurrentPosition();
+//            VRIGHT_POS = right.getCurrentPosition();
+//        }
+//        else {
+//            left.setPower(0);
+//            right.setPower(0);
+//            left.setZeroPowerBehavior(BRAKE);
+//            right.setZeroPowerBehavior(BRAKE);
+//        }
+
             left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             left.setPower(-VMOVE_DOWN_POWER);
 
@@ -125,33 +148,26 @@ public class CraneLift {
 
             VLEFT_POS = left.getCurrentPosition();
             VRIGHT_POS = right.getCurrentPosition();
-        }
-        else {
-            left.setPower(0);
-            right.setPower(0);
-            left.setZeroPowerBehavior(BRAKE);
-            right.setZeroPowerBehavior(BRAKE);
-        }
-        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left.setPower(-VMOVE_DOWN_POWER);
-
-        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right.setPower(-VMOVE_DOWN_POWER);
-
-        VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();
-
-        t.addData("Left Lift:", VLEFT_POS);
-        t.addData("Right Lift:", VRIGHT_POS);
-        t.update();
-    }
-
-    public void vstop() {
 
 //        left.setPower(0);
 //        right.setPower(0);
 //        left.setZeroPowerBehavior(BRAKE);
 //        right.setZeroPowerBehavior(BRAKE);
+
+//        left.setPower(-VMOVE_DOWN_POWER);
+//        left.setTargetPosition(0);
+//        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        right.setPower(-VMOVE_DOWN_POWER);
+//        right.setTargetPosition(0);
+//        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+//        t.addData("Left Lift:", VLEFT_POS);
+//        t.addData("Right Lift:", VRIGHT_POS);
+//        t.update();
+    }
+
+    public void vstop() {
         left.setTargetPosition(VLEFT_POS);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -159,10 +175,9 @@ public class CraneLift {
         right.setTargetPosition(VRIGHT_POS);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        t.addData("Left Lift:", VLEFT_POS);
-        t.addData("Right Lift:", VRIGHT_POS);
-        t.update();
-
+//        t.addData("Left Lift:", VLEFT_POS);
+//        t.addData("Right Lift:", VRIGHT_POS);
+//        t.update();
 
 /*        double time = System.currentTimeMillis();
         while ((left.isBusy() || right.isBusy()) && ((System.currentTimeMillis()-time <= 500))) {
