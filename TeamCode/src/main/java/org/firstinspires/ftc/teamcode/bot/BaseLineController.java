@@ -38,7 +38,7 @@ public class BaseLineController extends LinearOpMode {
 
             if (gamepad1.x) bot.lower_foundations();
             else if (gamepad1.y) bot.raise_foundations();
-
+// comment out while using PID tuner
 //            if (gamepad1.left_trigger != 0) {
 //                bot.vraise_lift();
 //            }

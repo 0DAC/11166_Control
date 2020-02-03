@@ -56,19 +56,19 @@ public class LiftPIDTuner extends LinearOpMode {
             PIDFCoefficients pidfRightNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
             right.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfRightNew);
 
-            if (gamepad1.a) {
+            if (gamepad1.x) {
                 NEW_P+=SIGN*FACTOR;
                 sleep(100);
             }
-            if (gamepad1.b) {
+            if (gamepad1.y) {
                 NEW_I+=SIGN*FACTOR;
                 sleep(100);
             }
-            if (gamepad1.x) {
+            if (gamepad1.b) {
                 NEW_D+=SIGN*FACTOR;
                 sleep(100);
             }
-            if (gamepad1.y) {
+            if (gamepad1.a) {
                 SIGN*=-1;
                 sleep(100);
             }

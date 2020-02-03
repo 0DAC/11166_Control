@@ -16,8 +16,8 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 public class CraneLift {
     private DcMotorEx left, right; // vertical extension
 
-    public static final double P = 2;//15//29;
-    public static final double I = 0.5;//0;
+    public static final double P = 4;//15//29;
+    public static final double I = 0;//0;
     public static final double D = 0;//0.5//3.78;
     public static final double F = 10.6;//10.6;
 
@@ -28,8 +28,8 @@ public class CraneLift {
     private final int VMIN_POSITION= 500;
     private final int VMAX_POSITION = 10;
     private final int VMOVE_INCREMENT = 50;
-    private final double VMOVE_UP_POWER = .4;
-    private final double VMOVE_DOWN_POWER = .05;
+    private final double VMOVE_UP_POWER = .6;
+    private final double VMOVE_DOWN_POWER = .1;
     private int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension
