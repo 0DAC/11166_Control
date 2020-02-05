@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.SystemConfig;
 
 @TeleOp
 
-public class MaxVelocityTest extends LinearOpMode {
+public class LiftMaxVelocityTest extends LinearOpMode {
     DcMotorEx motor;
     double currentLeftVelocity;
     double currentRightVelocity;

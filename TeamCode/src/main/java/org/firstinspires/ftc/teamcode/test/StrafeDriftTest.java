@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.bot;
+package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.bot.components.Robot;
 
-@Autonomous(name = "Strafe PID Tuning", group = "auto")
-public class StrafePIDTuner extends LinearOpMode {
+@Autonomous(name = "StrafeDriftTest", group = "auto")
+public class StrafeDriftTest extends LinearOpMode {
     private final double speed = 0.7;
     private final long time_per = 3000;
 

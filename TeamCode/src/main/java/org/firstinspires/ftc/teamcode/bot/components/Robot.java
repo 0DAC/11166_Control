@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,6 +12,7 @@ public class Robot {
     //private FinishableIntegratedController controller;
     public MecanumDrivetrain drive;
     private Servo l_foundation, r_foundation;
+    private boolean FOUNDATION_UP;
     private Intake intake;
     private CraneLift lift;
     private Camera camera;
@@ -42,12 +42,18 @@ public class Robot {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+//        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
         drive = new MecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight});
 
         // config foundation servos
 
         l_foundation = hmp.get(Servo.class, SystemConfig.left_foundation_servo);
         r_foundation = hmp.get(Servo.class, SystemConfig.right_foundation_servo);
+        FOUNDATION_UP = true;
 
         // configure foundation grabber servos
 
@@ -216,26 +222,36 @@ public class Robot {
         l_foundation.setPosition(LEFT_FOUNDATION_DOWN);
         r_foundation.setPosition(RIGHT_FOUNDATION_DOWN);
     }
+    public void toggle_foundation() {
+        if (FOUNDATION_UP) lower_foundations();
+        else raise_foundations();
+        FOUNDATION_UP = !FOUNDATION_UP;
+    }
 
     public void vraise_lift() { lift.vextend(); }
     public void vlower_lift() { lift.vretract(); }
     public void vhold() {lift.vstop();}
+    public void vslack(int time) {lift.slack(time);}
+    public void raise_claw(int time) {lift.c_raise(time);}
 
     public void hextend_toggle() {
         lift.htoggle();
     }
+    public void t_captone_pos() {lift.tcapstone();}
+    public void h_grabber_pos() {lift.h_grabber_bot();}
+    public void h_extend() {lift.hextend();}
+    public void h_retract() {lift.hretract();}
+    public void place_capstone () {lift.toggle_capstone();}
 
-    public void toggle_turner() { lift.toggle_rotator();}
+    public void toggle_turner() {
+        if (lift.H_FULLY_EXTENDED) lift.toggle_rotator();
+    }
 
     public void grab_stone() { lift.grab_stone(); }
     public void drop_stone() { lift.drop_stone(); }
 
     public void toggle_grabber() {
         lift.toggle_grabber();
-    }
-
-    public void deploy_grabber() {
-        lift.deploy();
     }
 
     public void xbox_drive(double move_x, double move_y, double turn_x) {
