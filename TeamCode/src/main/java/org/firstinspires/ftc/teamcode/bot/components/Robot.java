@@ -237,7 +237,6 @@ public class Robot {
     public void hextend_toggle() {
         lift.htoggle();
     }
-    public void t_captone_pos() {lift.tcapstone();}
     public void h_grabber_pos() {lift.h_grabber_bot();}
     public void h_extend() {lift.hextend();}
     public void h_retract() {lift.hretract();}
@@ -246,6 +245,7 @@ public class Robot {
     public void toggle_turner() {
         if (lift.H_FULLY_EXTENDED) lift.toggle_rotator();
     }
+    public void t_capstone_pos() {lift.capstone_turn();}
 
     public void grab_stone() { lift.grab_stone(); }
     public void drop_stone() { lift.drop_stone(); }
@@ -287,6 +287,14 @@ public class Robot {
          t.addData("Front Right:", drive.motors[1].getCurrentPosition());
          t.addData("Back Left:", drive.motors[2].getCurrentPosition());
          t.addData("Back Right:", drive.motors[3].getCurrentPosition());
+     }
+
+     public void print_servo_vals(Telemetry t) {
+         t.addData("Turner Servo:", String.format("%.2f [%s]", lift.turner_pos(), lift.rotator_out ? "Rotated out" : "Not fully rotated"));
+         t.addData("Horizontal Servo:", String.format("%.2f [%s]", lift.extender_pos(), lift.H_FULLY_EXTENDED ? "Fully extended" : "Not full extension"));
+         t.addData("Grabber Servo:", String.format("%.2f [%s]", lift.grabber_pos(), lift.grabber_state==1 ? "Grabbing" : "Open"));
+         t.addData("Left Lift:", lift.VLEFT_POS);
+         t.addData("Right Lift:", lift.VRIGHT_POS);
      }
 
      //public PIDTuner getPIDTuner(Gamepad pad, Telemetry t) { return new PIDTuner(drive, (PIDController) controller.algorithm, pad, t); }

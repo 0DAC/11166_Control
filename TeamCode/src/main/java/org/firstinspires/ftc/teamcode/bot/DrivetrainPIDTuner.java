@@ -29,6 +29,7 @@ public class DrivetrainPIDTuner extends LinearOpMode {
     public static int NEW_I = 0;
     public static int NEW_D = 0;
     public static int NEW_F = 12;
+    public static int POS_P = 2;
     public static int SIGN = 1;
     public static int FACTOR = 1;
     @Override
@@ -43,7 +44,6 @@ public class DrivetrainPIDTuner extends LinearOpMode {
         leftRear = hardwareMap.get(DcMotorEx.class, SystemConfig.bot_l);
         rightFront = hardwareMap.get(DcMotorEx.class, SystemConfig.top_r);
         rightRear = hardwareMap.get(DcMotorEx.class, SystemConfig.bot_r);
-
         // wait for start command.
         waitForStart();
         telemetry.clearAll();
@@ -54,6 +54,11 @@ public class DrivetrainPIDTuner extends LinearOpMode {
             PIDFCoefficients pidfLeftRearOrig = leftRear.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
             PIDFCoefficients pidfRightFrontOrig = rightFront.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
             PIDFCoefficients pidfRightRearOrig = rightRear.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            leftFront.setPositionPIDFCoefficients(POS_P);
+            leftRear.setPositionPIDFCoefficients(POS_P);
+            rightFront.setPositionPIDFCoefficients(POS_P);
+            rightRear.setPositionPIDFCoefficients(POS_P);
 
             // change coefficients using methods included with DcMotorEx class.
             PIDFCoefficients pidfLeftFrontNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
@@ -75,6 +80,14 @@ public class DrivetrainPIDTuner extends LinearOpMode {
             }
             if (gamepad1.b) {
                 NEW_D+=SIGN*FACTOR;
+                sleep(100);
+            }
+            if (gamepad1.right_bumper) {
+                POS_P+=FACTOR;
+                sleep(100);
+            }
+            if (gamepad1.left_bumper) {
+                POS_P-=FACTOR;
                 sleep(100);
             }
             if (gamepad1.a) {
@@ -102,11 +115,11 @@ public class DrivetrainPIDTuner extends LinearOpMode {
             PIDFCoefficients pidfRightFrontModified = rightFront.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
             PIDFCoefficients pidfRightRearModified = rightRear.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
-//            telemetry.addData("Old_P,Old_I,Old_D,Old_F", "%.04f, %.04f, %.0f, %.0f",
-//                    pidfLeftFrontOrig.p, pidfLeftFrontOrig.i, pidfLeftFrontOrig.d, pidfLeftFrontOrig.f);
-//            telemetry.addData("New_P,New_I,New_D,New_F,Sign,Factor", "%.09f, %.09f, %.09f, %.09f, %.01f, %.09f",
-//                    pidfLeftFrontModified.p, pidfLeftFrontModified.i, pidfLeftFrontModified.d, pidfLeftFrontModified.f,SIGN, FACTOR);
-//            telemetry.update();
+            telemetry.addData("Old_P,Old_I,Old_D,Old_F", "%.04f, %.04f, %.0f, %.0f",
+                    pidfLeftFrontOrig.p, pidfLeftFrontOrig.i, pidfLeftFrontOrig.d, pidfLeftFrontOrig.f);
+            telemetry.addData("New_P,New_I,New_D,New_F,POS_P,Sign,Factor", "%.09f, %.09f, %.09f, %.09f, %.09f, %.01f, %.09f",
+                    pidfLeftFrontModified.p, pidfLeftFrontModified.i, pidfLeftFrontModified.d, pidfLeftFrontModified.f,POS_P,SIGN, FACTOR);
+            telemetry.update();
         }
     }
 }

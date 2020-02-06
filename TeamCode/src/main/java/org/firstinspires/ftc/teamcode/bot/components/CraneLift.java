@@ -32,28 +32,30 @@ public class CraneLift {
     private final int VMOVE_INCREMENT = 50;
     private final double VMOVE_UP_POWER = .6;
     private final double VMOVE_DOWN_POWER = .15;
-    private int VRIGHT_POS, VLEFT_POS;
+    int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension
-    private final double H_OUT = 0.65;
-    private final double T_CAPSTONE = 0.35;
-    private final double H_GRABBER_BOT = 0.55;
+    private final double H_OUT = 0.75;
+    private final double H_GRABBER_BOT = 0.45;
     private final double H_IN = 0.25;
     public boolean H_FULLY_EXTENDED = false;
 
-    // grabber rotator
-    //TODO: Tune these values for the capper
+    //Capstone Holder Values
     private double CAPSTONE_UP = .1;
     private double CAPSTONE_DOWN = .6;
-    private double ROTATOR_IN = 0.1;
-    private double ROTATOR_OUT = 0.5;
-    private boolean rotator_out = true;
+
+    // grabber rotator
+    //TODO: Tune these values for the capper
+    private double ROTATOR_CAPSTONE = 0.5;
+    private double ROTATOR_IN = 0.15;
+    private double ROTATOR_OUT = 0.85;
+    boolean rotator_out = true;
 
     // stone grabber
-    private final double GRABBER_CLOSED = 0.14,
-                    GRABBER_OPEN = 0.8;
-    private int grabber_state = 0; // 0 = open, 1 = closed
-    private int capper_state = 0; // 0 = closed, 1 = open
+    private final double GRABBER_CLOSED = 0.7,
+                    GRABBER_OPEN = .2;
+    int grabber_state = 0; // 0 = open, 1 = closed
+    int capper_state = 0; // 0 = closed, 1 = open
 
     public CraneLift(HardwareMap hardwareMap, Telemetry t) {
         this.t = t;
@@ -99,6 +101,8 @@ public class CraneLift {
         turner = hardwareMap.get(Servo.class, SystemConfig.lift_turner);
         capper = hardwareMap.get(Servo.class, SystemConfig.lift_capper);
 
+        drop_stone();
+
         // init servos to these values
         capper.setPosition(CAPSTONE_UP);
         turner.setPosition(ROTATOR_OUT);
@@ -125,9 +129,6 @@ public class CraneLift {
 //        right.setTargetPosition(300);
 //        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        t.addData("Left Lift:", VLEFT_POS);
-        t.addData("Right Lift:", VRIGHT_POS);
-        t.update();
     }
 
     public void c_raise (int time_ms) {
@@ -256,21 +257,18 @@ public class CraneLift {
     // extender
     public void hextend() {
         extender.setPosition(H_OUT);
-        H_FULLY_EXTENDED = true;
     }
-    public void tcapstone(){
-        turner.setPosition(T_CAPSTONE);
-    }
+
     public void h_grabber_bot() {
         extender.setPosition(H_GRABBER_BOT);
     }
     public void hretract() {
         extender.setPosition(H_IN);
-        H_FULLY_EXTENDED = false;
     }
     public void htoggle() {
         if (H_FULLY_EXTENDED) hretract();
         else hextend();
+        H_FULLY_EXTENDED = !H_FULLY_EXTENDED;
     }
 
     public void protect_capstone() {
@@ -301,6 +299,16 @@ public class CraneLift {
         if (rotator_out) turner.setPosition(ROTATOR_IN);
         else turner.setPosition(ROTATOR_OUT);
         rotator_out = !rotator_out;
+    }
+
+    public double extender_pos() { return extender.getPosition();}
+    public double grabber_pos() { return grabber.getPosition();}
+    public double turner_pos() { return turner.getPosition();}
+    public double capper_pos() { return capper.getPosition();}
+
+
+    public void capstone_turn() {
+        turner.setPosition(ROTATOR_CAPSTONE);
     }
     /**
      * Composite grabbing action

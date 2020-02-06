@@ -29,32 +29,31 @@ public class BaseLineController extends LinearOpMode {
             else bot.xbox_drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             if (gamepad1.y) {
-                bot.h_extend();
-                sleep(200);
+                bot.hextend_toggle();
+                sleep(600);
             }
             if (gamepad1.a) {
-                bot.h_retract();
-                sleep(200);
+                bot.toggle_turner();
+                sleep(600);
             }
 
             if (gamepad1.x) {
-                bot.toggle_turner();
-                sleep(200);
+                bot.toggle_foundation();
+                sleep(600);
             }
 
             if (gamepad1.b) {
                 bot.toggle_grabber();
-                sleep(200);
+                sleep(600);
             }
 
             if (gamepad1.back) {
-                bot.toggle_foundation();
-                sleep(200);
+
             }
 
             if (gamepad1.start) {
                 bot.h_grabber_pos();
-                sleep(200);
+                sleep(600);
             }
 
             if (gamepad1.left_bumper) {
@@ -75,17 +74,6 @@ public class BaseLineController extends LinearOpMode {
             }
             else bot.vhold();
 
-           //set stone in capstone position ONLY IF LIFT IS RAISED
-           if (gamepad2.back) {
-               bot.h_extend();
-               sleep(3000);
-               sleep(500);
-               bot.t_captone_pos();
-               sleep(3000);
-               sleep(500);
-               bot.h_grabber_pos();
-           }
-
            // secondary gamepad
            if (gamepad2.left_trigger != 0) bot.intake();
            else if (gamepad2.right_trigger != 0) bot.spit();
@@ -96,7 +84,7 @@ public class BaseLineController extends LinearOpMode {
                bot.h_extend();
            }
            if (gamepad2.y) {
-               bot.t_captone_pos();
+               bot.t_capstone_pos();
            }
            if (gamepad2.a) {
                bot.h_grabber_pos();
@@ -104,6 +92,8 @@ public class BaseLineController extends LinearOpMode {
            if (gamepad2.b) {
                bot.place_capstone();
            }
+           bot.print_servo_vals(telemetry);
+           telemetry.update();
 
         }
     }
