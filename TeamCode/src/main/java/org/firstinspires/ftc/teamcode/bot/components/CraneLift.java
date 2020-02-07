@@ -35,14 +35,15 @@ public class CraneLift {
     int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension
-    private final double H_OUT = 0.75;
-    private final double H_GRABBER_BOT = 0.45;
+    private final double H_OUT = .8;
+    private final double H_GRABBER_BOT = 0.40;
+    private final double H_CAPSTONE = 0.45;
     private final double H_IN = 0.25;
     public boolean H_FULLY_EXTENDED = false;
 
     //Capstone Holder Values
-    private double CAPSTONE_UP = .1;
-    private double CAPSTONE_DOWN = .6;
+    private double CAPSTONE_UP = 0.078;
+    private double CAPSTONE_DOWN = 0.4;
 
     // grabber rotator
     //TODO: Tune these values for the capper
@@ -113,44 +114,21 @@ public class CraneLift {
     // vertical lift
     public void vextend() {
         //TODO: finish tuning, implement ramping power by time
-        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left.setPower(VMOVE_UP_POWER);
-
-        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right.setPower(VMOVE_UP_POWER);
-
-        VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();
+//        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        left.setPower(VMOVE_UP_POWER);
-//        left.setTargetPosition(300);
-//        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //
+//        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        right.setPower(VMOVE_UP_POWER);
-//        right.setTargetPosition(300);
-//        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-    }
-
-    public void c_raise (int time_ms) {
-        left.setZeroPowerBehavior(BRAKE);
-        left.setPower(0);
-
-        right.setZeroPowerBehavior(BRAKE);
-        right.setPower(0);
-
-        // wait for some time
-        double t = System.currentTimeMillis();
-        while (System.currentTimeMillis()-t < time_ms);
-
-        VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();
-
-        left.setTargetPosition(VLEFT_POS);
+//
+        left.setPower(VMOVE_UP_POWER);
+        left.setTargetPosition(VLEFT_POS+180);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        //right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right.setTargetPosition(VRIGHT_POS);
+        right.setPower(VMOVE_UP_POWER);
+        right.setTargetPosition(VRIGHT_POS+180);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
     }
 
     public void vretract() {
@@ -210,17 +188,49 @@ public class CraneLift {
         double t = System.currentTimeMillis();
         while (System.currentTimeMillis()-t < time_ms);
 
-        VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();
-
         left.setTargetPosition(VLEFT_POS);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setTargetPosition(VRIGHT_POS);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
     }
 
+    public void c_raise (int time_ms) {
+        left.setZeroPowerBehavior(BRAKE);
+        left.setPower(VMOVE_UP_POWER);
+
+        right.setZeroPowerBehavior(BRAKE);
+        right.setPower(VMOVE_UP_POWER);
+
+        // wait for some time
+        double t = System.currentTimeMillis();
+        while (System.currentTimeMillis()-t < time_ms);
+
+        left.setTargetPosition(VLEFT_POS+40);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setTargetPosition(VRIGHT_POS+40);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+    }
+
+    public void liftbypos (int pos) {
+        left.setTargetPosition(VLEFT_POS+pos);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        right.setTargetPosition(VRIGHT_POS+pos);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+    }
     public void vstop() {
         left.setTargetPosition(VLEFT_POS);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -262,9 +272,15 @@ public class CraneLift {
     public void h_grabber_bot() {
         extender.setPosition(H_GRABBER_BOT);
     }
+
     public void hretract() {
         extender.setPosition(H_IN);
     }
+
+    public void hcapstonepos() {
+        extender.setPosition(H_CAPSTONE);
+    }
+
     public void htoggle() {
         if (H_FULLY_EXTENDED) hretract();
         else hextend();
@@ -295,9 +311,15 @@ public class CraneLift {
         grabber_state = 1- grabber_state;
     }
 
+    public void rotator_retract() {
+        turner.setPosition(ROTATOR_IN);
+    }
+    public void rotator_extend() {
+        turner.setPosition(ROTATOR_OUT);
+    }
     public void toggle_rotator() {
-        if (rotator_out) turner.setPosition(ROTATOR_IN);
-        else turner.setPosition(ROTATOR_OUT);
+        if (rotator_out) rotator_retract();
+        else rotator_extend();
         rotator_out = !rotator_out;
     }
 
@@ -306,27 +328,18 @@ public class CraneLift {
     public double turner_pos() { return turner.getPosition();}
     public double capper_pos() { return capper.getPosition();}
 
-
     public void capstone_turn() {
         turner.setPosition(ROTATOR_CAPSTONE);
     }
-    /**
-     * Composite grabbing action
-     */
-//    public void deploy() {
-//        vextend();
-//        vextend();
-//        vretract();
-//        vretract();
-//
-//        hextend();
-//        grab_stone();
-//        hretract();
-//
-//        vextend();
-//        vextend();
-//        vretract();
-//        vretract();
-//    }
+
+    public void grab_n_retract() {
+        grab_stone();
+        hretract();
+    }
+
+    public void extend_then_grab() {
+        h_grabber_bot();
+        grab_n_retract();
+    }
 
 }

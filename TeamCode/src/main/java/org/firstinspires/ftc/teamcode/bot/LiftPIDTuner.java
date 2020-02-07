@@ -24,10 +24,11 @@ public class LiftPIDTuner extends LinearOpMode {
 
     private DcMotorEx left, right; // vertical extension
 //  default 2, 0.5, 0, 11
-    public static double NEW_P = .00001;
+    public static double NEW_P = 0;
     public static double NEW_I = 0;
     public static double NEW_D = 0;
     public static double NEW_F = 10.6;
+    public static double POS_P =0;
     public static double SIGN = 1;
     public static double FACTOR = 1;
     @Override
@@ -56,6 +57,9 @@ public class LiftPIDTuner extends LinearOpMode {
             PIDFCoefficients pidfRightNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
             right.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfRightNew);
 
+            left.setPositionPIDFCoefficients(POS_P);
+            right.setPositionPIDFCoefficients(POS_P);
+
             if (gamepad1.x) {
                 NEW_P+=SIGN*FACTOR;
                 sleep(100);
@@ -78,6 +82,14 @@ public class LiftPIDTuner extends LinearOpMode {
                 bot.vlower_lift();
             } else {
                 bot.vhold();
+            }
+            if (gamepad1.left_bumper) {
+                POS_P+=FACTOR;
+                sleep(100);
+            }
+            if (gamepad1.right_bumper) {
+                POS_P-=FACTOR;
+                sleep(100);
             }
             if (gamepad1.start) {
                 FACTOR*=10;

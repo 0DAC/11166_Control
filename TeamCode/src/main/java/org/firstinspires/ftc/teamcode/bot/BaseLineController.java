@@ -47,17 +47,18 @@ public class BaseLineController extends LinearOpMode {
                 sleep(600);
             }
 
-            if (gamepad1.back) {
-
-            }
-
             if (gamepad1.start) {
                 bot.h_grabber_pos();
                 sleep(600);
             }
 
+            if (gamepad1.back) {
+                bot.lift_by_pos(50);
+                sleep(600);
+            }
+
             if (gamepad1.left_bumper) {
-                bot.raise_claw(1500);
+                bot.vfloatup(1500);
             }
 
             if(gamepad1.right_bumper) {
@@ -67,10 +68,10 @@ public class BaseLineController extends LinearOpMode {
             // comment out while using PID tuner
             // raise lift
             if (gamepad1.left_trigger != 0) {
-                bot.vraise_lift();
+                bot.vlower_lift();
             }
             else if (gamepad1.right_trigger != 0) {
-                bot.vlower_lift();
+                bot.vraise_lift();
             }
             else bot.vhold();
 
@@ -87,11 +88,13 @@ public class BaseLineController extends LinearOpMode {
                bot.t_capstone_pos();
            }
            if (gamepad2.a) {
-               bot.h_grabber_pos();
+               bot.h_capstone_pos();
            }
            if (gamepad2.b) {
                bot.place_capstone();
            }
+           if (gamepad2.right_bumper) bot.grab_n_retract();
+           if (gamepad2.left_bumper) bot.extend_n_grab();
            bot.print_servo_vals(telemetry);
            telemetry.update();
 

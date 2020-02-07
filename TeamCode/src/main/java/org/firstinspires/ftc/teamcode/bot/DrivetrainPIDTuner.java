@@ -25,13 +25,13 @@ public class DrivetrainPIDTuner extends LinearOpMode {
 
     private DcMotorEx leftFront, leftRear, rightFront, rightRear; // drivetrain motors
     //  default 2, 0, 0, 12 for GoBilda
-    public static int NEW_P = 2;
-    public static int NEW_I = 0;
-    public static int NEW_D = 0;
-    public static int NEW_F = 12;
-    public static int POS_P = 2;
-    public static int SIGN = 1;
-    public static int FACTOR = 1;
+    public static float NEW_P = 4;
+    public static float NEW_I = 0;
+    public static float NEW_D = 4;
+    public static float NEW_F = 12;
+    public static float POS_P = 6;
+    public static float SIGN = 1;
+    public static float FACTOR = 1;
     @Override
     public void runOpMode() {
         bot = new Robot(hardwareMap, telemetry);
@@ -83,11 +83,11 @@ public class DrivetrainPIDTuner extends LinearOpMode {
                 sleep(100);
             }
             if (gamepad1.right_bumper) {
-                POS_P+=FACTOR;
+                POS_P+=SIGN*FACTOR;
                 sleep(100);
             }
             if (gamepad1.left_bumper) {
-                POS_P-=FACTOR;
+                bot.turn_90_cw(.8);
                 sleep(100);
             }
             if (gamepad1.a) {
@@ -95,11 +95,9 @@ public class DrivetrainPIDTuner extends LinearOpMode {
                 sleep(100);
             }
             if (gamepad1.left_trigger != 0) {
-                bot.drive_forward(1,100);
+                bot.drive_forward(.8,30);
             } else if (gamepad1.right_trigger != 0) {
-                bot.strafe_right(1,100);
-            } else {
-                bot.vhold();
+                bot.strafe_right(.8, 40);
             }
             if (gamepad1.start) {
                 FACTOR*=10;
@@ -109,6 +107,11 @@ public class DrivetrainPIDTuner extends LinearOpMode {
                 FACTOR*=.1;
                 sleep(100);
             }
+            if (gamepad1.dpad_left) bot.power_drive(Math.PI*3/2, 1, 0);
+            else if (gamepad1.dpad_right) bot.power_drive(Math.PI/2, 1, 0);
+            else if (gamepad1.dpad_up) bot.power_drive(0, 1, 0);
+            else if (gamepad1.dpad_down) bot.power_drive(Math.PI, 1, 0);
+            else bot.xbox_drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             // re-read coefficients and verify change.
             PIDFCoefficients pidfLeftFrontModified = leftFront.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
             PIDFCoefficients pidfLeftRearModified = leftRear.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);

@@ -18,7 +18,7 @@ public class Robot {
     private Camera camera;
     private int TIME_THRESHOLD = 1500;
 
-    private final int TURN_90_TIME = 35;
+    private final int TURN_90_TIME = 38;
 
     public static double  RIGHT_FOUNDATION_UP = 1,
             RIGHT_FOUNDATION_DOWN  = 0.24,
@@ -232,12 +232,14 @@ public class Robot {
     public void vlower_lift() { lift.vretract(); }
     public void vhold() {lift.vstop();}
     public void vslack(int time) {lift.slack(time);}
-    public void raise_claw(int time) {lift.c_raise(time);}
+    public void vfloatup(int time) {lift.c_raise(time);}
+    public void lift_by_pos(int pos) {lift.liftbypos(pos);}
 
     public void hextend_toggle() {
         lift.htoggle();
     }
     public void h_grabber_pos() {lift.h_grabber_bot();}
+    public void h_capstone_pos() {lift.hcapstonepos();}
     public void h_extend() {lift.hextend();}
     public void h_retract() {lift.hretract();}
     public void place_capstone () {lift.toggle_capstone();}
@@ -249,6 +251,9 @@ public class Robot {
 
     public void grab_stone() { lift.grab_stone(); }
     public void drop_stone() { lift.drop_stone(); }
+
+    public void grab_n_retract() {lift.grab_n_retract();}
+    public void extend_n_grab() {lift.extend_then_grab();}
 
     public void toggle_grabber() {
         lift.toggle_grabber();
