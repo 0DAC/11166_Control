@@ -33,7 +33,7 @@ public class CraneLift {
     private final int VMAX_POSITION = 10;
     private final int VMOVE_INCREMENT = 50;
     private final double VMOVE_UP_POWER = 1;
-    private final double VMOVE_DOWN_POWER = .15;
+    private final double VMOVE_DOWN_POWER = .2;
     int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension

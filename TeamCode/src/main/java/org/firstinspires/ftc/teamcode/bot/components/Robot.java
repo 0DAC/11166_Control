@@ -25,7 +25,7 @@ public class Robot {
     public static double  RIGHT_FOUNDATION_UP = 1,
             RIGHT_FOUNDATION_DOWN  = 0.24,
             LEFT_FOUNDATION_UP   = 0.1,
-            LEFT_FOUNDATION_DOWN = 0.86;
+            LEFT_FOUNDATION_DOWN = 0.8;
 
     //  default 2, 0, 0, 12 for GoBilda
     public static float NEW_P = 6;
