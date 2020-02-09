@@ -19,7 +19,6 @@ public class BlueVision extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
-            }
-            telemetry.update();
+        }
     }
 }

@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,36 +20,57 @@ public class Robot {
     private Camera camera;
     private int TIME_THRESHOLD = 1500;
 
-    private final int TURN_90_TIME = 38;
+    private final int TURN_90_TIME = 41;
 
     public static double  RIGHT_FOUNDATION_UP = 1,
             RIGHT_FOUNDATION_DOWN  = 0.24,
             LEFT_FOUNDATION_UP   = 0.1,
             LEFT_FOUNDATION_DOWN = 0.86;
 
+    //  default 2, 0, 0, 12 for GoBilda
+    public static float NEW_P = 6;
+    public static float NEW_I = 0;
+    public static float NEW_D = 0;
+    public static float NEW_F = 12;
+    public static float POS_P = 6;
+
     public Robot(HardwareMap hmp, Telemetry t) {
         // configure motors
-        DcMotor frontLeft = hmp.get(DcMotor.class, "driveFrontLeft");
-        DcMotor frontRight = hmp.get(DcMotor.class, "driveFrontRight");
-        DcMotor backLeft = hmp.get(DcMotor.class, "driveBackLeft");
-        DcMotor backRight = hmp.get(DcMotor.class, "driveBackRight");
+        DcMotorEx frontLeft = hmp.get(DcMotorEx.class, "driveFrontLeft");
+        DcMotorEx frontRight = hmp.get(DcMotorEx.class, "driveFrontRight");
+        DcMotorEx backLeft = hmp.get(DcMotorEx.class, "driveBackLeft");
+        DcMotorEx backRight = hmp.get(DcMotorEx.class, "driveBackRight");
 
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setPositionPIDFCoefficients(POS_P);
+        frontLeft.setPositionPIDFCoefficients(POS_P);
+        backLeft.setPositionPIDFCoefficients(POS_P);
+        backRight.setPositionPIDFCoefficients(POS_P);
 
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        PIDFCoefficients pidfLeftFrontNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
+        frontRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfLeftFrontNew);
+        PIDFCoefficients pidfLeftRearNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
+        frontLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfLeftRearNew);
+        PIDFCoefficients pidfRightFrontNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
+        backLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfRightFrontNew);
+        PIDFCoefficients pidfRightRearNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
+        backRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfRightRearNew);
 
-//        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-//        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-//        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-//        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        drive = new MecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight});
+        frontRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+//        frontRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+//        frontLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+//        backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+//        backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+
+        drive = new MecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight});
 
         // config foundation servos
 
@@ -78,28 +101,28 @@ public class Robot {
                         new PIDController(1, 1, 1), // default values to 1, will tune later
                         new ErrorTimeThresholdFinishingAlgorithm(Math.PI/50, 1));
 
-        drive = new HeadingableMecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight},
+        drive = new HeadingableMecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight},
                 controller);*/
     }
 
     public Robot(HardwareMap hmp) {
         // configure motors
-        DcMotor frontLeft = hmp.get(DcMotor.class, "driveFrontLeft");
-        DcMotor frontRight = hmp.get(DcMotor.class, "driveFrontRight");
-        DcMotor backLeft = hmp.get(DcMotor.class, "driveBackLeft");
-        DcMotor backRight = hmp.get(DcMotor.class, "driveBackRight");
+        DcMotorEx frontLeft = hmp.get(DcMotorEx.class, "driveFrontLeft");
+        DcMotorEx frontRight = hmp.get(DcMotorEx.class, "driveFrontRight");
+        DcMotorEx backLeft = hmp.get(DcMotorEx.class, "driveBackLeft");
+        DcMotorEx backRight = hmp.get(DcMotorEx.class, "driveBackRight");
 
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        drive = new MecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight});
+        drive = new MecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight});
 
         // config foundation servos
 
@@ -129,7 +152,7 @@ public class Robot {
                         new PIDController(1, 1, 1), // default values to 1, will tune later
                         new ErrorTimeThresholdFinishingAlgorithm(Math.PI/50, 1));
 
-        drive = new HeadingableMecanumDrivetrain(new DcMotor[]{frontLeft, frontRight, backLeft, backRight},
+        drive = new HeadingableMecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight},
                 controller);*/
     }
 
@@ -154,10 +177,10 @@ public class Robot {
      */
     public void encoder_drive(double power, int[] encoder_vals) {
         for (int i = 0; i < 4; i ++) {
-            drive.motors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            drive.motors[i].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             //set dummy position before changing runmode
             drive.motors[i].setTargetPosition(0);
-            drive.motors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            drive.motors[i].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             int new_pos = encoder_vals[i]*(1125 / ((42 / 35) * (32)) + drive.motors[i].getCurrentPosition());
             drive.motors[i].setTargetPosition(new_pos);
             drive.motors[i].setPower(power);
@@ -170,9 +193,9 @@ public class Robot {
         }
 
         for (int i = 0; i < 4; i ++) {
-            drive.motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            drive.motors[i].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
             drive.motors[i].setPower(0);
-            drive.motors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            drive.motors[i].setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         }
     }
 
@@ -232,8 +255,10 @@ public class Robot {
     public void vlower_lift() { lift.vretract(); }
     public void vhold() {lift.vstop();}
     public void vslack(int time) {lift.slack(time);}
-    public void vfloatup(int time) {lift.c_raise(time);}
-    public void lift_by_pos(int pos) {lift.liftbypos(pos);}
+    public void vglideup() {lift.v_glide_up();}
+    public void vglidedown() {lift.v_glide_down();}
+    public void vgroundstonelevel() {lift.ground_stone_raise();}
+
 
     public void hextend_toggle() {
         lift.htoggle();
@@ -249,6 +274,9 @@ public class Robot {
     }
     public void t_capstone_pos() {lift.capstone_turn();}
 
+    public void turnerout() {lift.turner_out();}
+    public void turnerin() {lift.turner_in();}
+
     public void grab_stone() { lift.grab_stone(); }
     public void drop_stone() { lift.drop_stone(); }
 
@@ -262,7 +290,7 @@ public class Robot {
     public void xbox_drive(double move_x, double move_y, double turn_x) {
         double course = Math.atan2(-move_y, move_x) - Math.PI/2;
         double velocity = Math.hypot(move_x, move_y);
-        double rotation = -turn_x;
+        double rotation = -.85*turn_x;
         power_drive(course, velocity, rotation);
     }
 

@@ -25,16 +25,19 @@ public class MainFoundationAuto {
 
         bot.drive_forward(1.0, 20);
 
-        if (side == Side.RIGHT) bot.turn(1.0, 110);
-        else bot.turn(1.0, -110);
+        if (side == Side.RIGHT) bot.turn(.6, 95); //old value for speed turn = 1.0
+        else bot.turn(.6, -95);
 
         // park near the wall
-        if (side == Side.RIGHT) bot.strafe_right(1.0, 40);
-        else bot.strafe_left(1.0, 40);
+        if (side == Side.RIGHT) bot.strafe_right(0.75, 25); //old value for distance was 40
+        else bot.strafe_left(0.75, 25);
         bot.drive_backward(1.0, 40);
 
         bot.raise_foundations();
 
-        bot.drive_forward(1.0, 100);
+        if (side == Side.RIGHT) bot.strafe_left(0.75, 19); //old value for distance was 40
+        else bot.strafe_right(0.75, 19);
+
+        bot.drive_forward(1.0, 80);
     }
 }

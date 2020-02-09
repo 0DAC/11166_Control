@@ -25,9 +25,9 @@ public class DrivetrainPIDTuner extends LinearOpMode {
 
     private DcMotorEx leftFront, leftRear, rightFront, rightRear; // drivetrain motors
     //  default 2, 0, 0, 12 for GoBilda
-    public static float NEW_P = 4;
+    public static float NEW_P = 6;
     public static float NEW_I = 0;
-    public static float NEW_D = 4;
+    public static float NEW_D = 0;
     public static float NEW_F = 12;
     public static float POS_P = 6;
     public static float SIGN = 1;
@@ -87,7 +87,7 @@ public class DrivetrainPIDTuner extends LinearOpMode {
                 sleep(100);
             }
             if (gamepad1.left_bumper) {
-                bot.turn_90_cw(.8);
+                bot.turn_90_cw(.6);
                 sleep(100);
             }
             if (gamepad1.a) {

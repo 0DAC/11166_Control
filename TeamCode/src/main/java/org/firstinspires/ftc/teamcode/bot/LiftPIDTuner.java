@@ -24,11 +24,11 @@ public class LiftPIDTuner extends LinearOpMode {
 
     private DcMotorEx left, right; // vertical extension
 //  default 2, 0.5, 0, 11
-    public static double NEW_P = 0;
+    public static double NEW_P = 4;
     public static double NEW_I = 0;
     public static double NEW_D = 0;
     public static double NEW_F = 10.6;
-    public static double POS_P =0;
+    public static double POS_P =4;
     public static double SIGN = 1;
     public static double FACTOR = 1;
     @Override
@@ -75,28 +75,33 @@ public class LiftPIDTuner extends LinearOpMode {
             if (gamepad1.a) {
                 SIGN*=-1;
                 sleep(100);
+
             }
             if (gamepad1.left_trigger != 0) {
-                bot.vraise_lift();
+                //bot.vraise_lift();
             } else if (gamepad1.right_trigger != 0) {
-                bot.vlower_lift();
+                bot.vglidedown();
             } else {
                 bot.vhold();
             }
             if (gamepad1.left_bumper) {
-                POS_P+=FACTOR;
+                bot.vraise_lift();
                 sleep(100);
             }
             if (gamepad1.right_bumper) {
-                POS_P-=FACTOR;
+                bot.vlower_lift();
                 sleep(100);
             }
             if (gamepad1.start) {
-                FACTOR*=10;
-                sleep(100);
+//                FACTOR*=10;
+//                sleep(100);
+//                SIGN*=-1;
+//                sleep(100);
             }
             if (gamepad1.back) {
-                FACTOR*=.1;
+//                FACTOR*=.1;
+//                sleep(100);
+                POS_P+=SIGN*FACTOR;
                 sleep(100);
             }
             // re-read coefficients and verify change.
@@ -112,8 +117,8 @@ public class LiftPIDTuner extends LinearOpMode {
 //            telemetry.addData("Right: P,I,D,F (modified)", "%.04f, %.04f, %.04f, %.0f",
 //                    pidfRightModified.p, pidfRightModified.i, pidfRightModified.d, pidfRightModified.f);
 //            telemetry.addData("SIGN,FACTOR", "%s, %s",SIGN,FACTOR);
-            telemetry.addData("P,I,D,F (modified), Sign, Factor", "%.09f, %.09f, %.09f, %.09f, %.01f, %.09f",
-                    pidfLeftModified.p, pidfLeftModified.i, pidfLeftModified.d, pidfLeftModified.f,SIGN, FACTOR);
+            telemetry.addData("P,I,D,F,POS_P, Sign, Factor, ticks", "%.09f, %.09f, %.09f, %.09f, %.01f, %.01f, %.09f,%d",
+                    pidfLeftModified.p, pidfLeftModified.i, pidfLeftModified.d, pidfLeftModified.f,POS_P,SIGN, FACTOR, left.getCurrentPosition());
             telemetry.update();
         }
     }
