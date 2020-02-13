@@ -49,9 +49,9 @@ public class RobotControl {
      */
     public void linear_drive(int direction, double percent_power) {
         top_left .setPower(direction*percent_power*MAX_SPEED);
-        top_right.setPower(-direction*percent_power*MAX_SPEED);
+        top_right.setPower(direction*percent_power*MAX_SPEED);
         bot_left .setPower(direction*percent_power*MAX_SPEED);
-        bot_right.setPower(-direction*percent_power*MAX_SPEED);
+        bot_right.setPower(direction*percent_power*MAX_SPEED);
     }
 
     /**

@@ -20,7 +20,7 @@ public class MotorGroup {
 
     public MotorGroup(HardwareMap hmp, String motor_names) {
         this.hmp = hmp;
-        this.n = 1;
+        this.n = 0;
         motors = new DcMotor[1];
         init_motors(new String[] {motor_names});
     }
