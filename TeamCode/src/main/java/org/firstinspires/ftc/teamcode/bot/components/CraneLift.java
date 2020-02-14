@@ -33,12 +33,12 @@ public class CraneLift {
     private final int VMAX_POSITION = 10;
     private final int VMOVE_INCREMENT = 50;
     private final double VMOVE_UP_POWER = 1;
-    private final double VMOVE_DOWN_POWER = .15;
+    private final double VMOVE_DOWN_POWER = .5;
     int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension
     private final double H_OUT = .8;
-    private final double H_GRABBER_BOT = 0.38;
+    private final double H_GRABBER_BOT = 0.40;
     private final double H_CAPSTONE = 0.33;
     private final double H_IN = 0.25;
     boolean H_FULLY_EXTENDED = false;
@@ -201,25 +201,39 @@ public class CraneLift {
         double t = System.currentTimeMillis();
         while (System.currentTimeMillis()-t < time_ms);
 
-        left.setPower(VMOVE_UP_POWER);
-        right.setPower(VMOVE_UP_POWER);
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
 
+        left.setPower(VMOVE_UP_POWER);
         left.setTargetPosition(VLEFT_POS);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        //right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setPower(VMOVE_UP_POWER);
         right.setTargetPosition(VRIGHT_POS);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();
     }
 
     public void ground_stone_raise () {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS+=80;
-        VRIGHT_POS+=80;
+        VLEFT_POS+=120;
+        VRIGHT_POS+=120;
+
+        left.setPower(VMOVE_UP_POWER);
+        left.setTargetPosition(VLEFT_POS);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        right.setPower(VMOVE_UP_POWER);
+        right.setTargetPosition(VRIGHT_POS);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void ground_stone_retract () {
+        left.setPositionPIDFCoefficients(Up_Pos_P);
+        right.setPositionPIDFCoefficients(Up_Pos_P);
+        VLEFT_POS-=120;
+        VRIGHT_POS-=120;
+
         left.setPower(VMOVE_UP_POWER);
         left.setTargetPosition(VLEFT_POS);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);

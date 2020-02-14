@@ -25,7 +25,7 @@ public class Robot {
     public static double  RIGHT_FOUNDATION_UP = 1,
             RIGHT_FOUNDATION_DOWN  = 0.24,
             LEFT_FOUNDATION_UP   = 0.1,
-            LEFT_FOUNDATION_DOWN = 0.86;
+            LEFT_FOUNDATION_DOWN = 0.89;
 
     //  default 2, 0, 0, 12 for GoBilda
     public static float NEW_P = 6;
@@ -173,8 +173,9 @@ public class Robot {
     /**
      *
      * @param power
-     * @param encoder_vals: encoder positions in this order: {front_l, front_r, back_l, back_r}
+     * @param encoder_vals: encoder positions in this order: {front_r, rear_r, front_l, rear_l}
      */
+    // staggered order of motor engagement so that one side of robot does not turn on / off before the other side
     public void encoder_drive(double power, int[] encoder_vals) {
         for (int i = 0; i < 4; i ++) {
             drive.motors[i].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -185,6 +186,39 @@ public class Robot {
             drive.motors[i].setTargetPosition(new_pos);
             drive.motors[i].setPower(power);
         }
+
+//        drive.motors[0].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+//        //set dummy position before changing runmode
+//        drive.motors[0].setTargetPosition(0);
+//        drive.motors[0].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//        int new_pos_0 = encoder_vals[0]*(1125 / ((42 / 35) * (32)) + drive.motors[0].getCurrentPosition());
+//        drive.motors[0].setTargetPosition(new_pos_0);
+//        drive.motors[0].setPower(power);
+//
+//        drive.motors[2].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+//        //set dummy position before changing runmode
+//        drive.motors[2].setTargetPosition(0);
+//        drive.motors[2].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//        int new_pos_2 = encoder_vals[2]*(1125 / ((42 / 35) * (32)) + drive.motors[2].getCurrentPosition());
+//        drive.motors[2].setTargetPosition(new_pos_2);
+//        drive.motors[2].setPower(power);
+//
+//        drive.motors[1].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+//        //set dummy position before changing runmode
+//        drive.motors[1].setTargetPosition(0);
+//        drive.motors[1].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//        int new_pos_1 = encoder_vals[1]*(1125 / ((42 / 35) * (32)) + drive.motors[1].getCurrentPosition());
+//        drive.motors[1].setTargetPosition(new_pos_1);
+//        drive.motors[1].setPower(power);
+//
+//        drive.motors[3].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+//        //set dummy position before changing runmode
+//        drive.motors[3].setTargetPosition(0);
+//        drive.motors[3].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//        int new_pos_3 = encoder_vals[3]*(1125 / ((42 / 35) * (32)) + drive.motors[3].getCurrentPosition());
+//        drive.motors[3].setTargetPosition(new_pos_3);
+//        drive.motors[3].setPower(power);
+
 
         double time = System.currentTimeMillis();
 
@@ -197,6 +231,22 @@ public class Robot {
             drive.motors[i].setPower(0);
             drive.motors[i].setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         }
+
+//        drive.motors[0].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//        drive.motors[0].setPower(0);
+//        drive.motors[0].setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//
+//        drive.motors[1].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//        drive.motors[1].setPower(0);
+//        drive.motors[1].setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//
+//        drive.motors[2].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//        drive.motors[2].setPower(0);
+//        drive.motors[2].setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//
+//        drive.motors[3].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//        drive.motors[3].setPower(0);
+//        drive.motors[3].setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
     public void set_threshold(int val) {
@@ -258,6 +308,7 @@ public class Robot {
     public void vglideup() {lift.v_glide_up();}
     public void vglidedown() {lift.v_glide_down();}
     public void vgroundstonelevel() {lift.ground_stone_raise();}
+    public void vgroundlevel() {lift.ground_stone_retract();}
 
 
     public void hextend_toggle() {

@@ -4,9 +4,9 @@ import org.firstinspires.ftc.teamcode.bot.components.Robot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Blue Stone and Foundation Auto")
+@Autonomous(name="Red Stone and Foundation Auto")
 
-public class BlueStoneFoundationAuto extends LinearOpMode {
+public class RedStoneFoundationAuto extends LinearOpMode {
     Robot bot;
 
     @Override
@@ -17,18 +17,28 @@ public class BlueStoneFoundationAuto extends LinearOpMode {
         while (opModeIsActive()) {
             //bot.pause(13000);
             bot.vgroundstonelevel();
+            bot.h_extend();
+            sleep(400);
+            bot.turnerout();
+            bot.drive_backward(.5,39);
             sleep(600);
+            bot.vgroundlevel();
+            sleep(1000);
+            bot.grab_stone();
+            sleep(1000);
+            bot.h_grabber_pos();
+            sleep(1000);
+            bot.strafe_left(.75,500);
+            sleep(4000);
+            bot.vraise_lift();
             bot.h_extend();
             sleep(600);
-            bot.toggle_turner();
-            sleep(800);
-            bot.drive_backward(.5,20);
-            bot.toggle_turner();
-            sleep(800);
-            bot.vslack(500);
-            bot.grab_stone();
-            sleep(600);
+            bot.toggle_grabber();
             bot.h_grabber_pos();
+            sleep(600);
+            bot.vlower_lift();
+            bot.strafe_left(.75,750);
+
             sleep(600000);
 
 //        if (side == Side.RIGHT) bot.strafe_right(0.75, 10);

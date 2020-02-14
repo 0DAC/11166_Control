@@ -19,6 +19,7 @@ public class MainFoundationAuto {
         else bot.strafe_left(0.75, 20);
         bot.drive_backward(1.0, 10);
         bot.lower_foundations();
+        bot.pause(500);
 
         if (side == Side.RIGHT) bot.strafe_left(0.75, 40);
         else bot.strafe_right(0.75, 40);
