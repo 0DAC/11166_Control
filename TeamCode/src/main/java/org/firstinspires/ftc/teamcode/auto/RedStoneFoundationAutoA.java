@@ -4,9 +4,9 @@ import org.firstinspires.ftc.teamcode.bot.components.Robot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Red Stone and Foundation Auto")
+@Autonomous(name="Red Stone and Foundation Auto A")
 
-public class RedStoneFoundationAuto extends LinearOpMode {
+public class RedStoneFoundationAutoA extends LinearOpMode {
     Robot bot;
 
     @Override
@@ -15,31 +15,76 @@ public class RedStoneFoundationAuto extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            //bot.pause(13000);
             bot.vgroundstonelevel();
-            bot.h_extend();
+            bot.h_auto_extend();
             sleep(400);
             bot.turnerout();
-            bot.drive_backward(.5,39);
+
+            bot.drive_backward(.5,40);
             sleep(600);
+
             bot.vgroundlevel();
-            sleep(1000);
+            sleep(2000);
+
             bot.grab_stone();
             sleep(1000);
             bot.h_grabber_pos();
             sleep(1000);
-            bot.strafe_left(.75,500);
-            sleep(4000);
-            bot.vraise_lift();
-            bot.h_extend();
+
+            bot.drive_forward(1,20);
             sleep(600);
-            bot.toggle_grabber();
+
+//            bot.drive_forward(.5,10);
+//            sleep(600);
+            bot.vnudgeup();
+            sleep(600);
+
+            bot.set_threshold(3000);
+            bot.strafe_left(.75,330);
+            sleep(100);
+
+            bot.vgroundstonelevel();
+            bot.vgroundstonelevel();
+            sleep(600);
+            bot.h_extend();
+            sleep(1000);
+
+            bot.set_threshold(3000);
+            bot.drive_backward(.25,20);
+            bot.set_threshold(1500);
+            sleep(600);
+
+            bot.vgroundlevel();
+            sleep(600);
+            bot.drop_stone();
+            sleep(600);
             bot.h_grabber_pos();
             sleep(600);
-            bot.vlower_lift();
-            bot.strafe_left(.75,750);
+            bot.vgroundlevel();
+            sleep(600);
 
-            sleep(600000);
+//            bot.drive_forward(.5,10);
+//            sleep(600);
+
+            sleep(60000);
+
+//            bot.strafe_right(.75,750);
+//            bot.set_threshold(7000);
+//            sleep(1000);
+//
+//            bot.vgroundstonelevel();
+//            bot.h_extend();
+//            sleep(400);
+//            bot.turnerout();
+//            bot.drive_backward(.5,39);
+//            sleep(600);
+//            bot.vgroundlevel();
+//            sleep(1000);
+//            bot.grab_stone();
+//            sleep(1000);
+//            bot.h_grabber_pos();
+//            sleep(1000);
+//            sleep(600000);
 
 //        if (side == Side.RIGHT) bot.strafe_right(0.75, 10);
 //        else bot.strafe_left(0.75, 10);

@@ -33,16 +33,15 @@ public class CraneLift {
     private final int VMAX_POSITION = 10;
     private final int VMOVE_INCREMENT = 50;
     private final double VMOVE_UP_POWER = 1;
-<<<<<<< HEAD
+
     private final double VMOVE_DOWN_POWER = .5;
-=======
-    private final double VMOVE_DOWN_POWER = .2;
->>>>>>> 9b33f351bd9b4f918402e73ed1f7c3421459ddb3
+
     int VRIGHT_POS, VLEFT_POS;
 
     // horizontal extension
-    private final double H_OUT = .8;
-    private final double H_GRABBER_BOT = 0.40;
+    private final double H__AUTO_OUT = .75;
+    private final double H_TELE_OUT = .5;
+    private final double H_GRABBER_BOT = .4;
     private final double H_CAPSTONE = 0.33;
     private final double H_IN = 0.25;
     boolean H_FULLY_EXTENDED = false;
@@ -59,7 +58,7 @@ public class CraneLift {
     boolean rotator_out = false;
 
     // stone grabber
-    private final double GRABBER_CLOSED = 0.7,
+    private final double GRABBER_CLOSED = 0.69,
                     GRABBER_OPEN = .2;
     int grabber_state = 0; // 0 = open, 1 = closed
     int capper_state = 0; // 0 = closed, 1 = open
@@ -104,8 +103,6 @@ public class CraneLift {
         turner = hardwareMap.get(Servo.class, SystemConfig.lift_turner);
         capper = hardwareMap.get(Servo.class, SystemConfig.lift_capper);
 
-        drop_stone();
-
         // init servos to these values
         capper.setPosition(CAPSTONE_UP);
         turner.setPosition(ROTATOR_IN);
@@ -149,9 +146,6 @@ public class CraneLift {
             left.setZeroPowerBehavior(BRAKE);
             right.setZeroPowerBehavior(BRAKE);
         }
-        t.addData("Left Lift:", VLEFT_POS);
-        t.addData("Right Lift:", VRIGHT_POS);
-//        t.update();
     }
 
     public void v_glide_up() {
@@ -217,6 +211,36 @@ public class CraneLift {
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
+    public void nudge_up () {
+        left.setPositionPIDFCoefficients(Up_Pos_P);
+        right.setPositionPIDFCoefficients(Up_Pos_P);
+        VLEFT_POS+=8;
+        VRIGHT_POS+=8;
+
+        left.setPower(VMOVE_UP_POWER);
+        left.setTargetPosition(VLEFT_POS);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        right.setPower(VMOVE_UP_POWER);
+        right.setTargetPosition(VRIGHT_POS);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void nudge_down () {
+        left.setPositionPIDFCoefficients(Up_Pos_P);
+        right.setPositionPIDFCoefficients(Up_Pos_P);
+        VLEFT_POS-=8;
+        VRIGHT_POS+=8;
+
+        left.setPower(VMOVE_UP_POWER);
+        left.setTargetPosition(VLEFT_POS);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        right.setPower(VMOVE_UP_POWER);
+        right.setTargetPosition(VRIGHT_POS);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
     public void ground_stone_raise () {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
@@ -267,9 +291,13 @@ public class CraneLift {
     }
 
     // extender
-    public void hextend() {
-        extender.setPosition(H_OUT);
+    public void hteleextend() {
+        extender.setPosition(H_TELE_OUT);
     }
+    public void hautoextend() {
+        extender.setPosition(H__AUTO_OUT);
+    }
+
 
     public void h_grabber_bot() {
         extender.setPosition(H_GRABBER_BOT);
@@ -286,7 +314,7 @@ public class CraneLift {
 
     public void htoggle() {
         if (H_FULLY_EXTENDED) hretract();
-        else hextend();
+        else hteleextend();
         H_FULLY_EXTENDED = !H_FULLY_EXTENDED;
     }
 

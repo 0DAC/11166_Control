@@ -20,7 +20,7 @@ public class Robot {
     private Camera camera;
     private int TIME_THRESHOLD = 1500;
 
-    private final int TURN_90_TIME = 41;
+    private final int TURN_90_TICKS = 41;
 
     public static double  RIGHT_FOUNDATION_UP = 1,
             RIGHT_FOUNDATION_DOWN  = 0.24,
@@ -139,7 +139,6 @@ public class Robot {
 
         //camera = new Camera(hmp, null);
 
-        // configure outerIntake motors
         /*gyro = hmp.get(BNO055IMUImpl.class, "gyro");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -174,9 +173,9 @@ public class Robot {
     /**
      *
      * @param power
-     * @param encoder_vals: encoder positions in this order: {front_r, rear_r, front_l, rear_l}
+     * @param encoder_vals: encoder positions in this order: {front_r, front_l, rear_r, rear_l}
      */
-    // staggered order of motor engagement so that one side of robot does not turn on / off before the other side
+    // make sure to stagger order of motor engagement so that one side of robot does not turn on / off before the other side
     public void encoder_drive(double power, int[] encoder_vals) {
         for (int i = 0; i < 4; i ++) {
             drive.motors[i].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -194,7 +193,6 @@ public class Robot {
 //        drive.motors[0].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 //        int new_pos_0 = encoder_vals[0]*(1125 / ((42 / 35) * (32)) + drive.motors[0].getCurrentPosition());
 //        drive.motors[0].setTargetPosition(new_pos_0);
-//        drive.motors[0].setPower(power);
 //
 //        drive.motors[2].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 //        //set dummy position before changing runmode
@@ -202,7 +200,6 @@ public class Robot {
 //        drive.motors[2].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 //        int new_pos_2 = encoder_vals[2]*(1125 / ((42 / 35) * (32)) + drive.motors[2].getCurrentPosition());
 //        drive.motors[2].setTargetPosition(new_pos_2);
-//        drive.motors[2].setPower(power);
 //
 //        drive.motors[1].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 //        //set dummy position before changing runmode
@@ -210,7 +207,6 @@ public class Robot {
 //        drive.motors[1].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 //        int new_pos_1 = encoder_vals[1]*(1125 / ((42 / 35) * (32)) + drive.motors[1].getCurrentPosition());
 //        drive.motors[1].setTargetPosition(new_pos_1);
-//        drive.motors[1].setPower(power);
 //
 //        drive.motors[3].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 //        //set dummy position before changing runmode
@@ -218,6 +214,11 @@ public class Robot {
 //        drive.motors[3].setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 //        int new_pos_3 = encoder_vals[3]*(1125 / ((42 / 35) * (32)) + drive.motors[3].getCurrentPosition());
 //        drive.motors[3].setTargetPosition(new_pos_3);
+//
+//        //set power to motors in x shape
+//        drive.motors[0].setPower(power);
+//        drive.motors[1].setPower(power);
+//        drive.motors[2].setPower(power);
 //        drive.motors[3].setPower(power);
 
 
@@ -234,20 +235,22 @@ public class Robot {
         }
 
 //        drive.motors[0].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-//        drive.motors[0].setPower(0);
 //        drive.motors[0].setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 //
 //        drive.motors[1].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-//        drive.motors[1].setPower(0);
 //        drive.motors[1].setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 //
 //        drive.motors[2].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-//        drive.motors[2].setPower(0);
 //        drive.motors[2].setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 //
 //        drive.motors[3].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-//        drive.motors[3].setPower(0);
 //        drive.motors[3].setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//
+//        //set power to motors in x shape
+//        drive.motors[0].setPower(0);
+//        drive.motors[1].setPower(0);
+//        drive.motors[2].setPower(0);
+//        drive.motors[3].setPower(0);
     }
 
     public void set_threshold(int val) {
@@ -278,13 +281,13 @@ public class Robot {
         encoder_drive(speed, new int[]{distance, distance, -distance, -distance});
     }
     public void turn_90_ccw(double speed) {
-        encoder_drive(speed, new int[]{TURN_90_TIME, TURN_90_TIME, TURN_90_TIME, TURN_90_TIME});
+        encoder_drive(speed, new int[]{TURN_90_TICKS, TURN_90_TICKS, TURN_90_TICKS, TURN_90_TICKS});
     }
     public void turn_90_cw(double speed) {
-        encoder_drive(speed, new int[]{-TURN_90_TIME, -TURN_90_TIME, -TURN_90_TIME, -TURN_90_TIME});
+        encoder_drive(speed, new int[]{-TURN_90_TICKS, -TURN_90_TICKS, -TURN_90_TICKS, -TURN_90_TICKS});
     }
     public void turn(double speed, double angle) {
-        int sign = (int) (angle/90 * TURN_90_TIME);
+        int sign = (int) (angle/90 * TURN_90_TICKS);
         encoder_drive(speed, new int[]{sign, sign, sign, sign});
     }
 
@@ -310,6 +313,8 @@ public class Robot {
     public void vglidedown() {lift.v_glide_down();}
     public void vgroundstonelevel() {lift.ground_stone_raise();}
     public void vgroundlevel() {lift.ground_stone_retract();}
+    public void vnudgeup() {lift.nudge_up();}
+    public void vnudgedown() {lift.nudge_down();}
 
 
     public void hextend_toggle() {
@@ -317,7 +322,8 @@ public class Robot {
     }
     public void h_grabber_pos() {lift.h_grabber_bot();}
     public void h_capstone_pos() {lift.hcapstonepos();}
-    public void h_extend() {lift.hextend();}
+    public void h_extend() {lift.hteleextend();}
+    public void h_auto_extend() {lift.hautoextend();}
     public void h_retract() {lift.hretract();}
     public void place_capstone () {lift.toggle_capstone();}
 
