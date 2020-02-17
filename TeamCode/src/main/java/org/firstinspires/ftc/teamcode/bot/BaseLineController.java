@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.bot.components.Robot;
 public class BaseLineController extends LinearOpMode {
     Robot bot;
 
+    double liftlevel = 0;
+
     @Override
     public void runOpMode() throws InterruptedException {
         bot = new Robot(hardwareMap, telemetry);
@@ -29,13 +31,25 @@ public class BaseLineController extends LinearOpMode {
             else bot.xbox_drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             if (gamepad1.y) {
-                bot.hextend_toggle();
+                bot.vslack(1);
+                sleep(200);
+                bot.grab_stone();
+                sleep(1000);
+                bot.h_extend();
+                bot.vlifttolevel(liftlevel, 1);
                 sleep(600);
+                bot.turnerout();
             }
-            if (gamepad1.a && !gamepad1.start) {
-                bot.toggle_turner();
-                sleep(800);
+            else if (gamepad1.a && !gamepad1.start) {
+                bot.drop_stone();
+                sleep(600);
+                bot.vlifttolevel(liftlevel+.3, 1);
+                bot.turnerin();
+                bot.vlifttolevel(0, .7);
+                sleep(600);
+                bot.h_retract();
             }
+            else bot.vhold();
 
             if (gamepad1.x) {
                 bot.toggle_foundation();
@@ -43,7 +57,7 @@ public class BaseLineController extends LinearOpMode {
             }
 
             if (gamepad1.b && !gamepad1.start) {
-                bot.toggle_grabber();
+                bot.vgroundstonelevel();
                 sleep(600);
             }
 
@@ -58,13 +72,21 @@ public class BaseLineController extends LinearOpMode {
             }
 
             if (gamepad1.left_bumper) {
-                bot.vraise_lift();
-                sleep(100);
+//                bot.vraise_lift();
+//                sleep(100);
+                if (liftlevel < 10) {
+                    liftlevel += 1;
+                    telemetry.addData("Lift Level", liftlevel);
+                }
             }
             else if (gamepad1.right_bumper) {
-                bot.vlower_lift();
-                sleep(100);
-            } else bot.vhold();
+//                bot.vlower_lift();
+//                sleep(100);
+                if (liftlevel > 0) {
+                    liftlevel -= 1;
+                    telemetry.addData("Lift Level", liftlevel);
+                }
+            }
 
             // comment out while using PID tuner
             // raise lift

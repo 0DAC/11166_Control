@@ -111,6 +111,21 @@ public class CraneLift {
     }
 
     // vertical lift
+
+    public void lift_to_level(double liftlevel, double power) {
+        left.setPositionPIDFCoefficients(Up_Pos_P);
+        right.setPositionPIDFCoefficients(Up_Pos_P);
+        VLEFT_POS+=liftlevel*160;
+        VRIGHT_POS+=liftlevel*160;
+        left.setPower(VMOVE_UP_POWER);
+        left.setTargetPosition(VLEFT_POS);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        right.setPower(VMOVE_UP_POWER);
+        right.setTargetPosition(VRIGHT_POS);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
     public void vextend() {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
@@ -188,6 +203,7 @@ public class CraneLift {
         t.addData("Right Lift:", VRIGHT_POS);
 //        t.update();
     }
+
     public void slack(int time_ms) {
         left.setZeroPowerBehavior(BRAKE);
         left.setPower(0);
@@ -195,20 +211,20 @@ public class CraneLift {
         right.setZeroPowerBehavior(BRAKE);
         right.setPower(0);
 
-        // wait for some time
-        double t = System.currentTimeMillis();
-        while (System.currentTimeMillis()-t < time_ms);
-
-        VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();
-
-        left.setPower(VMOVE_UP_POWER);
-        left.setTargetPosition(VLEFT_POS);
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        right.setPower(VMOVE_UP_POWER);
-        right.setTargetPosition(VRIGHT_POS);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        // wait for some time
+//        double t = System.currentTimeMillis();
+//        while (System.currentTimeMillis()-t < time_ms);
+//
+//        VLEFT_POS = left.getCurrentPosition();
+//        VRIGHT_POS = right.getCurrentPosition();
+//
+//        left.setPower(VMOVE_UP_POWER);
+//        left.setTargetPosition(VLEFT_POS);
+//        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        right.setPower(VMOVE_UP_POWER);
+//        right.setTargetPosition(VRIGHT_POS);
+//        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void nudge_up () {

@@ -315,7 +315,7 @@ public class Robot {
         else raise_foundations();
         FOUNDATION_UP = !FOUNDATION_UP;
     }
-
+    public void vlifttolevel(double liftlevel, double power) {lift.lift_to_level(liftlevel, power);}
     public void vraise_lift() { lift.vextend(); }
     public void vlower_lift() { lift.vretract(); }
     public void vhold() {lift.vstop();}
