@@ -24,6 +24,8 @@ public class SystemConfig {
     public static String left_foundation_servo = "left_foundation";
     public static String right_foundation_servo = "right_foundation";
 
+    public static String gyro = "gyro";
+
     public static String VUFORIA_LICENSE =
             "AVQaKO7/////AAABmQFBis10NUmmmITnIlHPC8ZK/qOj4m9+8VyrUgEKj83oG+HigeX5meWckrb1IyQzptwVBGVWVEKBhiyhsOiU8eUaDBY9uyhMGMSd7NW/7JE4zMyrYWdQeNb3FZ979b072+T5h5p/qzrjdgTQvNdLTJfBYM3407CgV070hMfA6r2AilF4QTHQ6ds8X5t42wFENyWf5NjPR69jwez9/hI2TU7iYLQ3PtS3i0PfAPrR/R0YQRaMXqPq45vguLg53UuzcYWYruHxsnPLR/ASDhrz44bp6bP3V2fr34F7ocXwEP+0ZqsbcKUZGPqz1WhLVspZ0ojYJqhTRZlSOCwPTX6S42J7Y8163xbYpQ6vORUwDJvH";
 

@@ -7,17 +7,24 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.HOMAR.internal.controller.ErrorTimeThresholdFinishingAlgorithm;
+import org.firstinspires.ftc.teamcode.HOMAR.internal.controller.FinishableIntegratedController;
+import org.firstinspires.ftc.teamcode.HOMAR.internal.controller.PIDController;
+import org.firstinspires.ftc.teamcode.HOMAR.internal.drivetrain.HeadingableMecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.HOMAR.internal.drivetrain.MecanumDrivetrain;
+import org.firstinspires.ftc.teamcode.HOMAR.internal.sensor.IntegratingGyroscopeSensor;
 import org.firstinspires.ftc.teamcode.SystemConfig;
 
 public class Robot {
     //private FinishableIntegratedController controller;
-    public MecanumDrivetrain drive;
+    public HeadingableMecanumDrivetrain drive;
     private Servo l_foundation, r_foundation;
     private boolean FOUNDATION_UP;
     private Intake intake;
     private CraneLift lift;
     private Camera camera;
+    private Gyro imu;
     private int TIME_THRESHOLD = 1500;
 
     private final int TURN_90_TICKS = 41;
@@ -71,8 +78,6 @@ public class Robot {
 //        backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 //        backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
-        drive = new MecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight});
-
         // config foundation servos
 
         l_foundation = hmp.get(Servo.class, SystemConfig.left_foundation_servo);
@@ -89,6 +94,9 @@ public class Robot {
         //camera = new Camera(hmp, t);
 
         // configure outerIntake motors
+        imu = new Gyro(hmp, t);
+        FinishableIntegratedController controller = new FinishableIntegratedController(new IntegratingGyroscopeSensor(imu.gyro), new PIDController(1,1,1), new ErrorTimeThresholdFinishingAlgorithm(Math.PI/50, 1));
+        drive = new HeadingableMecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight}, controller);
         /*gyro = hmp.get(BNO055IMUImpl.class, "gyro");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -123,7 +131,7 @@ public class Robot {
         backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        drive = new MecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight});
+        drive = new HeadingableMecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight}, null);
 
         // config foundation servos
 
@@ -281,14 +289,17 @@ public class Robot {
         encoder_drive(speed, new int[]{distance, distance, -distance, -distance});
     }
     public void turn_90_ccw(double speed) {
-        encoder_drive(speed, new int[]{TURN_90_TICKS, TURN_90_TICKS, TURN_90_TICKS, TURN_90_TICKS});
+        turn(speed, -90);
     }
     public void turn_90_cw(double speed) {
-        encoder_drive(speed, new int[]{-TURN_90_TICKS, -TURN_90_TICKS, -TURN_90_TICKS, -TURN_90_TICKS});
+        turn(speed, 90);
     }
     public void turn(double speed, double angle) {
-        int sign = (int) (angle/90 * TURN_90_TICKS);
-        encoder_drive(speed, new int[]{sign, sign, sign, sign});
+        double radians = AngleUnit.RADIANS.fromDegrees(angle);
+        drive.setTargetHeading(radians);
+        while(drive.isRotating()) {
+            drive.updateHeading();
+        }
     }
 
     public void raise_foundations() {
