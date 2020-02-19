@@ -60,10 +60,10 @@ public class BaseLineController extends LinearOpMode {
             if (gamepad1.b && !gamepad1.start) {
                 bot.vgroundstonelevel();
                 sleep(100);
-                bot.intake();
+                bot.servointake();
                 sleep(1500);
                 bot.stop_intake();
-                bot.vslack(1000);
+                bot.vnudgedown();
                 bot.grab_stone();
             }
 

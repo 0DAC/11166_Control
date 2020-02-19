@@ -34,6 +34,11 @@ public class Intake {
         this.in_left.setPower(1);
     }
 
+    public void servo_intake() {
+        this.in_right.setPower(-1);
+        this.in_left.setPower(1);
+    }
+
     public void spit() {
         this.out_left.setPower(l_speed);
         this.out_right.setPower(-r_speed);

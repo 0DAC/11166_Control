@@ -272,6 +272,7 @@ public class Robot {
     public void stop_intake() {
          intake.stop();
     }
+    public void servointake() { intake.servo_intake();}
 
     public void drive_forward(double speed, int distance) {
         encoder_drive(speed, new int[]{-distance, distance, -distance, distance});

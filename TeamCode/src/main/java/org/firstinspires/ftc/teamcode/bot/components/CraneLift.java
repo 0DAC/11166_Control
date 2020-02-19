@@ -30,10 +30,7 @@ public class CraneLift {
 
     //  vertical extension
     private final int VMIN_POSITION= 120;
-    private final int VMAX_POSITION = 10;
-    private final int VMOVE_INCREMENT = 50;
     private final double VMOVE_UP_POWER = 1;
-
     private final double VMOVE_DOWN_POWER = .5;
 
     int VRIGHT_POS, VLEFT_POS;
@@ -114,17 +111,39 @@ public class CraneLift {
     // vertical lift
 
     public void lift_to_level(double liftlevel, double power) {
-        left.setPositionPIDFCoefficients(Up_Pos_P);
-        right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS+=liftlevel*160;
-        VRIGHT_POS+=liftlevel*160;
-        left.setPower(VMOVE_UP_POWER);
-        left.setTargetPosition(VLEFT_POS);
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if (liftlevel != 0) {
+            left.setPositionPIDFCoefficients(Up_Pos_P);
+            right.setPositionPIDFCoefficients(Up_Pos_P);
+            VLEFT_POS += liftlevel * 160;
+            VRIGHT_POS += liftlevel * 160;
+            left.setPower(VMOVE_UP_POWER);
+            left.setTargetPosition(VLEFT_POS);
+            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        right.setPower(VMOVE_UP_POWER);
-        right.setTargetPosition(VRIGHT_POS);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            right.setPower(VMOVE_UP_POWER);
+            right.setTargetPosition(VRIGHT_POS);
+            right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        } else {
+            left.setPositionPIDFCoefficients(Down_Pos_P);
+            right.setPositionPIDFCoefficients(Down_Pos_P);
+            if (VLEFT_POS > VMIN_POSITION || VRIGHT_POS > VMIN_POSITION)  {
+                VLEFT_POS=0;
+                VRIGHT_POS=0;
+                left.setPower(VMOVE_DOWN_POWER);
+                left.setTargetPosition(VLEFT_POS);
+                left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                right.setPower(VMOVE_DOWN_POWER);
+                right.setTargetPosition(VRIGHT_POS);
+                right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            else {
+                left.setPower(0);
+                right.setPower(0);
+                left.setZeroPowerBehavior(BRAKE);
+                right.setZeroPowerBehavior(BRAKE);
+            }
+        }
     }
 
     public void vextend() {
@@ -144,15 +163,14 @@ public class CraneLift {
     public void vretract() {
         left.setPositionPIDFCoefficients(Down_Pos_P);
         right.setPositionPIDFCoefficients(Down_Pos_P);
-        //TODO: finish tuning, implement ramping power by time
         if (VLEFT_POS > VMIN_POSITION || VRIGHT_POS > VMIN_POSITION)  {
             VLEFT_POS-=170;
             VRIGHT_POS-=170;
-            left.setPower(VMOVE_UP_POWER);
+            left.setPower(VMOVE_DOWN_POWER);
             left.setTargetPosition(VLEFT_POS);
             left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            right.setPower(VMOVE_UP_POWER);
+            right.setPower(VMOVE_DOWN_POWER);
             right.setTargetPosition(VRIGHT_POS);
             right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
@@ -199,10 +217,6 @@ public class CraneLift {
             VLEFT_POS = left.getCurrentPosition();
             VRIGHT_POS = right.getCurrentPosition();
         }
-
-        t.addData("Left Lift:", VLEFT_POS);
-        t.addData("Right Lift:", VRIGHT_POS);
-//        t.update();
     }
 
     public void slack(int time_ms) {
@@ -246,8 +260,8 @@ public class CraneLift {
     public void nudge_down () {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS-=8;
-        VRIGHT_POS+=8;
+        VLEFT_POS-=40;
+        VRIGHT_POS+=40;
 
         left.setPower(VMOVE_UP_POWER);
         left.setTargetPosition(VLEFT_POS);
