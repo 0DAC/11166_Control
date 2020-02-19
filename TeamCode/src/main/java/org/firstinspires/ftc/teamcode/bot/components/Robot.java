@@ -18,16 +18,15 @@ import org.firstinspires.ftc.teamcode.SystemConfig;
 
 public class Robot {
     //private FinishableIntegratedController controller;
-    public HeadingableMecanumDrivetrain drive;
+    public MecanumDrivetrain drive;
     private Servo l_foundation, r_foundation;
     private boolean FOUNDATION_UP;
     private Intake intake;
     private CraneLift lift;
     private Camera camera;
-    private Gyro imu;
     private int TIME_THRESHOLD = 1500;
 
-    private final int TURN_90_TICKS = 41;
+    private final int TURN_90_TIME = 41;
 
     public static double  RIGHT_FOUNDATION_UP = 1,
             RIGHT_FOUNDATION_DOWN  = 0.24,
@@ -94,9 +93,7 @@ public class Robot {
         //camera = new Camera(hmp, t);
 
         // configure outerIntake motors
-        imu = new Gyro(hmp, t);
-        FinishableIntegratedController controller = new FinishableIntegratedController(new IntegratingGyroscopeSensor(imu.gyro), new PIDController(1,1,1), new ErrorTimeThresholdFinishingAlgorithm(Math.PI/50, 1));
-        drive = new HeadingableMecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight}, controller);
+        drive = new MecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight});
         /*gyro = hmp.get(BNO055IMUImpl.class, "gyro");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -295,11 +292,8 @@ public class Robot {
         turn(speed, 90);
     }
     public void turn(double speed, double angle) {
-        double radians = AngleUnit.RADIANS.fromDegrees(angle);
-        drive.setTargetHeading(radians);
-        while(drive.isRotating()) {
-            drive.updateHeading();
-        }
+        int sign = (int) (angle/90 * TURN_90_TIME);
+        encoder_drive(speed, new int[]{sign, sign, sign, sign});
     }
 
     public void raise_foundations() {
@@ -334,6 +328,7 @@ public class Robot {
     public void h_grabber_pos() {lift.h_grabber_bot();}
     public void h_capstone_pos() {lift.hcapstonepos();}
     public void h_extend() {lift.hteleextend();}
+    public void h_extend_full() {lift.hmaxextend();}
     public void h_auto_extend() {lift.hautoextend();}
     public void h_retract() {lift.hretract();}
     public void place_capstone () {lift.toggle_capstone();}

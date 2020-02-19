@@ -20,51 +20,45 @@ public class RedStoneFoundationAutoA extends LinearOpMode {
             sleep(400);
             bot.turnerout();
 
-            bot.drive_backward(.5,40);
-            sleep(600);
+            bot.drive_backward(.75,40);
+            sleep(200);
 
             bot.vgroundlevel();
-            sleep(2000);
+            sleep(600);
 
             bot.grab_stone();
-            sleep(1000);
+            sleep(400);
             bot.h_grabber_pos();
-            sleep(1000);
+            bot.drive_forward(1,20);
+
+            bot.turn_90_ccw(1);
+
+            bot.set_threshold(3000);
+            bot.drive_forward(1,250);
+            bot.set_threshold(1500);
+
+            bot.turn_90_cw(1);
+            bot.vgroundstonelevel();
+            bot.vgroundstonelevel();
+            sleep(300);
+            bot.h_extend();
+
+            bot.drive_backward(.5,20);
+
+            bot.lower_foundations();
+
+            bot.vgroundlevel();
+            bot.drop_stone();
 
             bot.drive_forward(1,20);
-            sleep(600);
 
-//            bot.drive_forward(.5,10);
-//            sleep(600);
-            bot.vnudgeup();
-            sleep(600);
+            bot.turn_90_ccw(1);
 
-            bot.set_threshold(3000);
-            bot.strafe_left(.75,330);
-            sleep(100);
+            bot.drive_backward(1,20);
 
-            bot.vgroundstonelevel();
-            bot.vgroundstonelevel();
-            sleep(600);
-            bot.h_extend();
-            sleep(1000);
-
-            bot.set_threshold(3000);
-            bot.drive_backward(.25,20);
-            bot.set_threshold(1500);
-            sleep(600);
-
-            bot.vgroundlevel();
-            sleep(600);
-            bot.drop_stone();
-            sleep(600);
+            bot.raise_foundations();
             bot.h_grabber_pos();
-            sleep(600);
             bot.vgroundlevel();
-            sleep(600);
-
-//            bot.drive_forward(.5,10);
-//            sleep(600);
 
             sleep(60000);
 

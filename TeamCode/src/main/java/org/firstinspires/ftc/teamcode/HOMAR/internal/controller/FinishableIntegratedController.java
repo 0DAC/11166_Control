@@ -12,14 +12,14 @@ public class FinishableIntegratedController extends IntegratedController {
     /**
      *
      */
-    FinishingAlgorithm finisher;
+    public FinishingAlgorithm finisher;
 
     /**
      * @param sensor
      * @param algorithm
      * @param finisher
      */
-    public FinishableIntegratedController(Sensor sensor, ControlAlgorithm algorithm, FinishingAlgorithm finisher) {
+    public FinishableIntegratedController(Sensor sensor, PIDController algorithm, FinishingAlgorithm finisher) {
         super(sensor, algorithm);
         this.finisher = finisher;
     }

@@ -41,6 +41,7 @@ public class CraneLift {
     // horizontal extension
     private final double H__AUTO_OUT = .75;
     private final double H_TELE_OUT = .5;
+    private final double H_MAX_OUT = .9;
     private final double H_GRABBER_BOT = .4;
     private final double H_CAPSTONE = 0.33;
     private final double H_IN = 0.25;
@@ -313,6 +314,7 @@ public class CraneLift {
     public void hautoextend() {
         extender.setPosition(H__AUTO_OUT);
     }
+    public void hmaxextend() {extender.setPosition(H_MAX_OUT);}
 
 
     public void h_grabber_bot() {
