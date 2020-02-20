@@ -260,8 +260,8 @@ public class CraneLift {
     public void nudge_down () {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS-=40;
-        VRIGHT_POS+=40;
+        VLEFT_POS-=50;
+        VRIGHT_POS-=50;
 
         left.setPower(VMOVE_UP_POWER);
         left.setTargetPosition(VLEFT_POS);
@@ -275,8 +275,9 @@ public class CraneLift {
     public void ground_stone_raise () {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS+=120;
-        VRIGHT_POS+=120;
+
+        VLEFT_POS+=140;
+        VRIGHT_POS+=140;
 
         left.setPower(VMOVE_UP_POWER);
         left.setTargetPosition(VLEFT_POS);

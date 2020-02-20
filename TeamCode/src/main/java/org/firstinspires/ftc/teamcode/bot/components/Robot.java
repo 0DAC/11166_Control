@@ -109,6 +109,11 @@ public class Robot {
 
         drive = new HeadingableMecanumDrivetrain(new DcMotorEx[]{frontLeft, frontRight, backLeft, backRight},
                 controller);*/
+        h_extend_full();
+        pause(600);
+        turnerin();
+        pause(600);
+        h_retract();
     }
 
     public Robot(HardwareMap hmp) {
