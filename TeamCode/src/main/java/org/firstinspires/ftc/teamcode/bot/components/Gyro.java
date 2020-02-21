@@ -36,17 +36,12 @@ public class Gyro {
         gyro = (IntegratingGyroscope)navxMicro;
 
         timer.reset();
-        while (navxMicro.isCalibrating())  {
+        navxMicro.initialize();
+        while (navxMicro.isCalibrating() && timer.seconds() <= 30)  {
             t.addData("Status:", "Calibrating Gyro, Don't Move!");
-            t.addData("calibrating", "%s", Math.round(timer.seconds())%2==0 ? "|.." : "..|");
+            t.addData("Time Elapsed:", Math.floor(timer.seconds()));
+            t.addData("C:alibrating", "%s", Math.round(timer.seconds())%2==0 ? "|.." : "..|");
             t.update();
-            try {
-                Thread.sleep(50);
-            }
-            catch (InterruptedException ie) {
-                t.addData("Gyro Calibration Error: ", ie.getMessage());
-                t.update();
-            }
         }
     }
 

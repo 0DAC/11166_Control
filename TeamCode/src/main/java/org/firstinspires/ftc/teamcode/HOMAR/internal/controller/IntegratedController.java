@@ -17,7 +17,7 @@ public class IntegratedController implements Controller, Targetable {
     /**
      * The algorithm doing the math to control the robot
      */
-    public ControlAlgorithm algorithm;
+    public PIDController algorithm;
     /**
      * The value the robot is trying to reach
      */
@@ -28,7 +28,7 @@ public class IntegratedController implements Controller, Targetable {
      * @param sensor The sensor providing the values from the robot
      * @param algorithm The algorithm being used to do the math
      */
-    public IntegratedController(Sensor sensor, ControlAlgorithm algorithm) {
+    public IntegratedController(Sensor sensor, PIDController algorithm) {
         this.sensor = sensor;
         this.algorithm = algorithm;
     }
