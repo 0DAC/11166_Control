@@ -34,13 +34,13 @@ public class BaseLineController extends LinearOpMode {
                 bot.grab_stone();
                 sleep(400);
                 bot.h_extend_full();
-                sleep(1000);
+                sleep(500);
+                bot.vlifttolevel(liftlevel, 1);
+                sleep(2500);
                 bot.turnerout();
                 sleep(400);
                 bot.h_extend();
                 sleep(400);
-                bot.vlifttolevel(liftlevel, 1);
-                sleep(600);
             }
             else if (gamepad1.a && !gamepad1.start) {
                 bot.drop_stone();
