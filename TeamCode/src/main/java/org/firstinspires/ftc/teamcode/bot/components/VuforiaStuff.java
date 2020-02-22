@@ -1,15 +1,19 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.teamcode.DbgLog;
+import org.firstinspires.ftc.teamcode.SystemConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,17 +24,25 @@ import static android.graphics.Bitmap.createScaledBitmap;
 
 public class VuforiaStuff {
 
-    static VuforiaLocalizer vuforia;
+    VuforiaLocalizer vuforia;
+    Telemetry t;
 
-    public VuforiaStuff(VuforiaLocalizer vu) {
-        vuforia = vu;
+    public VuforiaStuff(HardwareMap hmp, Telemetry tele) {
+        int cameraMonitorViewId = hmp.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hmp.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameters.vuforiaLicenseKey = SystemConfig.VUFORIA_LICENSE;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        t = tele;
     }
 
     public enum skystonePos {
         LEFT, CENTER, RIGHT;
     }
 
-    public static skystonePos vuforiascan(boolean saveBitmaps, boolean red) {
+    public skystonePos vuforiascan(boolean saveBitmaps, boolean red) {
         Image rgbImage = null;
         int rgbTries = 0;
 
@@ -43,10 +55,10 @@ public class VuforiaStuff {
         double blackCountR = 1;
         Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
         VuforiaLocalizer.CloseableFrame closeableFrame = null;
-        vuforia.setFrameQueueCapacity(1);
+        this.vuforia.setFrameQueueCapacity(1);
         while (rgbImage == null) {
             try {
-                closeableFrame = vuforia.getFrameQueue().take();
+                closeableFrame = this.vuforia.getFrameQueue().take();
                 long numImages = closeableFrame.getNumImages();
 
                 for (int i = 0; i < numImages; i++) {
