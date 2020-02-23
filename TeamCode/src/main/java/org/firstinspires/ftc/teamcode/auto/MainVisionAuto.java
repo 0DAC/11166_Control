@@ -23,19 +23,19 @@ public class MainVisionAuto extends LinearOpMode {
         switch (pos) {
             case LEFT:
                 //driveToPoint(-12, 37, 0, 9);
-                bot.strafe_right(0.5, 40);
+                bot.strafe_right(0.25, 40);
                 stoneDiff = 0;
                 break;
             case CENTER:
                 //driveToPoint(2, 42, 0, 9);
-                bot.drive_backward(0.5, 40);
+                bot.drive_backward(0.25, 40);
                 stoneDiff = 16;
                 break;
             case RIGHT:
                 //driveToPoint(10, 9, 0, 9);
                 //driveToPoint(0, 33, 0, 9);
                 //driveToPoint2(10, 42, 0, 9, 4);
-                bot.strafe_left(0.5, 40);
+                bot.strafe_left(0.25, 40);
                 stoneDiff = 20;
                 break;
         }

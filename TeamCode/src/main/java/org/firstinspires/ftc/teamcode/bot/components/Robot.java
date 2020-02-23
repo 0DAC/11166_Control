@@ -352,8 +352,6 @@ public class Robot {
     public void grab_stone() { lift.grab_stone(); }
     public void drop_stone() { lift.drop_stone(); }
 
-    public void grab_n_retract() {lift.grab_n_retract();}
-    public void extend_n_grab() {lift.extend_then_grab();}
 
     public void toggle_grabber() {
         lift.toggle_grabber();
