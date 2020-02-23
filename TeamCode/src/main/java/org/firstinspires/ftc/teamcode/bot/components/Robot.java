@@ -326,6 +326,7 @@ public class Robot {
     public void vgroundlevel() {lift.ground_stone_retract();}
     public void vnudgeup() {lift.nudge_up();}
     public void vnudgedown() {lift.nudge_down();}
+    public void updateheight(double liftlevel) {lift.update_height(liftlevel);}
 
 
     public void hextend_toggle() {
@@ -335,6 +336,7 @@ public class Robot {
     public void h_capstone_pos() {lift.hcapstonepos();}
     public void h_extend() {lift.hteleextend();}
     public void h_extend_full() {lift.hmaxextend();}
+    public void h_engage() {lift.hengage();}
     public void h_auto_extend() {lift.hautoextend();}
     public void h_retract() {lift.hretract();}
     public void place_capstone () {lift.toggle_capstone();}
@@ -393,7 +395,7 @@ public class Robot {
      }
 
      public void print_servo_vals(Telemetry t) {
-         t.addData("Lift Level:", lift.liftlevel);
+         t.addData("Lift Level:", lift.height);
          t.addData("Turner Servo:", String.format("%.2f [%s]", lift.turner_pos(), lift.rotator_out ? "Rotated out" : "Not fully rotated"));
          t.addData("Horizontal Servo:", String.format("%.2f [%s]", lift.extender_pos(), lift.H_FULLY_EXTENDED ? "Fully extended" : "Not full extension"));
          t.addData("Grabber Servo:", String.format("%.2f [%s]", lift.grabber_pos(), lift.grabber_state==1 ? "Grabbing" : "Open"));

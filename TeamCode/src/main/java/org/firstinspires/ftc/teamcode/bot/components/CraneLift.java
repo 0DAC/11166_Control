@@ -33,15 +33,18 @@ public class CraneLift {
     private final double VMOVE_UP_POWER = 1;
     private final double VMOVE_DOWN_POWER = .5;
 
-    int VRIGHT_POS, VLEFT_POS, liftlevel;
+    int VRIGHT_POS, VLEFT_POS;
+
+    double height;
 
     // horizontal extension
     private final double H__AUTO_OUT = .75;
-    private final double H_TELE_OUT = .5;
+    private final double H_TELE_OUT = .42;
     private final double H_MAX_OUT = .9;
     private final double H_GRABBER_BOT = .4;
     private final double H_CAPSTONE = 0.33;
     private final double H_IN = 0.25;
+    private final double H_ENGAGE = 0.28;
     boolean H_FULLY_EXTENDED = false;
 
     //Capstone Holder Values
@@ -110,12 +113,16 @@ public class CraneLift {
 
     // vertical lift
 
+    public void update_height (double liftlevel) {
+        height = liftlevel;
+    }
+
     public void lift_to_level(double liftlevel, double power) {
         if (liftlevel != 0) {
             left.setPositionPIDFCoefficients(Up_Pos_P);
             right.setPositionPIDFCoefficients(Up_Pos_P);
-            VLEFT_POS += liftlevel * 160;
-            VRIGHT_POS += liftlevel * 160;
+            VLEFT_POS += liftlevel * 120;
+            VRIGHT_POS += liftlevel * 120;
             left.setPower(VMOVE_UP_POWER);
             left.setTargetPosition(VLEFT_POS);
             left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -260,8 +267,8 @@ public class CraneLift {
     public void nudge_down () {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS-=50;
-        VRIGHT_POS-=50;
+        VLEFT_POS-=40;
+        VRIGHT_POS-=40;
 
         left.setPower(VMOVE_UP_POWER);
         left.setTargetPosition(VLEFT_POS);
@@ -330,6 +337,7 @@ public class CraneLift {
         extender.setPosition(H__AUTO_OUT);
     }
     public void hmaxextend() {extender.setPosition(H_MAX_OUT);}
+    public void hengage() {extender.setPosition(H_ENGAGE);}
 
 
     public void h_grabber_bot() {

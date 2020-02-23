@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.bot.components.Robot;
 public class BaseLineController extends LinearOpMode {
     Robot bot;
 
-    double liftlevel = 0;
+    double liftlevel = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -44,13 +44,15 @@ public class BaseLineController extends LinearOpMode {
             }
             else if (gamepad1.a && !gamepad1.start) {
                 bot.drop_stone();
-                bot.vlifttolevel(liftlevel+.5, 1);
-                sleep(1500);
-                bot.vlifttolevel(.5, .7);
+                sleep(400);
+                bot.vlifttolevel(.4, 1);
+                bot.drive_forward(1,30);
+                sleep(200);
+                bot.vlifttolevel(0, .7);
+                sleep(200);
                 bot.turnerin();
                 sleep(600);
-                bot.vlifttolevel(0, .7);
-                bot.h_retract();
+                bot.h_engage();
             }
             else bot.vhold();
 
@@ -60,6 +62,7 @@ public class BaseLineController extends LinearOpMode {
             }
 
             if (gamepad1.b && !gamepad1.start) {
+                bot.h_engage();
                 bot.vgroundstonelevel();
                 sleep(500);
                 bot.servointake();
@@ -85,15 +88,15 @@ public class BaseLineController extends LinearOpMode {
             if (gamepad1.left_bumper) {
                 if (liftlevel < 10) {
                     liftlevel += 1;
-                    telemetry.addData("Lift Level", liftlevel);
                 }
+                bot.updateheight(liftlevel);
                 sleep(300);
             }
             else if (gamepad1.right_bumper) {
                 if (liftlevel > 0) {
                     liftlevel -= 1;
-                    telemetry.addData("Lift Level", liftlevel);
                 }
+                bot.updateheight(liftlevel);
                 sleep(300);
             }
 
