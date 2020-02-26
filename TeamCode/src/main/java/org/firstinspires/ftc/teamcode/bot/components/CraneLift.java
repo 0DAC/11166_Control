@@ -121,7 +121,9 @@ public class CraneLift {
     // vertical lift
 
     public void update_height (int change) {
-        height += change;
+        if (height >= 0 && height <=10) {
+            height += change;
+        }
     }
 
     public void lift_to_level() {
