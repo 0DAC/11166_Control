@@ -124,21 +124,9 @@ public class CraneLift {
         height += change;
     }
 
-<<<<<<< HEAD
     public void lift_to_level() {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-=======
-    public void lift_to_level(double liftlevel, double power) {
-        if (height != 0) {
-            left.setPositionPIDFCoefficients(Up_Pos_P);
-            right.setPositionPIDFCoefficients(Up_Pos_P);
-            VLEFT_POS += liftlevel * 120;
-            VRIGHT_POS += liftlevel * 120;
-            left.setPower(VMOVE_UP_POWER);
-            left.setTargetPosition(VLEFT_POS);
-            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
->>>>>>> 69f7a3408b12dc774a7127202b2c5a6876e43f8a
 
         if (height == 1) {
             VLEFT_TARGET = height * ticksPerBlock;
@@ -321,8 +309,8 @@ public class CraneLift {
         right.setPower(0);
 
         // wait for some time
-        double t = System.currentTimeMillis();
-        while (System.currentTimeMillis()-t < time_ms);
+//        double t = System.currentTimeMillis();
+//        while (System.currentTimeMillis()-t < time_ms);
 
         VLEFT_POS = left.getCurrentPosition();
         VRIGHT_POS = right.getCurrentPosition();
