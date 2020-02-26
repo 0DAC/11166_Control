@@ -15,11 +15,17 @@ import org.firstinspires.ftc.teamcode.bot.components.Robot;
 public class BaseLineController extends LinearOpMode {
     Robot bot;
 
-    double liftlevel = 1;
+    double liftlevel = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
         bot = new Robot(hardwareMap, telemetry);
+
+        bot.h_extend_full();
+        bot.pause(400);
+        bot.turnerin();
+        bot.pause(400);
+        bot.h_retract();
 
         waitForStart();
         while (opModeIsActive()) {
@@ -32,10 +38,14 @@ public class BaseLineController extends LinearOpMode {
 
             if (gamepad1.y) {
                 bot.grab_stone();
-                sleep(400);
+                sleep(300);
                 bot.h_extend_full();
                 sleep(1000);
+<<<<<<< HEAD
                 bot.vlifttolevel();
+=======
+                bot.vlifttolevel(liftlevel, 1);
+>>>>>>> 69f7a3408b12dc774a7127202b2c5a6876e43f8a
                 bot.turnerout();
                 sleep(400);
                 bot.h_extend();
@@ -44,13 +54,20 @@ public class BaseLineController extends LinearOpMode {
             else if (gamepad1.a && !gamepad1.start) {
                 bot.drop_stone();
                 sleep(400);
+<<<<<<< HEAD
                 bot.vnudgeup();
                 bot.drive_forward(1,30);
                 sleep(400);
                 bot.vretractlift();
+=======
+                bot.vlifttolevel(liftlevel+1, 1);
+                bot.drive_forward(1,20);
+                sleep(500);
+>>>>>>> 69f7a3408b12dc774a7127202b2c5a6876e43f8a
                 bot.turnerin();
                 sleep(600);
                 bot.h_engage();
+                bot.vlifttolevel(0, .7);
             }
             else bot.vhold();
 
@@ -85,6 +102,7 @@ public class BaseLineController extends LinearOpMode {
             }
 
             if (gamepad1.left_bumper) {
+<<<<<<< HEAD
 //                if (liftlevel < 10) {
 //                    liftlevel += 1;
 //                }
@@ -101,6 +119,20 @@ public class BaseLineController extends LinearOpMode {
 //                sleep(300);
                 bot.updateheight(-1);
                 sleep(400);
+=======
+                bot.updateheight(liftlevel);
+                if (liftlevel < 10) {
+                    liftlevel += 1;
+                }
+                sleep(200);
+            }
+            else if (gamepad1.right_bumper) {
+                bot.updateheight(liftlevel);
+                if (liftlevel > 0) {
+                    liftlevel -= 1;
+                }
+                sleep(200);
+>>>>>>> 69f7a3408b12dc774a7127202b2c5a6876e43f8a
             }
 
             // comment out while using PID tuner

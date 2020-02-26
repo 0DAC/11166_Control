@@ -21,40 +21,42 @@ public class RedStoneFoundationAutoA extends LinearOpMode {
             bot.turnerout();
 
             bot.drive_backward(.75,40);
-            sleep(200);
 
-            bot.vgroundlevel();
-            sleep(600);
+            bot.vslack(1000);
 
             bot.grab_stone();
             sleep(400);
             bot.h_grabber_pos();
+
             bot.drive_forward(1,20);
 
-            bot.turn_90_ccw(1);
+            bot.turn_90_cw(1);
 
             bot.set_threshold(3000);
             bot.drive_forward(1,250);
             bot.set_threshold(1500);
 
-            bot.turn_90_cw(1);
-            bot.vgroundstonelevel();
+            bot.turn_90_ccw(1);
             bot.vgroundstonelevel();
             sleep(300);
+
             bot.h_extend();
 
             bot.drive_backward(.5,20);
 
             bot.lower_foundations();
 
-            bot.vgroundlevel();
+            bot.vslack(500);
             bot.drop_stone();
+
 
             bot.drive_forward(1,20);
 
+            bot.strafe_right(1,30);
+
             bot.turn_90_ccw(1);
 
-            bot.drive_backward(1,20);
+            bot.drive_backward(1,60);
 
             bot.raise_foundations();
             bot.h_grabber_pos();

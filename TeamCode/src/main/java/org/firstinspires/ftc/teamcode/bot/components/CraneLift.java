@@ -41,7 +41,7 @@ public class CraneLift {
 
     // horizontal extension
     private final double H__AUTO_OUT = .75;
-    private final double H_TELE_OUT = .42;
+    private final double H_TELE_OUT = .35;
     private final double H_MAX_OUT = .9;
     private final double H_GRABBER_BOT = .4;
     private final double H_CAPSTONE = 0.33;
@@ -124,9 +124,21 @@ public class CraneLift {
         height += change;
     }
 
+<<<<<<< HEAD
     public void lift_to_level() {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
+=======
+    public void lift_to_level(double liftlevel, double power) {
+        if (height != 0) {
+            left.setPositionPIDFCoefficients(Up_Pos_P);
+            right.setPositionPIDFCoefficients(Up_Pos_P);
+            VLEFT_POS += liftlevel * 120;
+            VRIGHT_POS += liftlevel * 120;
+            left.setPower(VMOVE_UP_POWER);
+            left.setTargetPosition(VLEFT_POS);
+            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+>>>>>>> 69f7a3408b12dc774a7127202b2c5a6876e43f8a
 
         if (height == 1) {
             VLEFT_TARGET = height * ticksPerBlock;
@@ -308,20 +320,20 @@ public class CraneLift {
         right.setZeroPowerBehavior(BRAKE);
         right.setPower(0);
 
-//        // wait for some time
-//        double t = System.currentTimeMillis();
-//        while (System.currentTimeMillis()-t < time_ms);
-//
-//        VLEFT_POS = left.getCurrentPosition();
-//        VRIGHT_POS = right.getCurrentPosition();
-//
-//        left.setPower(VMOVE_UP_POWER);
-//        left.setTargetPosition(VLEFT_POS);
-//        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//        right.setPower(VMOVE_UP_POWER);
-//        right.setTargetPosition(VRIGHT_POS);
-//        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // wait for some time
+        double t = System.currentTimeMillis();
+        while (System.currentTimeMillis()-t < time_ms);
+
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+
+        left.setPower(VMOVE_UP_POWER);
+        left.setTargetPosition(VLEFT_POS);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        right.setPower(VMOVE_UP_POWER);
+        right.setTargetPosition(VRIGHT_POS);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void nudge_up () {
@@ -487,14 +499,17 @@ public class CraneLift {
         turner.setPosition(ROTATOR_CAPSTONE);
     }
 
-    public void grab_n_retract() {
+    public void grabstone() {
         grab_stone();
         hretract();
     }
 
-    public void extend_then_grab() {
-        h_grabber_bot();
-        grab_n_retract();
+    public void placestone() {
+
+    }
+
+    public void resetclaw() {
+
     }
 
 }
