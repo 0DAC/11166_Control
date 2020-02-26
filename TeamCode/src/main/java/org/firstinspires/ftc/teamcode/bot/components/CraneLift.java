@@ -33,9 +33,11 @@ public class CraneLift {
     private final double VMOVE_UP_POWER = 1;
     private final double VMOVE_DOWN_POWER = .5;
 
-    int VRIGHT_POS, VLEFT_POS;
+    int VRIGHT_POS, VLEFT_POS, VLEFT_TARGET, VRIGHT_TARGET;
 
-    double height;
+    int height;
+
+    int ticksPerBlock;
 
     // horizontal extension
     private final double H__AUTO_OUT = .75;
@@ -99,6 +101,11 @@ public class CraneLift {
         VLEFT_POS = left.getCurrentPosition();
         VRIGHT_POS = right.getCurrentPosition();
 
+        VLEFT_TARGET = 0;
+        VRIGHT_TARGET = 0;
+
+        ticksPerBlock = 120;
+
         extender = hardwareMap.get(Servo.class, SystemConfig.lift_extend);
         grabber = hardwareMap.get(Servo.class, SystemConfig.lift_grabber);
         turner = hardwareMap.get(Servo.class, SystemConfig.lift_turner);
@@ -113,72 +120,102 @@ public class CraneLift {
 
     // vertical lift
 
-    public void update_height (double liftlevel) {
-        height = liftlevel;
+    public void update_height (int change) {
+        height += change;
     }
 
-    public void lift_to_level(double liftlevel, double power) {
-        if (liftlevel != 0) {
-            left.setPositionPIDFCoefficients(Up_Pos_P);
-            right.setPositionPIDFCoefficients(Up_Pos_P);
-            VLEFT_POS += liftlevel * 120;
-            VRIGHT_POS += liftlevel * 120;
-            left.setPower(VMOVE_UP_POWER);
-            left.setTargetPosition(VLEFT_POS);
-            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            right.setPower(VMOVE_UP_POWER);
-            right.setTargetPosition(VRIGHT_POS);
-            right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        } else {
-            left.setPositionPIDFCoefficients(Down_Pos_P);
-            right.setPositionPIDFCoefficients(Down_Pos_P);
-            if (VLEFT_POS > VMIN_POSITION || VRIGHT_POS > VMIN_POSITION)  {
-                VLEFT_POS=0;
-                VRIGHT_POS=0;
-                left.setPower(VMOVE_DOWN_POWER);
-                left.setTargetPosition(VLEFT_POS);
-                left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                right.setPower(VMOVE_DOWN_POWER);
-                right.setTargetPosition(VRIGHT_POS);
-                right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
-            else {
-                left.setPower(0);
-                right.setPower(0);
-                left.setZeroPowerBehavior(BRAKE);
-                right.setZeroPowerBehavior(BRAKE);
-            }
-        }
-    }
-
-    public void vextend() {
+    public void lift_to_level() {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS+=170;
-        VRIGHT_POS+=170;
+
+        if (height == 1) {
+            VLEFT_TARGET = height * ticksPerBlock;
+            VRIGHT_TARGET = height * ticksPerBlock;
+        } else if (height == 2) {
+            VLEFT_TARGET = height * ticksPerBlock;
+            VRIGHT_TARGET = height * ticksPerBlock;
+        } else if (height == 3) {
+            VLEFT_TARGET = height * ticksPerBlock;
+            VRIGHT_TARGET = height * ticksPerBlock;
+        } else if (height == 4) {
+            VLEFT_TARGET = height * ticksPerBlock;
+            VRIGHT_TARGET = height * ticksPerBlock;
+        } else if (height == 5) {
+            VLEFT_TARGET = height * ticksPerBlock;
+            VRIGHT_TARGET = height * ticksPerBlock;
+        } else if (height == 6) {
+            VLEFT_TARGET = height * ticksPerBlock;
+            VRIGHT_TARGET = height * ticksPerBlock;
+        } else if (height == 7) {
+            VLEFT_TARGET = height * ticksPerBlock;
+            VRIGHT_TARGET = height * ticksPerBlock;
+        } else if (height == 8) {
+            VLEFT_TARGET = height * ticksPerBlock;
+            VRIGHT_TARGET = height * ticksPerBlock;
+        } else if (height == 9) {
+            VLEFT_TARGET = height * ticksPerBlock;
+            VRIGHT_TARGET = height * ticksPerBlock;
+        }
+
         left.setPower(VMOVE_UP_POWER);
-        left.setTargetPosition(VLEFT_POS);
+        left.setTargetPosition(VLEFT_TARGET);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         right.setPower(VMOVE_UP_POWER);
-        right.setTargetPosition(VRIGHT_POS);
+        right.setTargetPosition(VRIGHT_TARGET);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+
+//        if (liftlevel != 0) {
+//            left.setPositionPIDFCoefficients(Up_Pos_P);
+//            right.setPositionPIDFCoefficients(Up_Pos_P);
+//            VLEFT_POS += liftlevel * 120;
+//            VRIGHT_POS += liftlevel * 120;
+//            left.setPower(VMOVE_UP_POWER);
+//            left.setTargetPosition(VLEFT_POS);
+//            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//            right.setPower(VMOVE_UP_POWER);
+//            right.setTargetPosition(VRIGHT_POS);
+//            right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        } else {
+//            left.setPositionPIDFCoefficients(Down_Pos_P);
+//            right.setPositionPIDFCoefficients(Down_Pos_P);
+//            if (VLEFT_POS > VMIN_POSITION || VRIGHT_POS > VMIN_POSITION)  {
+//                VLEFT_POS=0;
+//                VRIGHT_POS=0;
+//                left.setPower(VMOVE_DOWN_POWER);
+//                left.setTargetPosition(VLEFT_POS);
+//                left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//                right.setPower(VMOVE_DOWN_POWER);
+//                right.setTargetPosition(VRIGHT_POS);
+//                right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            }
+//            else {
+//                left.setPower(0);
+//                right.setPower(0);
+//                left.setZeroPowerBehavior(BRAKE);
+//                right.setZeroPowerBehavior(BRAKE);
+//            }
+//        }
     }
 
-    public void vretract() {
+        public void vretract() {
         left.setPositionPIDFCoefficients(Down_Pos_P);
         right.setPositionPIDFCoefficients(Down_Pos_P);
+        VLEFT_TARGET = 0;
+        VRIGHT_TARGET = 0;
+
         if (VLEFT_POS > VMIN_POSITION || VRIGHT_POS > VMIN_POSITION)  {
-            VLEFT_POS-=170;
-            VRIGHT_POS-=170;
             left.setPower(VMOVE_DOWN_POWER);
-            left.setTargetPosition(VLEFT_POS);
+            left.setTargetPosition(VLEFT_TARGET);
             left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             right.setPower(VMOVE_DOWN_POWER);
-            right.setTargetPosition(VRIGHT_POS);
+            right.setTargetPosition(VRIGHT_TARGET);
             right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
         else {
@@ -187,16 +224,54 @@ public class CraneLift {
             left.setZeroPowerBehavior(BRAKE);
             right.setZeroPowerBehavior(BRAKE);
         }
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
     }
 
+    public void vextend() {
+        left.setPositionPIDFCoefficients(Up_Pos_P);
+        right.setPositionPIDFCoefficients(Up_Pos_P);
+        VLEFT_POS+=120;
+        VRIGHT_POS+=120;
+        left.setPower(VMOVE_UP_POWER);
+        left.setTargetPosition(VLEFT_POS);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        right.setPower(VMOVE_UP_POWER);
+        right.setTargetPosition(VRIGHT_POS);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+//
+//    public void vretract() {
+//        left.setPositionPIDFCoefficients(Down_Pos_P);
+//        right.setPositionPIDFCoefficients(Down_Pos_P);
+//        if (VLEFT_POS > VMIN_POSITION || VRIGHT_POS > VMIN_POSITION)  {
+//            VLEFT_POS-=120;
+//            VRIGHT_POS-=120;
+//            left.setPower(VMOVE_DOWN_POWER);
+//            left.setTargetPosition(VLEFT_POS);
+//            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//            right.setPower(VMOVE_DOWN_POWER);
+//            right.setTargetPosition(VRIGHT_POS);
+//            right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
+//        else {
+//            left.setPower(0);
+//            right.setPower(0);
+//            left.setZeroPowerBehavior(BRAKE);
+//            right.setZeroPowerBehavior(BRAKE);
+//        }
+//    }
+
     public void v_glide_up() {
-        left.setPositionPIDFCoefficients(Down_Pos_P);
-        right.setPositionPIDFCoefficients(Down_Pos_P);
+        left.setPositionPIDFCoefficients(Up_Pos_P);
+        right.setPositionPIDFCoefficients(Up_Pos_P);
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left.setPower(.8);
+        left.setPower(.6);
 
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right.setPower(.8);
+        right.setPower(.6);
 
         VLEFT_POS = left.getCurrentPosition();
         VRIGHT_POS = right.getCurrentPosition();
@@ -226,7 +301,7 @@ public class CraneLift {
         }
     }
 
-    public void slack(int time_ms) {
+    public void slack() {
         left.setZeroPowerBehavior(BRAKE);
         left.setPower(0);
 
@@ -252,30 +327,30 @@ public class CraneLift {
     public void nudge_up () {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS+=8;
-        VRIGHT_POS+=8;
+        VLEFT_TARGET=20;
+        VRIGHT_TARGET=20;
 
         left.setPower(VMOVE_UP_POWER);
-        left.setTargetPosition(VLEFT_POS);
+        left.setTargetPosition(VLEFT_POS+VLEFT_TARGET);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         right.setPower(VMOVE_UP_POWER);
-        right.setTargetPosition(VRIGHT_POS);
+        right.setTargetPosition(VRIGHT_POS+VRIGHT_TARGET);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void nudge_down () {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS-=40;
-        VRIGHT_POS-=40;
+        VLEFT_TARGET=-40;
+        VRIGHT_TARGET=-40;
 
         left.setPower(VMOVE_UP_POWER);
-        left.setTargetPosition(VLEFT_POS);
+        left.setTargetPosition(VLEFT_POS+VLEFT_TARGET);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         right.setPower(VMOVE_UP_POWER);
-        right.setTargetPosition(VRIGHT_POS);
+        right.setTargetPosition(VRIGHT_POS+VRIGHT_TARGET);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
@@ -283,30 +358,30 @@ public class CraneLift {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
 
-        VLEFT_POS+=140;
-        VRIGHT_POS+=140;
+        VLEFT_TARGET=140;
+        VLEFT_TARGET=140;
 
         left.setPower(VMOVE_UP_POWER);
-        left.setTargetPosition(VLEFT_POS);
+        left.setTargetPosition(VLEFT_POS+VLEFT_TARGET);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         right.setPower(VMOVE_UP_POWER);
-        right.setTargetPosition(VRIGHT_POS);
+        right.setTargetPosition(VRIGHT_POS+VRIGHT_TARGET);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void ground_stone_retract () {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS-=120;
-        VRIGHT_POS-=120;
+        VLEFT_TARGET=-120;
+        VLEFT_TARGET=-120;
 
         left.setPower(VMOVE_UP_POWER);
-        left.setTargetPosition(VLEFT_POS);
+        left.setTargetPosition(VLEFT_POS+VLEFT_TARGET);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         right.setPower(VMOVE_UP_POWER);
-        right.setTargetPosition(VRIGHT_POS);
+        right.setTargetPosition(VRIGHT_POS+VRIGHT_TARGET);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 

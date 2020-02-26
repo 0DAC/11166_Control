@@ -315,18 +315,19 @@ public class Robot {
         else raise_foundations();
         FOUNDATION_UP = !FOUNDATION_UP;
     }
-    public void vlifttolevel(double liftlevel, double power) {lift.lift_to_level(liftlevel, power);}
+    public void vlifttolevel() {lift.lift_to_level();}
     public void vraise_lift() { lift.vextend(); }
-    public void vlower_lift() { lift.vretract(); }
+//    public void vlower_lift() { lift.vretract(); }
+    public void vretractlift() {lift.vretract();}
     public void vhold() {lift.vstop();}
-    public void vslack(int time) {lift.slack(time);}
+    public void vslack() {lift.slack();}
     public void vglideup() {lift.v_glide_up();}
     public void vglidedown() {lift.v_glide_down();}
     public void vgroundstonelevel() {lift.ground_stone_raise();}
     public void vgroundlevel() {lift.ground_stone_retract();}
     public void vnudgeup() {lift.nudge_up();}
     public void vnudgedown() {lift.nudge_down();}
-    public void updateheight(double liftlevel) {lift.update_height(liftlevel);}
+    public void updateheight(int change) {lift.update_height(change);}
 
 
     public void hextend_toggle() {
