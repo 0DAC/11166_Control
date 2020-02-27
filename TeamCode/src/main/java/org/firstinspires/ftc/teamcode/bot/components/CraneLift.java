@@ -167,9 +167,6 @@ public class CraneLift {
         right.setTargetPosition(VRIGHT_TARGET);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();
-
 //        if (liftlevel != 0) {
 //            left.setPositionPIDFCoefficients(Up_Pos_P);
 //            right.setPositionPIDFCoefficients(Up_Pos_P);
@@ -206,8 +203,13 @@ public class CraneLift {
     }
 
         public void vretract() {
+
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+
         left.setPositionPIDFCoefficients(Down_Pos_P);
         right.setPositionPIDFCoefficients(Down_Pos_P);
+
         VLEFT_TARGET = 0;
         VRIGHT_TARGET = 0;
 
@@ -226,21 +228,23 @@ public class CraneLift {
             left.setZeroPowerBehavior(BRAKE);
             right.setZeroPowerBehavior(BRAKE);
         }
-        VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();
     }
 
     public void vextend() {
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
-        VLEFT_POS+=120;
-        VRIGHT_POS+=120;
+        VLEFT_TARGET+=120;
+        VRIGHT_TARGET+=120;
+
         left.setPower(VMOVE_UP_POWER);
-        left.setTargetPosition(VLEFT_POS);
+        left.setTargetPosition(VLEFT_POS+VLEFT_TARGET);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         right.setPower(VMOVE_UP_POWER);
-        right.setTargetPosition(VRIGHT_POS);
+        right.setTargetPosition(VRIGHT_POS+VRIGHT_TARGET);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 //
@@ -270,10 +274,10 @@ public class CraneLift {
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left.setPower(.6);
+        left.setPower(1);
 
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right.setPower(.6);
+        right.setPower(1);
 
         VLEFT_POS = left.getCurrentPosition();
         VRIGHT_POS = right.getCurrentPosition();
@@ -314,19 +318,22 @@ public class CraneLift {
 //        double t = System.currentTimeMillis();
 //        while (System.currentTimeMillis()-t < time_ms);
 
-        VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();
-
-        left.setPower(VMOVE_UP_POWER);
-        left.setTargetPosition(VLEFT_POS);
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        right.setPower(VMOVE_UP_POWER);
-        right.setTargetPosition(VRIGHT_POS);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        VLEFT_POS = left.getCurrentPosition();
+//        VRIGHT_POS = right.getCurrentPosition();
+//
+//        left.setPower(VMOVE_UP_POWER);
+//        left.setTargetPosition(VLEFT_POS);
+//        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        right.setPower(VMOVE_UP_POWER);
+//        right.setTargetPosition(VRIGHT_POS);
+//        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void nudge_up () {
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
         VLEFT_TARGET=20;
@@ -342,6 +349,9 @@ public class CraneLift {
     }
 
     public void nudge_down () {
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
         VLEFT_TARGET=-40;
@@ -357,6 +367,9 @@ public class CraneLift {
     }
 
     public void ground_stone_raise () {
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
 
@@ -373,6 +386,9 @@ public class CraneLift {
     }
 
     public void ground_stone_retract () {
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
         VLEFT_TARGET=-120;
@@ -388,6 +404,9 @@ public class CraneLift {
     }
 
     public void vstop() {
+        VLEFT_POS = left.getCurrentPosition();
+        VRIGHT_POS = right.getCurrentPosition();
+        git
         left.setTargetPosition(VLEFT_POS);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
