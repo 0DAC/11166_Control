@@ -22,7 +22,7 @@ public class RedStoneFoundationAutoA extends LinearOpMode {
 
             bot.drive_backward(.75,40);
 
-            bot.vslack(1000);
+            bot.vslack();
 
             bot.grab_stone();
             sleep(400);
@@ -46,7 +46,7 @@ public class RedStoneFoundationAutoA extends LinearOpMode {
 
             bot.lower_foundations();
 
-            bot.vslack(500);
+            bot.vslack();
             bot.drop_stone();
 
 

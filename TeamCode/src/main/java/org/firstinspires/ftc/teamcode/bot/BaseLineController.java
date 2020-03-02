@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.bot;
 
+import com.disnodeteam.dogecommander.DogeCommander;
+import com.disnodeteam.dogecommander.DogeOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -12,7 +14,7 @@ import org.firstinspires.ftc.teamcode.bot.components.Robot;
 
 @TeleOp(name = "Xbox TeleOp", group = "control")
 
-public class BaseLineController extends LinearOpMode {
+public class BaseLineController extends LinearOpMode implements DogeOpMode {
     Robot bot;
 
     double liftlevel = 0;
@@ -20,6 +22,7 @@ public class BaseLineController extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         bot = new Robot(hardwareMap, telemetry);
+        DogeCommander commander = new DogeCommander(this);
 
         bot.h_extend_full();
         bot.pause(400);
@@ -40,7 +43,7 @@ public class BaseLineController extends LinearOpMode {
                 bot.grab_stone();
                 sleep(300);
                 bot.h_extend_full();
-                sleep(1000);
+                sleep(1500);
                 bot.vlifttolevel();
                 bot.turnerout();
                 sleep(400);
@@ -51,9 +54,12 @@ public class BaseLineController extends LinearOpMode {
                 bot.drop_stone();
                 sleep(400);
                 bot.vnudgeup();
+                sleep(200);
                 bot.drive_forward(1,30);
                 sleep(400);
                 bot.vretractlift();
+                bot.h_extend_full();
+                sleep(200);
                 bot.turnerin();
                 sleep(600);
                 bot.h_engage();

@@ -89,7 +89,7 @@ public class LiftPIDTuner extends LinearOpMode {
                 sleep(100);
             }
             if (gamepad1.right_bumper) {
-                bot.vlower_lift();
+//                bot.vlower_lift();
                 sleep(100);
             }
             if (gamepad1.start) {

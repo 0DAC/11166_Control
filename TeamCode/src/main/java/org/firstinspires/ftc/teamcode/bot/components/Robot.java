@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
+import com.disnodeteam.dogecommander.Subsystem;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,7 +17,7 @@ import org.firstinspires.ftc.teamcode.HOMAR.internal.drivetrain.MecanumDrivetrai
 import org.firstinspires.ftc.teamcode.HOMAR.internal.sensor.IntegratingGyroscopeSensor;
 import org.firstinspires.ftc.teamcode.SystemConfig;
 
-public class Robot {
+public class Robot implements Subsystem {
     //private FinishableIntegratedController controller;
     public MecanumDrivetrain drive;
     private Servo l_foundation, r_foundation;
@@ -402,5 +403,15 @@ public class Robot {
          t.addData("Right Lift:", lift.VRIGHT_POS);
      }
 
-     //public PIDTuner getPIDTuner(Gamepad pad, Telemetry t) { return new PIDTuner(drive, (PIDController) controller.algorithm, pad, t); }
+    @Override
+    public void initHardware() {
+
+    }
+
+    @Override
+    public void periodic() {
+
+    }
+
+    //public PIDTuner getPIDTuner(Gamepad pad, Telemetry t) { return new PIDTuner(drive, (PIDController) controller.algorithm, pad, t); }
 }

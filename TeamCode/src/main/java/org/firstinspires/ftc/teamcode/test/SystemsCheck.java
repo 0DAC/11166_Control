@@ -42,7 +42,7 @@ public class SystemsCheck extends LinearOpMode {
 
         telemetry.addData("Status: ", "Testing Lift");
         bot.vraise_lift();
-        bot.vlower_lift();
+//        bot.vlower_lift();
         sleep(1000);
 
         telemetry.addData("Status: ", "Testing Complete");
