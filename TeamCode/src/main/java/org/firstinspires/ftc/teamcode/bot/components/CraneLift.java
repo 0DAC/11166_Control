@@ -127,10 +127,6 @@ public class CraneLift {
     }
 
     public void lift_to_level() {
-<<<<<<< HEAD
-//        left.setPositionPIDFCoefficients(Up_Pos_P);
-//        right.setPositionPIDFCoefficients(Up_Pos_P);
-=======
         left.setPositionPIDFCoefficients(Up_Pos_P);
         right.setPositionPIDFCoefficients(Up_Pos_P);
 
@@ -450,7 +446,6 @@ public class CraneLift {
     public void vstop() {
         VLEFT_POS = left.getCurrentPosition();
         VRIGHT_POS = right.getCurrentPosition();
-        git
         left.setTargetPosition(VLEFT_POS);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
