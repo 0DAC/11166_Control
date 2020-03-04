@@ -189,7 +189,7 @@ public class Robot {
      */
     // make sure to stagger order of motor engagement so that one side of robot does not turn on / off before the other side
     public void encoder_drive(double power, int[] encoder_vals) {
-        if (isLift_sleeping()) return;
+//        if (isLift_sleeping()) return;
 
         for (int i = 0; i < 4; i ++) {
             drive.motors[i].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -320,19 +320,18 @@ public class Robot {
         FOUNDATION_UP = !FOUNDATION_UP;
     }
     public void vlifttolevel() {if (!isLift_sleeping()) lift.lift_to_level();}
-    public void vraise_lift() { if (!isLift_sleeping()) lift.vextend(); }
+    public void vraise_lift() { if (!isLift_sleeping()) lift.lift_by_ticks(120); }
 //    public void vlower_lift() { if (!isLift_sleeping()) lift.vretract(); }
     public void vretractlift() {if (!isLift_sleeping()) lift.vretract();}
     public void vhold() {if (!isLift_sleeping()) lift.vstop();}
     public void vslack() {if (!isLift_sleeping()) lift.slack();}
     public void vglideup() {if (!isLift_sleeping()) lift.v_glide_up();}
     public void vglidedown() {if (!isLift_sleeping()) lift.v_glide_down();}
-    public void vgroundstonelevel() {if (!isLift_sleeping()) lift.ground_stone_raise();}
-    public void vgroundlevel() {if (!isLift_sleeping()) lift.ground_stone_retract();}
-    public void vnudgeup() {if (!isLift_sleeping()) lift.nudge_up();}
-    public void vnudgedown() {if (!isLift_sleeping()) lift.nudge_down();}
+    public void vgroundstonelevel() {if (!isLift_sleeping()) lift.lift_by_ticks(140);}
+    public void vgroundlevel() {if (!isLift_sleeping()) lift.lift_by_ticks(0);}
+    public void vnudgeup() {if (!isLift_sleeping()) lift.lift_by_ticks(40);}
+    public void vnudgedown() {if (!isLift_sleeping()) lift.lift_by_ticks(110);}
     public void updateheight(int change) {if (!isLift_sleeping()) lift.update_height(change);}
-
 
     public void hextend_toggle() {
         if (!isLift_sleeping()) lift.htoggle();
@@ -377,7 +376,7 @@ public class Robot {
      */
      public void power_drive(double course, double velocity, double rotation) {
          // TODO: add these conditions everywhere
-         if (drive_sleeping) return;
+         if (isDrive_sleeping()) return;
          drive.setCourse(course);
          drive.setVelocity(velocity);
          drive.setRotation(rotation);
@@ -393,7 +392,7 @@ public class Robot {
      }
 
      public void pause_drive(long time) {
-         drive_sleeping = false;
+         drive_sleeping = true;
          drive_sleep_start = System.currentTimeMillis();
          drive_sleep_duration = time;
          drive.setVelocity(0);
@@ -401,28 +400,32 @@ public class Robot {
 
      public boolean isDrive_sleeping() {
          if (drive_sleeping){
-             if (System.currentTimeMillis()-drive_sleep_start > drive_sleep_duration) {
-                 drive_sleeping = false;
-                 return false;
+             while (System.currentTimeMillis()-drive_sleep_start < drive_sleep_duration) {
+                 return true;
              }
+             drive_sleeping = false;
+             return false;
+         } else {
+             return false;
          }
-         return true;
      }
 
      public void pause_lift(long time) {
-         lift_sleeping = false;
+         lift_sleeping = true;
          lift_sleep_start = System.currentTimeMillis();
          lift_sleep_duration = time;
      }
 
     public boolean isLift_sleeping() {
         if (lift_sleeping){
-            if (System.currentTimeMillis()-lift_sleep_start> lift_sleep_duration) {
-                lift_sleeping = false;
-                return false;
+            while (System.currentTimeMillis()-lift_sleep_start < lift_sleep_duration) {
+                return true;
             }
+            lift_sleeping = false;
+            return false;
+        } else {
+            return false;
         }
-        return true;
     }
 
      public void print_encoder_vals(Telemetry t) {

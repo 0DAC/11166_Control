@@ -22,9 +22,9 @@ public class BaseLineController extends LinearOpMode {
         bot = new Robot(hardwareMap, telemetry);
 
         bot.h_extend_full();
-        bot.pause(400);
+        bot.pause(1000);
         bot.turnerin();
-        bot.pause(400);
+        bot.pause(1000);
         bot.h_retract();
 
         waitForStart();
@@ -43,7 +43,7 @@ public class BaseLineController extends LinearOpMode {
                 sleep(1500);
                 bot.vlifttolevel();
                 bot.turnerout();
-                sleep(400);
+                sleep(1000);
                 bot.h_extend();
                 sleep(400);
             }
@@ -51,8 +51,8 @@ public class BaseLineController extends LinearOpMode {
                 bot.drop_stone();
                 sleep(400);
                 bot.vnudgeup();
-                sleep(200);
-                bot.drive_forward(1,30);
+                sleep(500);
+                bot.drive_forward(.2,10);
                 sleep(400);
                 bot.vretractlift();
                 bot.h_extend_full();
@@ -115,7 +115,9 @@ public class BaseLineController extends LinearOpMode {
             // comment out while using PID tuner
             // raise lift
             if (gamepad1.left_trigger != 0) {
-                bot.vglideup();
+//                bot.vglideup();
+                bot.vraise_lift();
+                sleep(1000);
             }
             else if (gamepad1.right_trigger != 0) {
                 bot.vslack();
