@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.bot.components;
 
-import com.disnodeteam.dogecommander.Subsystem;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,7 +16,7 @@ import org.firstinspires.ftc.teamcode.HOMAR.internal.drivetrain.MecanumDrivetrai
 import org.firstinspires.ftc.teamcode.HOMAR.internal.sensor.IntegratingGyroscopeSensor;
 import org.firstinspires.ftc.teamcode.SystemConfig;
 
-public class Robot implements Subsystem {
+public class Robot {
     //private FinishableIntegratedController controller;
     public MecanumDrivetrain drive;
     private Servo l_foundation, r_foundation;
@@ -26,6 +25,8 @@ public class Robot implements Subsystem {
     private CraneLift lift;
     private Camera camera;
     private int TIME_THRESHOLD = 1500;
+    private boolean drive_sleeping = false; private double drive_sleep_duration = 0; private double drive_sleep_start = 0;
+    private boolean lift_sleeping = false; private double lift_sleep_duration = 0; private double lift_sleep_start = 0;
 
     private final int TURN_90_TIME = 41;
 
@@ -188,6 +189,8 @@ public class Robot implements Subsystem {
      */
     // make sure to stagger order of motor engagement so that one side of robot does not turn on / off before the other side
     public void encoder_drive(double power, int[] encoder_vals) {
+        if (isLift_sleeping()) return;
+
         for (int i = 0; i < 4; i ++) {
             drive.motors[i].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             //set dummy position before changing runmode
@@ -316,43 +319,43 @@ public class Robot implements Subsystem {
         else raise_foundations();
         FOUNDATION_UP = !FOUNDATION_UP;
     }
-    public void vlifttolevel() {lift.lift_to_level();}
-    public void vraise_lift() { lift.vextend(); }
-//    public void vlower_lift() { lift.vretract(); }
-    public void vretractlift() {lift.vretract();}
-    public void vhold() {lift.vstop();}
-    public void vslack() {lift.slack();}
-    public void vglideup() {lift.v_glide_up();}
-    public void vglidedown() {lift.v_glide_down();}
-    public void vgroundstonelevel() {lift.ground_stone_raise();}
-    public void vgroundlevel() {lift.ground_stone_retract();}
-    public void vnudgeup() {lift.nudge_up();}
-    public void vnudgedown() {lift.nudge_down();}
-    public void updateheight(int change) {lift.update_height(change);}
+    public void vlifttolevel() {if (!isLift_sleeping()) lift.lift_to_level();}
+    public void vraise_lift() { if (!isLift_sleeping()) lift.vextend(); }
+//    public void vlower_lift() { if (!isLift_sleeping()) lift.vretract(); }
+    public void vretractlift() {if (!isLift_sleeping()) lift.vretract();}
+    public void vhold() {if (!isLift_sleeping()) lift.vstop();}
+    public void vslack() {if (!isLift_sleeping()) lift.slack();}
+    public void vglideup() {if (!isLift_sleeping()) lift.v_glide_up();}
+    public void vglidedown() {if (!isLift_sleeping()) lift.v_glide_down();}
+    public void vgroundstonelevel() {if (!isLift_sleeping()) lift.ground_stone_raise();}
+    public void vgroundlevel() {if (!isLift_sleeping()) lift.ground_stone_retract();}
+    public void vnudgeup() {if (!isLift_sleeping()) lift.nudge_up();}
+    public void vnudgedown() {if (!isLift_sleeping()) lift.nudge_down();}
+    public void updateheight(int change) {if (!isLift_sleeping()) lift.update_height(change);}
 
 
     public void hextend_toggle() {
-        lift.htoggle();
+        if (!isLift_sleeping()) lift.htoggle();
     }
-    public void h_grabber_pos() {lift.h_grabber_bot();}
-    public void h_capstone_pos() {lift.hcapstonepos();}
-    public void h_extend() {lift.hteleextend();}
-    public void h_extend_full() {lift.hmaxextend();}
-    public void h_engage() {lift.hengage();}
-    public void h_auto_extend() {lift.hautoextend();}
-    public void h_retract() {lift.hretract();}
-    public void place_capstone () {lift.toggle_capstone();}
+    public void h_grabber_pos() {if (!isLift_sleeping()) lift.h_grabber_bot();}
+    public void h_capstone_pos() {if (!isLift_sleeping()) lift.hcapstonepos();}
+    public void h_extend() {if (!isLift_sleeping()) lift.hteleextend();}
+    public void h_extend_full() {if (!isLift_sleeping()) lift.hmaxextend();}
+    public void h_engage() {if (!isLift_sleeping()) lift.hengage();}
+    public void h_auto_extend() {if (!isLift_sleeping()) lift.hautoextend();}
+    public void h_retract() {if (!isLift_sleeping()) lift.hretract();}
+    public void place_capstone () {if (!isLift_sleeping()) lift.toggle_capstone();}
 
     public void toggle_turner() {
-        if (lift.H_FULLY_EXTENDED) lift.toggle_rotator();
+        if (lift.H_FULLY_EXTENDED && !isLift_sleeping()) lift.toggle_rotator();
     }
-    public void t_capstone_pos() {lift.capstone_turn();}
+    public void t_capstone_pos() {if (!isLift_sleeping()) lift.capstone_turn();}
 
-    public void turnerout() {lift.turner_out();}
-    public void turnerin() {lift.turner_in();}
+    public void turnerout() {if (!isLift_sleeping()) lift.turner_out();}
+    public void turnerin() {if (!isLift_sleeping()) lift.turner_in();}
 
-    public void grab_stone() { lift.grab_stone(); }
-    public void drop_stone() { lift.drop_stone(); }
+    public void grab_stone() { if (!isLift_sleeping()) lift.grab_stone(); }
+    public void drop_stone() { if (!isLift_sleeping()) lift.drop_stone(); }
 
 
     public void toggle_grabber() {
@@ -373,6 +376,8 @@ public class Robot implements Subsystem {
      * @param rotation: rotation speed around center of mass
      */
      public void power_drive(double course, double velocity, double rotation) {
+         // TODO: add these conditions everywhere
+         if (drive_sleeping) return;
          drive.setCourse(course);
          drive.setVelocity(velocity);
          drive.setRotation(rotation);
@@ -386,6 +391,39 @@ public class Robot implements Subsystem {
          double t = System.currentTimeMillis();
          while (System.currentTimeMillis()-t < time);
      }
+
+     public void pause_drive(long time) {
+         drive_sleeping = false;
+         drive_sleep_start = System.currentTimeMillis();
+         drive_sleep_duration = time;
+         drive.setVelocity(0);
+     }
+
+     public boolean isDrive_sleeping() {
+         if (drive_sleeping){
+             if (System.currentTimeMillis()-drive_sleep_start > drive_sleep_duration) {
+                 drive_sleeping = false;
+                 return false;
+             }
+         }
+         return true;
+     }
+
+     public void pause_lift(long time) {
+         lift_sleeping = false;
+         lift_sleep_start = System.currentTimeMillis();
+         lift_sleep_duration = time;
+     }
+
+    public boolean isLift_sleeping() {
+        if (lift_sleeping){
+            if (System.currentTimeMillis()-lift_sleep_start> lift_sleep_duration) {
+                lift_sleeping = false;
+                return false;
+            }
+        }
+        return true;
+    }
 
      public void print_encoder_vals(Telemetry t) {
          t.addData("Front Left:", drive.motors[0].getCurrentPosition());
@@ -403,15 +441,15 @@ public class Robot implements Subsystem {
          t.addData("Right Lift:", lift.VRIGHT_POS);
      }
 
-    @Override
-    public void initHardware() {
-
-    }
-
-    @Override
-    public void periodic() {
-
-    }
+//    @Override
+//    public void initHardware() {
+//
+//    }
+//
+//    @Override
+//    public void periodic() {
+//
+//    }
 
     //public PIDTuner getPIDTuner(Gamepad pad, Telemetry t) { return new PIDTuner(drive, (PIDController) controller.algorithm, pad, t); }
 }
