@@ -385,7 +385,7 @@ public class Robot {
          if (isDrive_sleeping()) return;
          drive.setCourse(course);
          drive.setVelocity(speed_toggle*velocity);
-         drive.setRotation(rotation);
+         drive.setRotation(speed_toggle*rotation);
      }
 
      public void stop() {
