@@ -35,19 +35,8 @@ public class BaseLineController extends LinearOpMode {
             else bot.xbox_drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             if (gamepad1.y) {
-                //grab stone
-                bot.h_engage();
-                bot.vgroundstonelevel();
-                sleep(300);
-                bot.servointake();
-                sleep(1000);
-                bot.stop_intake();
-                bot.vnudgedown();
-                sleep(200);
-                bot.grab_stone();
-                //place stone
-                sleep(300);
-                bot.vraise_lift_by_ticks(30);
+                bot.updateheight(1);
+                bot.vraise_lift_by_ticks(60);
                 sleep(200);
                 bot.h_extend_full();
                 sleep(1000);
@@ -55,7 +44,6 @@ public class BaseLineController extends LinearOpMode {
                 bot.vlifttolevel();
                 sleep(1000);
                 bot.h_extend();
-                sleep(400);
             }
             else if (gamepad1.a && !gamepad1.start) {
                 bot.drop_stone();
@@ -85,16 +73,15 @@ public class BaseLineController extends LinearOpMode {
             }
 
             if (gamepad1.b && !gamepad1.start) {
-//                bot.h_engage();
-//                bot.vgroundstonelevel();
-//                sleep(300);
-//                bot.servointake();
-//                sleep(1000);
-//                bot.stop_intake();
-//                bot.vnudgedown();
-//                sleep(200);
-//                bot.grab_stone();
-                bot.vraise_lift_by_ticks(60);
+                bot.h_engage();
+                bot.vgroundstonelevel();
+                sleep(300);
+                bot.servointake();
+                sleep(1000);
+                bot.stop_intake();
+                bot.vnudgedown();
+                sleep(200);
+                bot.grab_stone();
             }
 
             if (gamepad1.start) {
