@@ -35,13 +35,13 @@ public class CraneLift {
 
     int VRIGHT_POS, VLEFT_POS, VLEFT_TARGET, VRIGHT_TARGET;
 
-    int height;
+    int height = 0;
 
     int ticksPerBlock;
 
     // horizontal extension
     private final double H__AUTO_OUT = .75;
-    private final double H_TELE_OUT = .45;
+    private final double H_TELE_OUT = .42;
     private final double H_MAX_OUT = .9;
     private final double H_GRABBER_BOT = .4;
     private final double H_CAPSTONE = 0.33;
@@ -61,8 +61,8 @@ public class CraneLift {
     boolean rotator_out = false;
 
     // stone grabber
-    private final double GRABBER_CLOSED = 0.69,
-                    GRABBER_OPEN = .2;
+    private final double GRABBER_CLOSED = 0.1,
+                    GRABBER_OPEN = .88;
     int grabber_state = 0; // 0 = open, 1 = closed
     int capper_state = 0; // 0 = closed, 1 = open
 
@@ -104,7 +104,7 @@ public class CraneLift {
         VLEFT_TARGET = 0;
         VRIGHT_TARGET = 0;
 
-        ticksPerBlock = 140;
+        ticksPerBlock = 130;
 
         extender = hardwareMap.get(Servo.class, SystemConfig.lift_extend);
         grabber = hardwareMap.get(Servo.class, SystemConfig.lift_grabber);
@@ -128,7 +128,7 @@ public class CraneLift {
 
     public void lift_to_level() {
         if (height == 1) {
-            lift_by_ticks(height * ticksPerBlock +0);
+            lift_by_ticks(height * ticksPerBlock +30);
         } else if (height == 2) {
             lift_by_ticks(height * ticksPerBlock +0);
         } else if (height == 3) {
@@ -175,15 +175,17 @@ public class CraneLift {
     }
 
     public void v_glide_up() {
-        left.setPositionPIDFCoefficients(Up_Pos_P);
-        right.setPositionPIDFCoefficients(Up_Pos_P);
+        left.setPositionPIDFCoefficients(Down_Pos_P);
+        right.setPositionPIDFCoefficients(Down_Pos_P);
 
-        left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-//TODO: MAKE THESE VALUES GENTLER
-        left.setPower(.4);
-        right.setPower(.4);
+        VLEFT_TARGET = right.getCurrentPosition();
+        VRIGHT_TARGET = right.getCurrentPosition();
+
+        left.setPower(.6);
+        right.setPower(.6);
     }
 
     public void v_glide_down() {
@@ -193,7 +195,6 @@ public class CraneLift {
         if (VLEFT_POS > VMIN_POSITION || VRIGHT_POS > VMIN_POSITION)  {
             left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//TODO: MAKE THESE VALUES GENTLER
             left.setPower(.4);
             right.setPower(.4);
         }
@@ -209,8 +210,8 @@ public class CraneLift {
         left.setPower(0);
         right.setPower(0);
 
-        VLEFT_POS = left.getCurrentPosition();
-        VRIGHT_POS = right.getCurrentPosition();
+        VLEFT_TARGET = left.getCurrentPosition();
+        VLEFT_TARGET = right.getCurrentPosition();
     }
 
     public void lift_by_ticks (int ticks) {

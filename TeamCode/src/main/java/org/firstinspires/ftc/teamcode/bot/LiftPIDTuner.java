@@ -85,7 +85,7 @@ public class LiftPIDTuner extends LinearOpMode {
                 bot.vhold();
             }
             if (gamepad1.left_bumper) {
-                bot.vraise_lift();
+                bot.vraise_lift_by_ticks(50);
                 sleep(100);
             }
             if (gamepad1.right_bumper) {

@@ -33,7 +33,7 @@ public class Robot {
     public static double  RIGHT_FOUNDATION_UP = 1,
             RIGHT_FOUNDATION_DOWN  = 0.24,
             LEFT_FOUNDATION_UP   = 0.1,
-            LEFT_FOUNDATION_DOWN = 0.89;
+            LEFT_FOUNDATION_DOWN = 0.87;
 
 
     //  default 2, 0, 0, 12 for GoBilda
@@ -42,6 +42,9 @@ public class Robot {
     public static float NEW_D = 0;
     public static float NEW_F = 12;
     public static float POS_P = 6;
+
+    public static int speed_toggle_state = 0;
+    public static double speed_toggle = 1;
 
     public Robot(HardwareMap hmp, Telemetry t) {
         // configure motors
@@ -320,7 +323,7 @@ public class Robot {
         FOUNDATION_UP = !FOUNDATION_UP;
     }
     public void vlifttolevel() {if (!isLift_sleeping()) lift.lift_to_level();}
-    public void vraise_lift() { if (!isLift_sleeping()) lift.lift_by_ticks(120); }
+    public void vraise_lift_by_ticks(int ticks) { if (!isLift_sleeping()) lift.lift_by_ticks(ticks); }
 //    public void vlower_lift() { if (!isLift_sleeping()) lift.vretract(); }
     public void vretractlift() {if (!isLift_sleeping()) lift.vretract();}
     public void vhold() {if (!isLift_sleeping()) lift.vstop();}
@@ -361,6 +364,9 @@ public class Robot {
         lift.toggle_grabber();
     }
 
+    public void toggle_speed(double vel) {
+        speed_toggle=vel;
+    }
     public void xbox_drive(double move_x, double move_y, double turn_x) {
         double course = Math.atan2(-move_y, move_x) - Math.PI/2;
         double velocity = Math.hypot(move_x, move_y);
@@ -378,7 +384,7 @@ public class Robot {
          // TODO: add these conditions everywhere
          if (isDrive_sleeping()) return;
          drive.setCourse(course);
-         drive.setVelocity(velocity);
+         drive.setVelocity(speed_toggle*velocity);
          drive.setRotation(rotation);
      }
 

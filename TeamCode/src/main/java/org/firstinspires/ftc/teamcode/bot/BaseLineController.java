@@ -15,8 +15,6 @@ import org.firstinspires.ftc.teamcode.bot.components.Robot;
 public class BaseLineController extends LinearOpMode {
     Robot bot;
 
-    double liftlevel = 0;
-
     @Override
     public void runOpMode() throws InterruptedException {
         bot = new Robot(hardwareMap, telemetry);
@@ -37,38 +35,7 @@ public class BaseLineController extends LinearOpMode {
             else bot.xbox_drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             if (gamepad1.y) {
-                bot.grab_stone();
-                sleep(300);
-                bot.h_extend_full();
-                sleep(1500);
-                bot.vlifttolevel();
-                bot.turnerout();
-                sleep(1000);
-                bot.h_extend();
-                sleep(400);
-            }
-            else if (gamepad1.a && !gamepad1.start) {
-                bot.drop_stone();
-                sleep(400);
-                bot.vnudgeup();
-                sleep(500);
-                bot.drive_forward(.2,10);
-                sleep(400);
-                bot.vretractlift();
-                bot.h_extend_full();
-                sleep(200);
-                bot.turnerin();
-                sleep(600);
-                bot.h_engage();
-            }
-            else bot.vhold();
-
-            if (gamepad1.x) {
-                bot.toggle_foundation();
-                sleep(600);
-            }
-
-            if (gamepad1.b && !gamepad1.start) {
+                //grab stone
                 bot.h_engage();
                 bot.vgroundstonelevel();
                 sleep(300);
@@ -78,6 +45,56 @@ public class BaseLineController extends LinearOpMode {
                 bot.vnudgedown();
                 sleep(200);
                 bot.grab_stone();
+                //place stone
+                sleep(300);
+                bot.vraise_lift_by_ticks(30);
+                sleep(200);
+                bot.h_extend_full();
+                sleep(1000);
+                bot.turnerout();
+                bot.vlifttolevel();
+                sleep(1000);
+                bot.h_extend();
+                sleep(400);
+            }
+            else if (gamepad1.a && !gamepad1.start) {
+                bot.drop_stone();
+                bot.raise_foundations();
+                sleep(400);
+                bot.drive_forward(.5,20);
+//                sleep(400);
+                bot.vretractlift();
+                bot.h_extend_full();
+                sleep(200);
+                bot.turnerin();
+                sleep(800);
+                bot.h_engage();
+            }
+//            else if (gamepad1.left_trigger != 0) {
+//              bot.vglideup();
+//            }
+            else if (gamepad1.right_trigger != 0) {
+                bot.vslack();
+            }
+            else {
+                bot.vhold();}
+
+            if (gamepad1.x) {
+                bot.toggle_foundation();
+                sleep(600);
+            }
+
+            if (gamepad1.b && !gamepad1.start) {
+//                bot.h_engage();
+//                bot.vgroundstonelevel();
+//                sleep(300);
+//                bot.servointake();
+//                sleep(1000);
+//                bot.stop_intake();
+//                bot.vnudgedown();
+//                sleep(200);
+//                bot.grab_stone();
+                bot.vraise_lift_by_ticks(60);
             }
 
             if (gamepad1.start) {
@@ -89,8 +106,7 @@ public class BaseLineController extends LinearOpMode {
             }
 
             if (gamepad1.back) {
-                bot.vraise_lift();
-                sleep(600);
+                //something
             }
 
             if (gamepad1.left_bumper) {
@@ -112,24 +128,16 @@ public class BaseLineController extends LinearOpMode {
                 sleep(400);
             }
 
-            // comment out while using PID tuner
-            // raise lift
             if (gamepad1.left_trigger != 0) {
-//                bot.vglideup();
-                bot.vraise_lift();
-                sleep(1000);
+                double toggle_speed = gamepad1.left_trigger;
             }
-            else if (gamepad1.right_trigger != 0) {
-                bot.vslack();
-            }
-            else bot.vhold();
 
-           // secondary gamepad
-           if (gamepad2.left_trigger != 0) bot.intake();
-           else if (gamepad2.right_trigger != 0) bot.spit();
-           else bot.stop_intake();
+            // secondary gamepad
+            if (gamepad2.left_trigger != 0) bot.intake();
+            else if (gamepad2.right_trigger != 0) bot.spit();
+            else bot.stop_intake();
 
-           //deploy Capstone
+            //deploy Capstone
 //           if (gamepad2.x){
 //               bot.h_extend();
 //               sleep(600);
@@ -148,8 +156,8 @@ public class BaseLineController extends LinearOpMode {
 //           }
 //           if (gamepad2.right_bumper) bot.grab_n_retract();
 //           if (gamepad2.left_bumper) bot.extend_n_grab();
-           bot.print_servo_vals(telemetry);
-           telemetry.update();
+            bot.print_servo_vals(telemetry);
+            telemetry.update();
         }
     }
 }
