@@ -192,7 +192,7 @@ public class Robot {
      */
     // make sure to stagger order of motor engagement so that one side of robot does not turn on / off before the other side
     public void encoder_drive(double power, int[] encoder_vals) {
-//        if (isLift_sleeping()) return;
+        if (isDrive_sleeping()) return;
 
         for (int i = 0; i < 4; i ++) {
             drive.motors[i].setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -406,12 +406,14 @@ public class Robot {
 
      public boolean isDrive_sleeping() {
          if (drive_sleeping){
-             while (System.currentTimeMillis()-drive_sleep_start < drive_sleep_duration) {
+             if (System.currentTimeMillis()-drive_sleep_start < drive_sleep_duration) {
                  return true;
+             } else {
+                 drive_sleeping = false;
+                 return false;
              }
-             drive_sleeping = false;
-             return false;
          } else {
+             drive_sleeping = false;
              return false;
          }
      }
@@ -424,12 +426,14 @@ public class Robot {
 
     public boolean isLift_sleeping() {
         if (lift_sleeping){
-            while (System.currentTimeMillis()-lift_sleep_start < lift_sleep_duration) {
+            if (System.currentTimeMillis()-lift_sleep_start < lift_sleep_duration) {
                 return true;
+            } else {
+                lift_sleeping = false;
+                return false;
             }
-            lift_sleeping = false;
-            return false;
         } else {
+            drive_sleeping = false;
             return false;
         }
     }
