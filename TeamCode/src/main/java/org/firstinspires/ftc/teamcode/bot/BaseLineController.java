@@ -20,7 +20,7 @@ public class BaseLineController extends LinearOpMode {
         bot = new Robot(hardwareMap, telemetry);
 
         bot.h_extend_full();
-        bot.pause(1000);
+        bot.pause(2000);
         bot.turnerin();
         bot.pause(1000);
         bot.h_retract();
@@ -36,7 +36,6 @@ public class BaseLineController extends LinearOpMode {
 
             if (gamepad1.y) {
                 bot.updateheight(1);
-                bot.vraise_lift_by_ticks(60);
                 sleep(200);
                 bot.h_extend_full();
                 sleep(1000);
@@ -49,8 +48,8 @@ public class BaseLineController extends LinearOpMode {
                 bot.drop_stone();
                 bot.raise_foundations();
                 sleep(400);
-                bot.drive_forward(.5,20);
-//                sleep(400);
+                bot.drive_forward(.75,25);
+                sleep(600);
                 bot.vretractlift();
                 bot.h_extend_full();
                 sleep(200);
@@ -74,12 +73,12 @@ public class BaseLineController extends LinearOpMode {
 
             if (gamepad1.b && !gamepad1.start) {
                 bot.h_engage();
-                bot.vgroundstonelevel();
+                bot.vraise_lift_by_ticks(140);
                 sleep(300);
                 bot.servointake();
                 sleep(1000);
                 bot.stop_intake();
-                bot.vnudgedown();
+                bot.vraise_lift_by_ticks(110);
                 sleep(200);
                 bot.grab_stone();
             }

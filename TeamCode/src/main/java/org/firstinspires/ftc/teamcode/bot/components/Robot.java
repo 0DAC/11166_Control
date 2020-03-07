@@ -274,7 +274,6 @@ public class Robot {
         TIME_THRESHOLD = val;
     }
 
-
     public void intake() {
     intake.intake();
     }
@@ -324,23 +323,18 @@ public class Robot {
     }
     public void vlifttolevel() {if (!isLift_sleeping()) lift.lift_to_level();}
     public void vraise_lift_by_ticks(int ticks) { if (!isLift_sleeping()) lift.lift_by_ticks(ticks); }
-//    public void vlower_lift() { if (!isLift_sleeping()) lift.vretract(); }
     public void vretractlift() {if (!isLift_sleeping()) lift.vretract();}
     public void vhold() {if (!isLift_sleeping()) lift.vstop();}
     public void vslack() {if (!isLift_sleeping()) lift.slack();}
     public void vglideup() {if (!isLift_sleeping()) lift.v_glide_up();}
     public void vglidedown() {if (!isLift_sleeping()) lift.v_glide_down();}
-    public void vgroundstonelevel() {if (!isLift_sleeping()) lift.lift_by_ticks(140);}
     public void vgroundlevel() {if (!isLift_sleeping()) lift.lift_by_ticks(0);}
-    public void vnudgeup() {if (!isLift_sleeping()) lift.lift_by_ticks(40);}
-    public void vnudgedown() {if (!isLift_sleeping()) lift.lift_by_ticks(110);}
     public void updateheight(int change) {if (!isLift_sleeping()) lift.update_height(change);}
 
     public void hextend_toggle() {
         if (!isLift_sleeping()) lift.htoggle();
     }
     public void h_grabber_pos() {if (!isLift_sleeping()) lift.h_grabber_bot();}
-    public void h_capstone_pos() {if (!isLift_sleeping()) lift.hcapstonepos();}
     public void h_extend() {if (!isLift_sleeping()) lift.hteleextend();}
     public void h_extend_full() {if (!isLift_sleeping()) lift.hmaxextend();}
     public void h_engage() {if (!isLift_sleeping()) lift.hengage();}
@@ -351,6 +345,7 @@ public class Robot {
     public void toggle_turner() {
         if (lift.H_FULLY_EXTENDED && !isLift_sleeping()) lift.toggle_rotator();
     }
+    //TODO:ADD FOR MANUAL CONTROL?
     public void t_capstone_pos() {if (!isLift_sleeping()) lift.capstone_turn();}
 
     public void turnerout() {if (!isLift_sleeping()) lift.turner_out();}
@@ -358,7 +353,6 @@ public class Robot {
 
     public void grab_stone() { if (!isLift_sleeping()) lift.grab_stone(); }
     public void drop_stone() { if (!isLift_sleeping()) lift.drop_stone(); }
-
 
     public void toggle_grabber() {
         lift.toggle_grabber();
