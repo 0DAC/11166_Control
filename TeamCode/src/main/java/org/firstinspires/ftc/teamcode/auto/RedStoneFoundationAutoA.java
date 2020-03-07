@@ -15,7 +15,7 @@ public class RedStoneFoundationAutoA extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            bot.vgroundstonelevel();
+            bot.vraise_lift_by_ticks(140);
             bot.h_auto_extend();
             sleep(400);
             bot.turnerout();
@@ -37,7 +37,7 @@ public class RedStoneFoundationAutoA extends LinearOpMode {
             bot.set_threshold(1500);
 
             bot.turn_90_ccw(1);
-            bot.vgroundstonelevel();
+            bot.vraise_lift_by_ticks(140);
             sleep(300);
 
             bot.h_extend();

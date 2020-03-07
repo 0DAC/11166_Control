@@ -15,6 +15,10 @@ import org.firstinspires.ftc.teamcode.bot.components.Robot;
 public class BaseLineController extends LinearOpMode {
     Robot bot;
 
+    boolean IS_IN_BOT = false;
+    boolean IS_OUT_BOT = false;
+    boolean IS_PLACED = true;
+
     @Override
     public void runOpMode() throws InterruptedException {
         bot = new Robot(hardwareMap, telemetry);
@@ -34,21 +38,31 @@ public class BaseLineController extends LinearOpMode {
             else if (gamepad1.dpad_down) bot.power_drive(Math.PI, 0.4, 0);
             else bot.xbox_drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-            if (gamepad1.y) {
-                bot.updateheight(1);
-                sleep(200);
+            if (gamepad1.y && IS_IN_BOT && !IS_OUT_BOT && !IS_PLACED) {
+                IS_IN_BOT = false;
+                IS_OUT_BOT = true;
+                IS_PLACED = false;
+                bot.toggle_speed(.3);
                 bot.h_extend_full();
-                sleep(1000);
+                sleep(1200);
                 bot.turnerout();
+                sleep(500);
                 bot.vlifttolevel();
-                sleep(1000);
                 bot.h_extend();
             }
-            else if (gamepad1.a && !gamepad1.start) {
+            if (gamepad1.a && !gamepad1.start && !IS_IN_BOT && IS_OUT_BOT && !IS_PLACED) {
+                IS_IN_BOT = false;
+                IS_OUT_BOT = false;
+                IS_PLACED = true;
+                bot.toggle_speed(1);
                 bot.drop_stone();
+                bot.vdisengagebylevel();
                 bot.raise_foundations();
                 sleep(400);
-                bot.drive_forward(.75,25);
+                bot.intake();
+                bot.servointake();
+                bot.drive_forward(.75,35);
+                bot.stop_intake();
                 sleep(600);
                 bot.vretractlift();
                 bot.h_extend_full();
@@ -57,30 +71,28 @@ public class BaseLineController extends LinearOpMode {
                 sleep(800);
                 bot.h_engage();
             }
-//            else if (gamepad1.left_trigger != 0) {
-//              bot.vglideup();
-//            }
-            else if (gamepad1.right_trigger != 0) {
-                bot.vslack();
-            }
-            else {
-                bot.vhold();}
-
-            if (gamepad1.x) {
-                bot.toggle_foundation();
-                sleep(600);
-            }
-
-            if (gamepad1.b && !gamepad1.start) {
+            if (gamepad1.b && !gamepad1.start && !IS_IN_BOT && !IS_OUT_BOT && IS_PLACED) {
+                bot.toggle_speed(.7);
+                IS_IN_BOT = true;
+                IS_OUT_BOT = false;
+                IS_PLACED = false;
+                bot.updateheight(1);
                 bot.h_engage();
                 bot.vraise_lift_by_ticks(140);
-                sleep(300);
                 bot.servointake();
-                sleep(1000);
+                sleep(1500);
                 bot.stop_intake();
                 bot.vraise_lift_by_ticks(110);
                 sleep(200);
                 bot.grab_stone();
+            }
+            else {
+                bot.vhold();
+            }
+
+            if (gamepad1.x) {
+                bot.toggle_foundation();
+                sleep(600);
             }
 
             if (gamepad1.start) {
@@ -92,30 +104,23 @@ public class BaseLineController extends LinearOpMode {
             }
 
             if (gamepad1.back) {
-                //something
+                bot.toggle_speed(1);
             }
 
             if (gamepad1.left_bumper) {
-//                if (liftlevel < 10) {
-//                    liftlevel += 1;
-//                }
-//                bot.updateheight(liftlevel);
-//                sleep(300);
                 bot.updateheight(1);
                 sleep(400);
             }
             else if (gamepad1.right_bumper) {
-//                if (liftlevel > 0) {
-//                    liftlevel -= 1;
-//                }
-//                bot.updateheight(liftlevel);
-//                sleep(300);
                 bot.updateheight(-1);
                 sleep(400);
             }
 
             if (gamepad1.left_trigger != 0) {
-                double toggle_speed = gamepad1.left_trigger;
+                bot.vdisengagebylevel();
+                sleep(1000);
+            } else if (gamepad1.right_trigger != 0) {
+                bot.vslack();
             }
 
             // secondary gamepad

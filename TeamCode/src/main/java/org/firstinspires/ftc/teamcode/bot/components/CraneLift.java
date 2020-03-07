@@ -29,9 +29,9 @@ public class CraneLift {
     private Telemetry t;
 
     //  vertical extension
-    private final int VMIN_POSITION= 120;
+    private final int VMIN_POSITION= 150;
     private final double VMOVE_UP_POWER = 1;
-    private final double VMOVE_DOWN_POWER = .5;
+    private final double VMOVE_DOWN_POWER = .4;
 
     int VRIGHT_POS, VLEFT_POS, VLEFT_TARGET, VRIGHT_TARGET;
 
@@ -121,8 +121,10 @@ public class CraneLift {
     // vertical lift
 
     public void update_height (int change) {
-        if (height >= 0 && height <=10) {
+        if (height >= 0 && height <=11) {
             height += change;
+        } else {
+            height = 0;
         }
     }
 
@@ -141,12 +143,40 @@ public class CraneLift {
             lift_by_ticks(height * ticksPerBlock +0);
         } else if (height == 7) {
             lift_by_ticks(height * ticksPerBlock +0);
-
         } else if (height == 8) {
             lift_by_ticks(height * ticksPerBlock +0);
-
         } else if (height == 9) {
             lift_by_ticks(height * ticksPerBlock +0);
+        } else if (height == 10) {
+            lift_by_ticks(height * ticksPerBlock +100);
+        } else if (height == 11) {
+            lift_by_ticks(height * ticksPerBlock +100);
+        }
+    }
+
+    public void disengage_by_level() {
+        if (height == 1) {
+            lift_by_ticks(height * ticksPerBlock + 30 + 50);
+        } else if (height == 2) {
+            lift_by_ticks(height * ticksPerBlock + 50);
+        } else if (height == 3) {
+            lift_by_ticks(height * ticksPerBlock + 50);
+        } else if (height == 4) {
+            lift_by_ticks(height * ticksPerBlock + 50);
+        } else if (height == 5) {
+            lift_by_ticks(height * ticksPerBlock + 50);
+        } else if (height == 6) {
+            lift_by_ticks(height * ticksPerBlock + 50);
+        } else if (height == 7) {
+            lift_by_ticks(height * ticksPerBlock + 50);
+        } else if (height == 8) {
+            lift_by_ticks(height * ticksPerBlock + 50);
+        } else if (height == 9) {
+            lift_by_ticks(height * ticksPerBlock + 50);
+        } else if (height == 10) {
+            lift_by_ticks(height * ticksPerBlock +150);
+        } else if (height == 11) {
+            lift_by_ticks(height * ticksPerBlock +150);
         }
     }
 

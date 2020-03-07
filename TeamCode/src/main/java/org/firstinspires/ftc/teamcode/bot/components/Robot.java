@@ -322,6 +322,7 @@ public class Robot {
         FOUNDATION_UP = !FOUNDATION_UP;
     }
     public void vlifttolevel() {if (!isLift_sleeping()) lift.lift_to_level();}
+    public void vdisengagebylevel() {if (!isLift_sleeping()) lift.disengage_by_level();}
     public void vraise_lift_by_ticks(int ticks) { if (!isLift_sleeping()) lift.lift_by_ticks(ticks); }
     public void vretractlift() {if (!isLift_sleeping()) lift.vretract();}
     public void vhold() {if (!isLift_sleeping()) lift.vstop();}
