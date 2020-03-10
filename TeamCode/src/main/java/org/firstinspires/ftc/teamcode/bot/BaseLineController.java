@@ -18,6 +18,7 @@ public class BaseLineController extends LinearOpMode {
     boolean IS_IN_BOT = false;
     boolean IS_OUT_BOT = false;
     boolean IS_PLACED = true;
+    boolean IS_STATIONARY = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -42,7 +43,7 @@ public class BaseLineController extends LinearOpMode {
                 IS_IN_BOT = false;
                 IS_OUT_BOT = true;
                 IS_PLACED = false;
-                bot.toggle_speed(.3);
+                bot.toggle_speed(.5);
                 bot.h_extend_full();
                 sleep(1200);
                 bot.turnerout();
@@ -61,15 +62,19 @@ public class BaseLineController extends LinearOpMode {
                 sleep(400);
                 bot.intake();
                 bot.servointake();
-                bot.drive_forward(.75,35);
-                bot.stop_intake();
-                sleep(600);
-                bot.vretractlift();
-                bot.h_extend_full();
-                sleep(200);
-                bot.turnerin();
-                sleep(800);
-                bot.h_engage();
+                bot.drive_forward(.75, 35);
+                if (IS_STATIONARY) {
+                    bot.vraise_lift_by_ticks(140);
+                } else {
+                    bot.stop_intake();
+                    sleep(600);
+                    bot.vretractlift();
+                    bot.h_extend_full();
+                    sleep(200);
+                    bot.turnerin();
+                    sleep(800);
+                    bot.h_engage();
+                }
             }
             if (gamepad1.b && !gamepad1.start && !IS_IN_BOT && !IS_OUT_BOT && IS_PLACED) {
                 bot.toggle_speed(.7);
@@ -77,14 +82,22 @@ public class BaseLineController extends LinearOpMode {
                 IS_OUT_BOT = false;
                 IS_PLACED = false;
                 bot.updateheight(1);
-                bot.h_engage();
-                bot.vraise_lift_by_ticks(140);
-                bot.servointake();
-                sleep(1500);
-                bot.stop_intake();
-                bot.vraise_lift_by_ticks(110);
-                sleep(200);
-                bot.grab_stone();
+                if (IS_STATIONARY) {
+                    bot.stop_intake();
+                    bot.vraise_lift_by_ticks(110);
+                    sleep(200);
+                    bot.grab_stone();
+                    sleep(100);
+                } else {
+                    bot.vraise_lift_by_ticks(140);
+                    bot.servointake();
+                    sleep(1500);
+                    bot.stop_intake();
+                    bot.vraise_lift_by_ticks(110);
+                    sleep(200);
+                    bot.grab_stone();
+                    sleep(100);
+                }
             }
             else {
                 bot.vhold();
@@ -96,11 +109,10 @@ public class BaseLineController extends LinearOpMode {
             }
 
             if (gamepad1.start) {
-                bot.h_extend();
+                if (IS_STATIONARY = false) {
+                    IS_STATIONARY = true;
+                } else IS_STATIONARY = false;
                 sleep(400);
-                bot.turnerout();
-                sleep(400);
-                bot.h_grabber_pos();
             }
 
             if (gamepad1.back) {
@@ -129,22 +141,29 @@ public class BaseLineController extends LinearOpMode {
             else bot.stop_intake();
 
             //deploy Capstone
-//           if (gamepad2.x){
-//               bot.h_extend();
-//               sleep(600);
-//           }
-//           if (gamepad2.y) {
-//               bot.t_capstone_pos();
-//               sleep(600);
-//           }
-//           if (gamepad2.a && !gamepad2.start) {
-//               bot.place_capstone();
-//               sleep(600);
-//           }
-//           if (gamepad2.b && !gamepad2.start) {
-//               bot.h_capstone_pos();
-//               sleep(600);
-//           }
+            if (gamepad2.y) {
+                bot.updateheight(1);
+                sleep(600);
+            }
+            if (gamepad2.x){
+                bot.updateheight(-1);
+                   sleep(600);
+            }
+            if (gamepad2.a && !gamepad2.start) {
+                bot.place_capstone();
+                sleep(600);
+            }
+            if (gamepad2.b && !gamepad2.start) {
+                bot.grab_stone();
+                sleep(600);
+            }
+            if (gamepad2.start) {
+                bot.grab_stone();
+                sleep(400);
+                bot.h_extend_full();
+                sleep(400);
+                bot.drop_stone();
+            }
 //           if (gamepad2.right_bumper) bot.grab_n_retract();
 //           if (gamepad2.left_bumper) bot.extend_n_grab();
             bot.print_servo_vals(telemetry);
