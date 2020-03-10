@@ -331,6 +331,7 @@ public class Robot {
     public void vglidedown() {if (!isLift_sleeping()) lift.v_glide_down();}
     public void vgroundlevel() {if (!isLift_sleeping()) lift.lift_by_ticks(0);}
     public void updateheight(int change) {if (!isLift_sleeping()) lift.update_height(change);}
+    public void updatestatus(boolean stationary) {lift.stationarystatus(stationary);}
 
     public void hextend_toggle() {
         if (!isLift_sleeping()) lift.htoggle();
@@ -442,11 +443,13 @@ public class Robot {
 
      public void print_servo_vals(Telemetry t) {
          t.addData("Lift Level:", lift.height);
+         t.addData("Stationary:", lift.IS_STATIONARY);
          t.addData("Turner Servo:", String.format("%.2f [%s]", lift.turner_pos(), lift.rotator_out ? "Rotated out" : "Not fully rotated"));
          t.addData("Horizontal Servo:", String.format("%.2f [%s]", lift.extender_pos(), lift.H_FULLY_EXTENDED ? "Fully extended" : "Not full extension"));
          t.addData("Grabber Servo:", String.format("%.2f [%s]", lift.grabber_pos(), lift.grabber_state==1 ? "Grabbing" : "Open"));
          t.addData("Left Lift:", lift.VLEFT_POS);
          t.addData("Right Lift:", lift.VRIGHT_POS);
+
      }
 
 //    @Override

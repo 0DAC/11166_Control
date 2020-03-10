@@ -48,6 +48,7 @@ public class CraneLift {
     private final double H_IN = 0.25;
     private final double H_ENGAGE = 0.28;
     boolean H_FULLY_EXTENDED = false;
+    boolean IS_STATIONARY = false;
 
     //Capstone Holder Values
     private double CAPSTONE_UP = 0.73;
@@ -126,6 +127,10 @@ public class CraneLift {
         } else {
             height = 0;
         }
+    }
+
+    public void stationarystatus(boolean stationary) {
+        IS_STATIONARY=stationary;
     }
 
     public void lift_to_level() {
@@ -288,7 +293,7 @@ public class CraneLift {
         VRIGHT_POS = right.getCurrentPosition();
 
         t.addData("Left Lift Position & Target:","%d, %d", VLEFT_POS, VLEFT_TARGET);
-        t.addData("Right Lift Position &Target:","%d, %d", VRIGHT_POS, VRIGHT_TARGET);
+        t.addData("Right Lift Position & Target:","%d, %d", VRIGHT_POS, VRIGHT_TARGET);
 
 //        t.update();
     }
