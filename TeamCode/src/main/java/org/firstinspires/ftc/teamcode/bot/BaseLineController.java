@@ -108,7 +108,7 @@ public class BaseLineController extends LinearOpMode {
                 sleep(600);
             }
 
-            if (gamepad1.start) {
+            if (gamepad1.start || gamepad2.a) {
                 if (IS_STATIONARY = false) {
                     IS_STATIONARY = true;
                     bot.vraise_lift_by_ticks(140);
