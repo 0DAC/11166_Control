@@ -157,7 +157,7 @@ public class BaseLineController extends LinearOpMode {
                 bot.vlifttolevel();
                 sleep(600);
             }
-            if (gamepad2.a && !gamepad2.start) {
+            if (gamepad2.back) {
                 bot.place_capstone();
                 sleep(600);
             }
